@@ -159,7 +159,7 @@ src/main/java/com/elecciones/backend/
 
 ¿Por qué esta estructura?
 Ventajas del enfoque por módulos:
-Escalabilidad: Cada módulo es independiente. Si crece el proyecto, puedes añadir asamblea/, votacion/, etc.
+Escalabilidad: Cada módulo es independiente. Si crece el proyecto, puedo añadir asamblea/, votacion/, etc.
 
 Mantenibilidad: Si hay que modificar algo de partidos, todo está en partido/
 
