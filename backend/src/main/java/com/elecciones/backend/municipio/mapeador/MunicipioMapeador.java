@@ -9,9 +9,10 @@ import org.mapstruct.MappingConstants;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface MunicipioMapeador {
 
-    @Mapping(target = "fechaCreacion", ignore = true)
+    @Mapping(target = "poblacion", source = "poblacion")
     MunicipioDTO toDTO(Municipio municipio);
 
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "fechaCreacion", ignore = true)
     Municipio toEntity(MunicipioDTO municipioDTO);
 }

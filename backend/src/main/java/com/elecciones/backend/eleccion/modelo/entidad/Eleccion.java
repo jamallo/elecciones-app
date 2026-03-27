@@ -16,7 +16,7 @@ public class Eleccion {
     private Long id;
     private String tipo; //Municipal, autonómica, nacional
     private String ambito; //Oviedo, Asturias, España
-    private String anio;
+    private int anio;
 
     @OneToMany(mappedBy = "eleccion")
     private List<Partido> partidos;

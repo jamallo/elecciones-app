@@ -1,4 +1,10 @@
 package com.elecciones.backend.candidato.repositorio;
 
-public class CandidatoRepositorio {
+import com.elecciones.backend.candidato.modelo.entidad.Candidato;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface CandidatoRepositorio extends JpaRepository<Candidato, Long> {
+    List<Candidato> findByPartidoIdOrderByPosicionListaAsc(Long partidoId);
 }

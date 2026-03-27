@@ -4,6 +4,9 @@ import lombok.Data;
 
 @Data
 public class PartidoResumenDTO {
-    private String historiaResumen;
-    private String programaResumen;
+    private Long id;
+    private String nombre;
+    private String siglas;
+    private String logoUrl;
+    private String color;
 }

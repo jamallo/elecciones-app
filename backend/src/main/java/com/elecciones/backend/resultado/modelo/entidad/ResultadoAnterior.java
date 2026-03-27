@@ -13,7 +13,7 @@ public class ResultadoAnterior {
     private Integer anio;
     private String partidoNombre;
     private Integer votos;
-    private Integer porcentaje;
+    private double porcentaje;
     private Integer concejales;
 
     @ManyToOne

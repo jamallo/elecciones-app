@@ -59,9 +59,9 @@ src/main/java/com/elecciones/backend/
 │
 ├── partido/                          # Módulo partido
 │   ├── controlador/
-│   │   └── PartidoControlador.java
+│   │   └── PartidoControlador.java [x] *****
 │   ├── servicio/
-│   │   └── PartidoServicio.java
+│   │   └── PartidoServicio.java [x] *****
 │   ├── repositorio/
 │   │   └── PartidoRepositorio.java [x] *****
 │   ├── modelo/
@@ -71,9 +71,9 @@ src/main/java/com/elecciones/backend/
 │   │   └── dto/
 │   │       ├── PartidoDTO.java [x] *****
 │   │       ├── PartidoResumenDTO.java [x] *****
-│   │       └── InformacionPartidoDTO.java
+│   │       └── InformacionPartidoDTO.java [x] *****
 │   └── mapeador/
-│       └── PartidoMapeador.java
+│       └── PartidoMapeador.java [x] *****
 │
 ├── candidato/                        # Módulo candidato
 │   ├── controlador/
@@ -81,7 +81,7 @@ src/main/java/com/elecciones/backend/
 │   ├── servicio/
 │   │   └── CandidatoServicio.java
 │   ├── repositorio/
-│   │   └── CandidatoRepositorio.java
+│   │   └── CandidatoRepositorio.java [x] *****
 │   ├── modelo/
 │   │   ├── entidad/
 │   │   │   └── Candidato.java [x] *****
@@ -97,7 +97,7 @@ src/main/java/com/elecciones/backend/
 │   ├── servicio/
 │   │   └── EventoServicio.java
 │   ├── repositorio/
-│   │   └── EventoRepositorio.java
+│   │   └── EventoRepositorio.java [x] *****
 │   ├── modelo/
 │   │   ├── entidad/
 │   │   │   └── Evento.java [x] *****
@@ -113,7 +113,7 @@ src/main/java/com/elecciones/backend/
 │   ├── servicio/
 │   │   └── SedeServicio.java
 │   ├── repositorio/
-│   │   └── SedeRepositorio.java
+│   │   └── SedeRepositorio.java [x] *****
 │   ├── modelo/
 │   │   ├── entidad/
 │   │   │   └── Sede.java [x] *****
@@ -179,3 +179,21 @@ modelo/entidad/: Entidades JPA (tablas de BD)
 modelo/dto/: Objetos de transferencia (para API)
 
 mapeador/: Conversión entre entidad ↔ DTO
+
+
+----------------------------------------
+#DÍA 2 (27/03/2026)
+
+-> Creación de los repositorios (JPA)
+-> Inicialización de datos
+-> Ajustes de entidades
+-> Actualización de mapeadores (MapStruct)
+-> Modificación de DTOs
+-> Primera prueba en swagger: funcionando correctamente.
+
+##Estado actual del proyecto
+-> API arranca correctamente
+-> Base de datos conectada
+-> Repositiriios funcionando
+-> Swagger operativo
+-> Primera capa funcional completa

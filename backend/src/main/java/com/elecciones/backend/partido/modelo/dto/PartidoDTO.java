@@ -9,5 +9,6 @@ public class PartidoDTO {
     private String siglas;
     private String logoUrl;
     private String color;
-    private PartidoResumenDTO informacion;
+    private Long eleccionId;
+    private InformacionPartidoDTO informacion;
 }

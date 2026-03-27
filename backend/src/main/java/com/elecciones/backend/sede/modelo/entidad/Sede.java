@@ -16,6 +16,7 @@ public class Sede {
     private Double latitud;
     private Double longitud;
     private String tipo; //SEDE_PARTIDO, COLEGIO_ELECTORAL, RECINTO_ELECTORAL
+    private String municipio;
 
     @ManyToOne
     @JoinColumn(name = "partido_id")
