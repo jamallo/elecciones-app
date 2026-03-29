@@ -11,6 +11,7 @@ import com.elecciones.backend.partido.repositorio.PartidoRepositorio;
 import com.elecciones.backend.partido.servicio.PartidoServicio;
 import com.elecciones.backend.sede.modelo.entidad.Sede;
 import com.elecciones.backend.sede.repositorio.SedeRepositorio;
+import com.elecciones.backend.tema.modelo.dto.TemaDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -100,6 +101,25 @@ public class PartidoControlador {
             @RequestBody InformacionPartidoDTO informacionDTO) {
         return ResponseEntity.ok(partidoServicio.actualizarInformacion(id, informacionDTO));
     }
+
+    @GetMapping("/{id}/tema")
+    @Operation(summary = "Obtener tema visual de un partido")
+    public ResponseEntity<TemaDTO> obtenerTemaPartido(@PathVariable Long id) {
+
+        TemaDTO tema = new TemaDTO();
+
+        tema.setColorPrincipal(partidoServicio.buscarPorId(id).getColorPrimario());
+        tema.setColorSecundario(partidoServicio.buscarPorId(id).getColorSecundario());
+        tema.setColorAcento(partidoServicio.buscarPorId(id).getColorAcento());
+        tema.setColorFondo(partidoServicio.buscarPorId(id).getColorFondo());
+        tema.setTipo("PARTIDO");
+        tema.setNombre(partidoServicio.buscarPorId(id).getNombre());
+        tema.setSiglas(partidoServicio.buscarPorId(id).getSiglas());
+
+        return ResponseEntity.ok(tema);
+    }
+
+
 
 
 }

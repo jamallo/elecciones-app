@@ -1,7 +1,9 @@
 package com.elecciones.backend.municipio.controlador;
 
 import com.elecciones.backend.municipio.modelo.dto.MunicipioDTO;
+import com.elecciones.backend.municipio.modelo.entidad.Municipio;
 import com.elecciones.backend.municipio.servicio.MunicipioServicio;
+import com.elecciones.backend.tema.modelo.dto.TemaDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,5 +44,20 @@ public class MunicipioControlador {
     @Operation(summary = "Crear nuevo municipio")
     public ResponseEntity<MunicipioDTO> crear(@RequestBody MunicipioDTO municipioDTO) {
         return new ResponseEntity<>(municipioServicio.crear(municipioDTO), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}/tema")
+    @Operation(summary = "Obtener tema visual de un municipio")
+    public ResponseEntity<TemaDTO> obtenerTemaMunicilio(@PathVariable Long id) {
+        TemaDTO tema = new TemaDTO();
+
+        tema.setColorPrincipal(municipioServicio.buscarPorId(id).getColorPrimario());
+        tema.setColorSecundario(municipioServicio.buscarPorId(id).getColorSecundario());
+        tema.setColorAcento(municipioServicio.buscarPorId(id).getColorAcento());
+        tema.setColorFondo(municipioServicio.buscarPorId(id).getColorFondo());
+        tema.setTipo("MUNICIPIO");
+        tema.setNombre(municipioServicio.buscarPorId(id).getNombre());
+
+        return ResponseEntity.ok(tema);
     }
 }

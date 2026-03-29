@@ -56,8 +56,12 @@ public class CargadorDatosIniciales implements CommandLineRunner {
         oviedo.setProvincia("Asturias");
         oviedo.setComunidadAutonoma("Asturias");
         oviedo.setLatitud(43.3619);
-        oviedo.setLatitud(-5.8494);
+        oviedo.setLongitud(-5.8494);
         oviedo.setPoblacion(220000);
+        oviedo.setColorPrimario("#00236C");
+        oviedo.setColorSecundario("#1985FF");
+        oviedo.setColorAcento("#00A86B");
+        oviedo.setColorFondo("#F0F7FF");
         municipioRepositorio.save(oviedo);
         System.out.println("Municipio creado: Oviedo");
 
@@ -125,6 +129,9 @@ public class CargadorDatosIniciales implements CommandLineRunner {
                         "PP",
                         "logo-pp.png",
                         "#1E88E5",
+                        "#0D47A1",
+                        "#42A5F5",
+                        "#E3F2FD",
                         eleccion,
                         "Partido de centro-derecha fundado en 1989. Defiende la economía de mercado y la unidad de España.",
                         "Programa: más empleo, mejores servicios públicos, bajada de impuestos"),
@@ -132,17 +139,26 @@ public class CargadorDatosIniciales implements CommandLineRunner {
                         "PSOE",
                         "logo-psoe.png",
                         "#E63946",
+                        "#C1121F",
+                        "#FF6B6B",
+                        "#FFEBEE",
                         eleccion,
                         "Partido de centro-izquierda fundado en 1879. Defiende la justicia social y el estado del bienestar.",
                         "Programa: Sanidad pública, educación gratuita, políticas sociales."),
                 crearPartido("Vox", "VOX",
                         "logo-vox.png",
                         "#2E7D32",
+                        "#2E7D32",
+                        "#2E7D32",
+                        "#2E7D32",
                         eleccion,
                         "Partido de derecha conservadora. Defiende la identidad nacional y políticas migratorias restrictivas.",
                         "Programa: Seguridad, reforma del estado, bajada de impuestos."),
                 crearPartido("Sumar", "SUMAR",
                         "logo-sumar.png",
+                        "#FF9800",
+                        "#FF9800",
+                        "#FF9800",
                         "#FF9800",
                         eleccion,
                         "Plataforma progresista. Apuesta por la ecología, feminismo y derechos sociales.",
@@ -156,11 +172,17 @@ public class CargadorDatosIniciales implements CommandLineRunner {
                         "FORO",
                         "logo-foro.png",
                         "#9C27B0",
+                        "#9C27B0",
+                        "#9C27B0",
+                        "#9C27B0",
                         eleccion,
                         "Partido regionalista asturiano. Defiende los intereses de Asturias.",
                         "Programa: Desarrollo rural, industrialización, protección del patrimonio asturiano."),
                 crearPartido("Partido Popular", "PP",
                         "logo-pp.png",
+                        "#1E88E5",
+                        "#1E88E5",
+                        "#1E88E5",
                         "#1E88E5",
                         eleccion,
                         "Partido de centro-derecha. Apuesta por el desarrollo económico de Asturias.",
@@ -168,11 +190,17 @@ public class CargadorDatosIniciales implements CommandLineRunner {
                 crearPartido("PSOE Asturias", "PSOE",
                         "logo-psoe.png",
                         "#E63946",
+                        "#E63946",
+                        "#E63946",
+                        "#E63946",
                         eleccion,
                         "Federación asturiana del PSOE. Defiende el estado de bienestar en la región.",
                         "Programa: sanidad, educación, políticas sociales en Asturias"),
                 crearPartido("Podemos Asturias", "PODEMOS",
                         "logo-podemos.png",
+                        "#7B1FA2",
+                        "#7B1FA2",
+                        "#7B1FA2",
                         "#7B1FA2",
                         eleccion,
                         "Partido de izquierda. Apuesta por la participación ciudadana y derechos sociales.",
@@ -185,11 +213,17 @@ public class CargadorDatosIniciales implements CommandLineRunner {
                 crearPartido("Partido Popular", "PP",
                         "logo-pp.png",
                         "#1E88E5",
+                        "#1E88E5",
+                        "#1E88E5",
+                        "#1E88E5",
                         eleccion,
                         "Partido de centro-derecha. Líder de la oposición",
                         "Programa: reformas estructurales, bajada de impuestos, fortalecimiento de la economía."),
                 crearPartido("PSOE", "PSOE",
                         "logo-psoe.png",
+                        "#E63946",
+                        "#E63946",
+                        "#E63946",
                         "#E63946",
                         eleccion,
                         "Partido de centro-izquierda. En el gobierno actualmente.",
@@ -197,17 +231,26 @@ public class CargadorDatosIniciales implements CommandLineRunner {
                 crearPartido("Vox", "VOX",
                         "logo-vox.png",
                         "#2E7D32",
+                        "#2E7D32",
+                        "#2E7D32",
+                        "#2E7D32",
                         eleccion,
                         "Partido de derecha conservadora. Tercera fuerza política.",
                         "Programa: seguridad, unidad nacional, reforma del estado."),
                 crearPartido("Sumar", "SUMAR",
                         "logo-sumar.png",
                         "#FF9800",
+                        "#FF9800",
+                        "#FF9800",
+                        "#FF9800",
                         eleccion,
                         "Plataforma de izquierdas. Apuesta por políticas verdes y feministas.",
                         "Programa: Pacto verde, trabajo digno, ciudado del medio ambiente."),
                 crearPartido("Podemos", "PODEMOS",
                         "logo-podemos.png",
+                        "#7B1FA2",
+                        "#7B1FA2",
+                        "#7B1FA2",
                         "#7B1FA2",
                         eleccion,
                         "Partido de izquierda. Enfocado en derechos sociales y participación ciudadana.",
@@ -218,7 +261,10 @@ public class CargadorDatosIniciales implements CommandLineRunner {
     private Partido crearPartido(String nombre,
                                  String siglas,
                                  String logoUrl,
-                                 String color,
+                                 String colorPrimario,
+                                 String colorSecundario,
+                                 String colorAcento,
+                                 String colorFondo,
                                  Eleccion eleccion,
                                  String historiaResumen,
                                  String programaResumen) {
@@ -227,7 +273,10 @@ public class CargadorDatosIniciales implements CommandLineRunner {
         partido.setNombre(nombre);
         partido.setSiglas(siglas);
         partido.setLogoUrl(logoUrl);
-        partido.setColor(color);
+        partido.setColorPrimario(colorPrimario);
+        partido.setColorSecundario(colorSecundario);
+        partido.setColorAcento(colorAcento);
+        partido.setColorFondo(colorFondo);
         partido.setEleccion(eleccion);
 
         InformacionPartido info = new InformacionPartido();

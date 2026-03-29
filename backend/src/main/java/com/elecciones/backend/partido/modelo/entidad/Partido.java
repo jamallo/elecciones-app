@@ -16,10 +16,23 @@ public class Partido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
     private String nombre;
+
+    @Column(nullable = false)
     private String siglas;
+
     private String logoUrl;
-    private String color;
+
+    //Colores personalizados del partido
+    @Column(nullable = false)
+    private String colorPrimario;
+
+    @Column(nullable = false)
+    private String colorSecundario;
+    private String colorAcento;
+    private String colorFondo;
 
     @ManyToOne
     @JoinColumn(name = "eleccion_id")
@@ -36,4 +49,10 @@ public class Partido {
 
     @OneToMany(mappedBy = "partido")
     private List<Sede> sedes;
+
+    @PrePersist
+    protected void onCreate() {
+        if (colorAcento == null) colorAcento = colorPrimario;
+        if (colorFondo == null) colorFondo = "#FFFFFF";
+    }
 }

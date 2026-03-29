@@ -1,15 +1,12 @@
-package com.elecciones.backend.municipio.modelo.dto;
+package com.elecciones.backend.comunidad.modelo.dto;
 
 import lombok.Data;
 
 @Data
-public class MunicipioDTO {
+public class ComunidadDTO {
     private Long id;
     private String nombre;
-    private String provincia;
-    private String comunidadAutonoma;
-    private Double latitud;
-    private Double longitud;
+    private String capital;
     private Integer poblacion;
     private String colorPrimario;
     private String colorSecundario;

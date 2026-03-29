@@ -197,3 +197,37 @@ mapeador/: Conversión entre entidad ↔ DTO
 -> Repositiriios funcionando
 -> Swagger operativo
 -> Primera capa funcional completa
+
+------------------------------
+DÍA 3 (28/03/2026)
+
+-> Comiendo frontend.
+-> estructura/arquitectura:
+frontend/src/app/
+├── app.module.ts
+├── app-routing.module.ts
+├── app.html
+├── app.ts
+├── home/
+│   ├── home.html
+│   ├── home.ts
+│   └── home.scss
+├── partidos-grid/
+├── partido-detalle/
+├── candidato-detalle/
+├── resultados-grafico/
+├── calendario-eventos/
+├── mapa-sedes/
+├── services/
+│   ├── eleccion.ts [x] *****
+│   ├── partido.ts [x] *****
+│   ├── sede.ts [x] *****
+│   └── evento.ts
+├── models/
+│   ├── partido.ts [x] *****
+│   ├── eleccion.ts [x] *****
+│   └── candidato.ts
+└── shared/
+    └── constants.ts
+
+
