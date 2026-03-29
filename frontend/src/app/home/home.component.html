@@ -1,0 +1,126 @@
+<div class="home-container" appTema>
+  <!-- BARRA SUPERIOR -->
+  <div class="top-bar" [style.background]="'var(--header-gradient)'">
+    <div class="logo"></div>
+    <div class="buscador" [style.borderColor]="'var(--primary-color)'">
+      <mat-icon [style.color]="'var(--primary-color)'">search</mat-icon>
+      <input type="text" placeholder="Buscar partido...">
+    </div>
+  </div>
+
+  <!-- Selector de elecciones -->
+  <div class="selector-elecciones">
+    <select #selectorEleccion (change)="onEleccionChange(selectorEleccion.value)" [value]="seleccionActual">
+      @for (elec of tiposEleccion; track elec.tipo + elec.ambito) {
+        <option [value]="elec.tipo + '|' + elec.ambito">
+          {{ elec.label }}
+        </option>
+      }
+    </select>
+  </div>
+
+  <!-- GRID DE PARTIDOS -->
+  <div class="partidos-grid-section">
+    <div class="grid">
+      @for (partido of partidos; track partido.id) {
+        <div class="partido-item" (click)="verPartido(partido.id)">
+          <div class="logo-wrapper">
+            <img [src]="partido.logoUrl" [alt]="partido.nombre">
+          </div>
+          <div class="partido-nombre">{{ partido.siglas }}</div>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- RESULTADOS ANTERIORES -->
+  <div class="resultados-section">
+    <div class="section-header">
+      <h3>RESULTADOS</h3>
+      <select #selectorAnio class="fecha-selector" (change)="onAnioChange(selectorAnio.value)">
+        @for (anio of aniosAnteriores; track anio) {
+          <option [value]="anio" [selected]="anio === anioSeleccionado">
+            {{ anio }}
+          </option>
+        }
+      </select>
+    </div>
+
+    <div class="grafico-barras">
+      <div class="barra-container">
+        @for (resultado of resultadosActuales; track resultado.partido) {
+          <div class="barra-item">
+            <div class="barra" [style.height.%]="resultado.porcentaje"></div>
+            <div class="partido-label">{{ resultado.partido }}</div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- PRÓXIMAS ELECCIONES -->
+  <div class="proximas-elecciones">
+    <h2>Próximas elecciones<br>domingo, 28 de mayo de {{ anioSeleccionado + 4 }}</h2>
+  </div>
+
+  <!-- EVENTOS -->
+  <div class="eventos-section">
+    <div class="section-header">
+      <h3>EVENTOS</h3>
+      <input #selectorFecha type="date" class="fecha-selector" (change)="onFechaChange(selectorFecha.value)">
+    </div>
+
+    @for (evento of eventos; track evento.id) {
+      <div class="evento-item">
+        <div class="evento-icono"></div>
+        <div class="evento-info">
+          <p>{{ evento.descripcion }}</p>
+        </div>
+      </div>
+    }
+    @if (eventos.length === 0) {
+      <div class="evento-item">
+        <div class="evento-info">
+          <p>Selecciona una fecha para ver eventos</p>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- MAPA -->
+  <div class="mapa-section">
+    <h3>BÚSQUEDA (Colegios o recintos electorales y sedes).</h3>
+    <div class="mapa-container">
+      <img src="/assets/mapa-oviedo.png" alt="Mapa de {{ municipioActual }}">
+      <div class="zoom-controls">
+        <button>+</button>
+        <button>-</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTONES ACCIÓN -->
+  <div class="action-buttons">
+    <button (click)="verMesas()">Mesas electorales</button>
+    <button (click)="verCenso()">Censo electoral</button>
+  </div>
+
+  <!-- BARRA INFERIOR -->
+  <div class="bottom-bar">
+    <button routerLink="/">
+      <mat-icon>home</mat-icon>
+    </button>
+    <button>
+      <mat-icon>search</mat-icon>
+    </button>
+    <button>
+      <mat-icon>bar_chart</mat-icon>
+    </button>
+    <button>
+      <mat-icon>calendar_today</mat-icon>
+    </button>
+    <button>
+      <mat-icon>place</mat-icon>
+    </button>
+  </div>
+</div>

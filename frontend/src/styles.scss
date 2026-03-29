@@ -1,0 +1,39 @@
+// Colores corporativos
+$azul-oscuro: #00236C;
+$azul-claro: #1985FF;
+$verde-vox: #1BA637;
+$rojo-iu: #DF0126;
+$morado-somos: #742F68;
+$rosa-andecha: #AD0049;
+$verde-pacma: #AEBD46;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Murecho', 'Roboto', sans-serif;
+  background-color: #FFFFFF;
+  color: $azul-oscuro;
+}
+
+// Scroll suave
+html {
+  scroll-behavior: smooth;
+}
+
+// Personalizar scrollbar
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $azul-claro;
+  border-radius: 4px;
+}

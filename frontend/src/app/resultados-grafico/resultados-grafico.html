@@ -1,0 +1,45 @@
+<div class="card shadow-sm">
+  <div class="card-header bg-primary text-white">
+    <h5 class="mb-0">📊 Resultados {{ municipio }} - {{ anio }}</h5>
+  </div>
+  <div class="card-body">
+    @if (resultados.length === 0) {
+      <div class="text-center text-muted">
+        No hay datos disponibles para el año {{ anio }}
+      </div>
+    }
+    @if (resultados.length > 0) {
+      <canvas id="resultadosChart" style="max-height: 400px;"></canvas>
+      <div class="table-responsive mt-3">
+        <table class="table table-sm table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>Partido</th>
+              <th class="text-end">Votos</th>
+              <th class="text-end">Porcentaje</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (r of resultados; track r.partido) {
+              <tr>
+                <td>
+                  <strong>{{ r.partido }}</strong>
+                </td>
+                <td class="text-end">{{ r.votos | number }}</td>
+                <td class="text-end">
+                  <div class="d-flex justify-content-end align-items-center">
+                    <span class="me-2">{{ r.porcentaje }}%</span>
+                    <div class="progress" style="width: 80px; height: 6px;">
+                      <div class="progress-bar" [style.width.%]="r.porcentaje"
+                           [style.backgroundColor]="'#0d6efd'"></div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>

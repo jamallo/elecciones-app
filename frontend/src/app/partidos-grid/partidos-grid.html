@@ -1,0 +1,26 @@
+<div class="partidos-grid">
+  <mat-grid-list [cols]="gridCols" rowHeight="280px" gutterSize="20px">
+    @for (partido of partidos; track partido.id) {
+      <mat-grid-tile>
+        <mat-card class="partido-card" [routerLink]="['/partido', partido.id]">
+          <div class="card-image">
+            <img [src]="partido.logoUrl" [alt]="partido.nombre"
+                 (error)="onImageError($event)">
+          </div>
+          <mat-card-content>
+            <h3>{{ partido.nombre }}</h3>
+            <p class="siglas">{{ partido.siglas }}</p>
+            <mat-progress-bar mode="determinate" value="100"
+                             [color]="getProgressColor(partido.color)"></mat-progress-bar>
+          </mat-card-content>
+          <mat-card-actions align="end">
+            <button mat-button color="primary">
+              <mat-icon>visibility</mat-icon>
+              Ver detalles
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </mat-grid-tile>
+    }
+  </mat-grid-list>
+</div>
