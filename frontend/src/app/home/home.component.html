@@ -10,10 +10,12 @@
 
   <!-- Selector de elecciones -->
   <div class="selector-elecciones">
-    <select #selectorEleccion (change)="onEleccionChange(selectorEleccion.value)" [value]="seleccionActual">
-      @for (elec of tiposEleccion; track elec.tipo + elec.ambito) {
-        <option [value]="elec.tipo + '|' + elec.ambito">
-          {{ elec.label }}
+    <select (change)="onEleccionChange($event)" [value]="eleccionSeleccionada?.id">
+      @for (eleccion of elecciones; track eleccion.id) {
+        <option [value]="eleccion.id">
+          {{ eleccion.tipo === 'MUNICIPAL' ? 'Municipales - ' :
+             eleccion.tipo === 'AUTONOMICA' ? 'Autonómicas - ' : 'Nacionales - ' }}
+          {{ eleccion.ambito }} ({{ eleccion.anio }})
         </option>
       }
     </select>
@@ -22,12 +24,12 @@
   <!-- GRID DE PARTIDOS -->
   <div class="partidos-grid-section">
     <div class="grid">
-      @for (partido of partidos; track partido.id) {
-        <div class="partido-item" (click)="verPartido(partido.id)">
-          <div class="logo-wrapper">
-            <img [src]="partido.logoUrl" [alt]="partido.nombre">
+      @for (participacion of partidosParticipacion; track participacion.id) {
+        <div class="partido-item" (click)="verPartido(participacion.id)">
+          <div class="logo-wrapper" [style.borderColor]="participacion.partidoColorPrimario">
+            <img [src]="participacion.partidoLogoUrl" [alt]="participacion.partidoNombre">
           </div>
-          <div class="partido-nombre">{{ partido.siglas }}</div>
+          <div class="partido-nombre">{{ participacion.partidoSiglas }}</div>
         </div>
       }
     </div>
@@ -37,7 +39,7 @@
   <div class="resultados-section">
     <div class="section-header">
       <h3>RESULTADOS</h3>
-      <select #selectorAnio class="fecha-selector" (change)="onAnioChange(selectorAnio.value)">
+      <select class="fecha-selector" (change)="onAnioChange($event)">
         @for (anio of aniosAnteriores; track anio) {
           <option [value]="anio" [selected]="anio === anioSeleccionado">
             {{ anio }}
@@ -50,7 +52,8 @@
       <div class="barra-container">
         @for (resultado of resultadosActuales; track resultado.partido) {
           <div class="barra-item">
-            <div class="barra" [style.height.%]="resultado.porcentaje"></div>
+            <div class="barra" [style.height.%]="resultado.porcentaje"
+                 [style.backgroundColor]="'var(--primary-color)'"></div>
             <div class="partido-label">{{ resultado.partido }}</div>
           </div>
         }
@@ -67,12 +70,12 @@
   <div class="eventos-section">
     <div class="section-header">
       <h3>EVENTOS</h3>
-      <input #selectorFecha type="date" class="fecha-selector" (change)="onFechaChange(selectorFecha.value)">
+      <input type="date" class="fecha-selector" (change)="onFechaChange($event)">
     </div>
 
     @for (evento of eventos; track evento.id) {
       <div class="evento-item">
-        <div class="evento-icono"></div>
+        <div class="evento-icono" [style.backgroundColor]="'var(--primary-color)'"></div>
         <div class="evento-info">
           <p>{{ evento.descripcion }}</p>
         </div>

@@ -1,0 +1,18 @@
+export interface Evento {
+  id: number;
+  titulo: string;
+  descripcion: string;
+  fecha: string;
+  lugar: string;
+  tipo: string;
+  partidoEleccionId?: number;
+}
+
+export interface EventoDetalle extends Evento {
+  partidoId: number;
+  partidoNombre: string;
+  partidoSiglas: string;
+  partidoLogoUrl: string;
+  eleccionTipo: string;
+  eleccionAmbito: string;
+}

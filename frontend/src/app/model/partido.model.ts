@@ -3,16 +3,23 @@ export interface Partido {
   nombre: string;
   siglas: string;
   logoUrl: string;
-  color?: string;
   colorPrimario: string;
   colorSecundario: string;
   colorAcento?: string;
   colorFondo?: string;
-  eleccionId?: number;
 }
 
 export interface PartidoDetalle extends Partido {
   informacion?: InformacionPartido;
+}
+
+export interface PartidoResumen {
+  id: number;
+  nombre: string;
+  siglas: string;
+  logoUrl: string;
+  colorPrimario: string;
+  colorSecundario: string;
 }
 
 export interface InformacionPartido {

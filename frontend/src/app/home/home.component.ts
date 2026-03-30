@@ -1,179 +1,116 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Eleccion } from '../model/eleccion.model';
+import { PartidoEleccionResumen } from '../model/partido-eleccion.model';
 import { EleccionService } from '../services/eleccion.service';
+import { PartidoService } from '../services/partido.service';
 import { TemaService } from '../services/tema.service';
-import { Partido } from '../model/partido.model';
-import { Municipio } from '../model/municipio.model';
-import { Comunidad } from '../model/comunidad.model';
-
-interface EleccionOption {
-  tipo: string;
-  ambito: string;
-  label: string;
-  nivel: string;
-  id?: number;
-  icon?: string;  // ← Añadir icon opcional
-}
-
-interface Resultado {
-  partido: string;
-  porcentaje: number;
-  votos: number;
-}
-
-interface Evento {
-  id: number;
-  descripcion: string;
-  fecha: string;
-}
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: false,
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrl: './home.component.scss',
 })
-export class HomeComponent implements OnInit {
-  // Propiedades para el selector de elecciones
-  tiposEleccion: EleccionOption[] = [];
-  partidos: Partido[] = [];
-  seleccionActual: string = '';
-  loadingTema: boolean = false;
+export class HomeComponent implements OnInit{
+  // Lista de elecciones disponibles
+  elecciones: Eleccion[] = [];
+  eleccionSeleccionada: Eleccion | null = null;
 
-  // Propiedades para resultados anteriores
+  // Partidos que participan en la elección seleccionada
+  partidosParticipacion: PartidoEleccionResumen[] = [];
+
+  // Resultados anteriores
   aniosAnteriores: number[] = [2023, 2019, 2015];
-  anioSeleccionado: number = 2019;
-  resultadosActuales: Resultado[] = [];
+  anioSeleccionado: number = 2023;
+  resultadosActuales: any[] = [];
 
-  // Propiedades para eventos
+  // Eventos
   fechaEventos: string = '';
-  eventos: Evento[] = [];
+  eventos: any[] = [];
 
-  // Propiedades para mapa
-  municipioActual: string = 'Oviedo';
+  // Estado
+  loading: boolean = false;
+  municipioActual: string = '';
 
   constructor(
     private eleccionService: EleccionService,
+    private partidoService: PartidoService,
     private temaService: TemaService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.cargarOpcionesEleccion();
-    this.cargarResultados();
-    this.cargarEventos();
+    this.cargarElecciones();
   }
 
-  cargarOpcionesEleccion(): void {
-    // Cargar municipios desde el backend
-    this.eleccionService.getMunicipios().subscribe({
-      next: (municipios: Municipio[]) => {
-        const opcionesMunicipios: EleccionOption[] = municipios.map((m: Municipio) => ({
-          tipo: 'MUNICIPAL',
-          ambito: m.nombre,
-          label: `Municipales - ${m.nombre}`,
-          nivel: 'MUNICIPAL',
-          id: m.id,
-          icon: 'location_city'
-        }));
-
-        // Cargar comunidades
-        this.eleccionService.getComunidades().subscribe({
-          next: (comunidades: Comunidad[]) => {
-            const opcionesComunidades: EleccionOption[] = comunidades.map((c: Comunidad) => ({
-              tipo: 'AUTONOMICA',
-              ambito: c.nombre,
-              label: `Autonómicas - ${c.nombre}`,
-              nivel: 'AUTONOMICA',
-              id: c.id,
-              icon: 'account_balance'
-            }));
-
-            // Opciones nacionales
-            const opcionesNacionales: EleccionOption[] = [
-              { tipo: 'NACIONAL', ambito: 'España', label: 'Nacionales - España', nivel: 'NACIONAL', icon: 'public' }
-            ];
-
-            this.tiposEleccion = [...opcionesMunicipios, ...opcionesComunidades, ...opcionesNacionales];
-
-            if (this.tiposEleccion.length > 0) {
-              this.seleccionActual = `${this.tiposEleccion[0].tipo}|${this.tiposEleccion[0].ambito}`;
-              this.onEleccionChange(this.seleccionActual);
-            }
-          },
-          error: (error: any) => {
-            console.error('Error cargando comunidades:', error);
-            this.cargarOpcionesPorDefecto();
-          }
-        });
+  cargarElecciones(): void {
+    this.loading = true;
+    this.eleccionService.getElecciones().subscribe({
+      next: (elecciones) => {
+        this.elecciones = elecciones;
+        if (this.elecciones.length > 0) {
+          this.eleccionSeleccionada = this.elecciones[0];
+          this.municipioActual = this.eleccionSeleccionada.ambito;
+          this.cargarPartidosPorEleccion();
+          this.cargarTema();
+        }
+        this.loading = false;
       },
-      error: (error: any) => {
-        console.error('Error cargando municipios:', error);
-        this.cargarOpcionesPorDefecto();
+      error: (error) => {
+        console.error('Error cargando elecciones:', error);
+        this.loading = false;
       }
     });
   }
 
-  cargarOpcionesPorDefecto(): void {
-    this.tiposEleccion = [
-      { tipo: 'MUNICIPAL', ambito: 'Oviedo', label: 'Municipales - Oviedo', nivel: 'MUNICIPAL', id: 1, icon: 'location_city' },
-      { tipo: 'AUTONOMICA', ambito: 'Asturias', label: 'Autonómicas - Asturias', nivel: 'AUTONOMICA', id: 1, icon: 'account_balance' },
-      { tipo: 'NACIONAL', ambito: 'España', label: 'Nacionales - España', nivel: 'NACIONAL', icon: 'public' }
-    ];
-    this.seleccionActual = `${this.tiposEleccion[0].tipo}|${this.tiposEleccion[0].ambito}`;
-    this.onEleccionChange(this.seleccionActual);
-  }
+  onEleccionChange(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    const eleccionId = Number(select.value);
+    this.eleccionSeleccionada = this.elecciones.find(e => e.id === eleccionId) || null;
 
-  onEleccionChange(value: string): void {
-    this.seleccionActual = value;
-    const [tipo, ambito] = value.split('|');
-    const opcion = this.tiposEleccion.find(o => o.tipo === tipo && o.ambito === ambito);
-
-    this.municipioActual = ambito;
-    this.loadingTema = true;
-
-    // Cargar tema según el nivel
-    if (tipo === 'MUNICIPAL' && opcion?.id) {
-      this.temaService.cargarTemaMunicipio(opcion.id).subscribe({
-        next: () => this.loadingTema = false,
-        error: () => this.loadingTema = false
-      });
-    } else if (tipo === 'AUTONOMICA' && opcion?.id) {
-      this.temaService.cargarTemaComunidad(opcion.id).subscribe({
-        next: () => this.loadingTema = false,
-        error: () => this.loadingTema = false
-      });
-    } else if (tipo === 'NACIONAL') {
-      this.temaService.cargarTemaNacional().subscribe({
-        next: () => this.loadingTema = false,
-        error: () => this.loadingTema = false
-      });
-    } else {
-      this.loadingTema = false;
+    if (this.eleccionSeleccionada) {
+      this.municipioActual = this.eleccionSeleccionada.ambito;
+      this.cargarPartidosPorEleccion();
+      this.cargarTema();
+      this.cargarResultados();
     }
-
-    this.cargarPartidos(tipo, ambito);
-    this.cargarResultados();
   }
 
-  cargarPartidos(tipo: string, ambito: string): void {
-    this.eleccionService.getPartidosByEleccion(tipo, ambito)
-      .subscribe({
-        next: (partidos: Partido[]) => {
-          this.partidos = partidos;
-          console.log('Partidos cargados:', partidos);
-        },
-        error: (error: any) => console.error('Error cargando partidos:', error)
-      });
+  cargarPartidosPorEleccion(): void {
+    if (!this.eleccionSeleccionada) return;
+
+    this.loading = true;
+    this.partidoService.getParticipacionesPorEleccion(this.eleccionSeleccionada.id).subscribe({
+      next: (participaciones) => {
+        this.partidosParticipacion = participaciones;
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error cargando partidos:', error);
+        this.loading = false;
+      }
+    });
   }
 
-  // Métodos para resultados anteriores
-  onAnioChange(valor: string): void {
-    this.anioSeleccionado = Number(valor);
-    this.cargarResultados();
+  cargarTema(): void {
+    if (!this.eleccionSeleccionada) return;
+
+    const tipo = this.eleccionSeleccionada.tipo;
+    const ambito = this.eleccionSeleccionada.ambito;
+
+    if (tipo === 'MUNICIPAL') {
+      // Buscar el municipio por nombre (simplificado, idealmente tener ID)
+      this.temaService.cargarTemaMunicipio(1).subscribe(); // Temporal
+    } else if (tipo === 'AUTONOMICA') {
+      this.temaService.cargarTemaComunidad(1).subscribe(); // Temporal
+    } else if (tipo === 'NACIONAL') {
+      this.temaService.cargarTemaNacional().subscribe();
+    }
   }
 
   cargarResultados(): void {
+    // Datos de ejemplo según el año
     if (this.anioSeleccionado === 2023) {
       this.resultadosActuales = [
         { partido: 'PP', porcentaje: 38, votos: 42000 },
@@ -201,9 +138,15 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  // Métodos para eventos
-  onFechaChange(valor: string): void {
-    this.fechaEventos = valor;
+  onAnioChange(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    this.anioSeleccionado = Number(select.value);
+    this.cargarResultados();
+  }
+
+  onFechaChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.fechaEventos = input.value;
     this.cargarEventos();
   }
 
@@ -212,27 +155,22 @@ export class HomeComponent implements OnInit {
       this.eventos = [
         { id: 1, descripcion: 'Mitin del Partido Popular en la Plaza Mayor', fecha: this.fechaEventos },
         { id: 2, descripcion: 'Rueda de prensa del PSOE en el Hotel de la Reconquista', fecha: this.fechaEventos },
-        { id: 3, descripcion: 'Debate electoral en el Teatro Campoamor', fecha: this.fechaEventos },
-        { id: 4, descripcion: 'Jornada de puertas abiertas de Vox', fecha: this.fechaEventos }
+        { id: 3, descripcion: 'Debate electoral en el Teatro Campoamor', fecha: this.fechaEventos }
       ];
     } else {
       this.eventos = [];
     }
   }
 
-  // Métodos para botones de acción
+  verPartido(partidoEleccionId: number): void {
+    this.router.navigate(['/partido', partidoEleccionId]);
+  }
+
   verMesas(): void {
-    console.log('Ver mesas electorales');
     alert('Funcionalidad de mesas electorales - Próximamente');
   }
 
   verCenso(): void {
-    console.log('Ver censo electoral');
     alert('Funcionalidad de censo electoral - Próximamente');
-  }
-
-  // Navegación
-  verPartido(id: number): void {
-    this.router.navigate(['/partido', id]);
   }
 }

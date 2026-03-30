@@ -6,11 +6,9 @@ import { App } from './app';
 import { HomeComponent } from './home/home.component';
 
 import { PartidosGrid } from './partidos-grid/partidos-grid';
-import { PartidoDetalle } from './partido-detalle/partido-detalle';
 import { CandidatoDetalle } from './candidato-detalle/candidato-detalle';
 import { ResultadosGrafico } from './resultados-grafico/resultados-grafico';
 import { CalendarioEventos } from './calendario-eventos/calendario-eventos';
-import { MapaSedes } from './mapa-sedes/mapa-sedes';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
@@ -31,6 +29,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { PartidoDetalleComponent } from './partido-detalle/partido-detalle.component';
+import { MapaSedesComponent } from './mapa-sedes/mapa-sedes.component';
 
 
 @NgModule({
@@ -38,11 +38,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     App,
     HomeComponent,
     PartidosGrid,
-    PartidoDetalle,
     CandidatoDetalle,
     ResultadosGrafico,
     CalendarioEventos,
-    MapaSedes
+    PartidoDetalleComponent,
+    MapaSedesComponent
   ],
   imports: [
     BrowserModule,

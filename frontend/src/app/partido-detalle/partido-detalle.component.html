@@ -1,0 +1,114 @@
+<div class="partido-container" appTema [style.backgroundColor]="'var(--bg-color)'">
+  @if (loading) {
+    <div class="loading-spinner">
+      <mat-spinner [style.color]="'var(--primary-color)'"></mat-spinner>
+    </div>
+  }
+
+  @if (!loading && participacion) {
+    <!-- Cabecera con logo y enlaces -->
+    <div class="partido-header" [style.background]="'var(--header-gradient)'">
+      <button class="back-button" (click)="volverAlInicio()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div class="logo-container">
+        <img [src]="participacion.partidoLogoUrl" [alt]="participacion.partidoNombre">
+      </div>
+      <h1 [style.color]="'var(--primary-color)'">{{ participacion.partidoNombre }}</h1>
+      <p class="siglas" [style.color]="'var(--secondary-color)'">{{ participacion.partidoSiglas }}</p>
+      <div class="eleccion-info">
+        <mat-icon>how_to_vote</mat-icon>
+        <span>{{ participacion.eleccionTipo === 'MUNICIPAL' ? 'Elecciones Municipales' :
+               participacion.eleccionTipo === 'AUTONOMICA' ? 'Elecciones Autonómicas' : 'Elecciones Nacionales' }}
+               - {{ participacion.eleccionAmbito }} {{ participacion.eleccionAnio }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Enlaces rápidos -->
+    <div class="quick-links">
+      <a (click)="mostrarHistoriaCompleta = true">
+        <mat-icon>history</mat-icon>
+        <span>Historia</span>
+        <p class="resumen">{{ participacion.informacion?.historiaResumen | slice:0:80 }}...</p>
+      </a>
+      <a (click)="mostrarProgramaCompleto = true">
+        <mat-icon>description</mat-icon>
+        <span>Programa electoral</span>
+        <p class="resumen">{{ participacion.informacion?.programaResumen | slice:0:80 }}...</p>
+      </a>
+    </div>
+
+    <!-- Candidatos -->
+    <div class="candidatos-section">
+      <h2>Candidatos</h2>
+      <div class="candidatos-grid">
+        @for (candidato of candidatos; track candidato.id) {
+          <div class="candidato-card" (click)="verCandidato(candidato.id)">
+            <img [src]="candidato.fotoUrl" [alt]="candidato.nombre">
+            <h3>{{ candidato.nombre }}</h3>
+            <p>{{ candidato.cargo }}</p>
+            <span class="posicion">{{ candidato.posicionLista }}ª en la lista</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Eventos -->
+    <div class="eventos-section">
+      <h2>Eventos</h2>
+      <div class="eventos-list">
+        @for (evento of eventos; track evento.id) {
+          <div class="evento-card">
+            <div class="evento-fecha">
+              <mat-icon>event</mat-icon>
+              <span>{{ evento.fecha | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="evento-info">
+              <h3>{{ evento.titulo }}</h3>
+              <p>{{ evento.descripcion }}</p>
+              <p class="lugar"><mat-icon>place</mat-icon> {{ evento.lugar }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Mapa con sedes -->
+    <div class="mapa-section">
+      <h2>Nuestras sedes</h2>
+      <app-mapa-sedes [sedes]="sedes" [municipio]="participacion.eleccionAmbito"></app-mapa-sedes>
+    </div>
+
+    <!-- Contacto -->
+    <div class="contacto-section">
+      <h2>Contacto</h2>
+      <div class="contacto-info">
+        <p><mat-icon>email</mat-icon> {{ participacion.informacion?.emailContacto }}</p>
+        <p><mat-icon>phone</mat-icon> {{ participacion.informacion?.telefonoContacto }}</p>
+        <p><mat-icon>language</mat-icon> <a [href]="participacion.informacion?.webUrl" target="_blank">{{ participacion.informacion?.webUrl }}</a></p>
+      </div>
+    </div>
+  }
+
+  <!-- Modales para contenido completo -->
+  @if (mostrarHistoriaCompleta && participacion) {
+    <div class="modal-overlay" (click)="mostrarHistoriaCompleta = false">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <h2>Historia de {{ participacion.partidoNombre }}</h2>
+        <p>{{ participacion.informacion?.historiaCompleta }}</p>
+        <button (click)="mostrarHistoriaCompleta = false">Cerrar</button>
+      </div>
+    </div>
+  }
+
+  @if (mostrarProgramaCompleto && participacion) {
+    <div class="modal-overlay" (click)="mostrarProgramaCompleto = false">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <h2>Programa electoral de {{ participacion.partidoNombre }}</h2>
+        <p>{{ participacion.informacion?.programaCompleto }}</p>
+        <button (click)="mostrarProgramaCompleto = false">Cerrar</button>
+      </div>
+    </div>
+  }
+</div>

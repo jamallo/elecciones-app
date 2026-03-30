@@ -5,22 +5,24 @@ import { Eleccion } from '../model/eleccion.model';
 import { Partido } from '../model/partido.model';
 import { Municipio } from '../model/municipio.model';
 import { Comunidad } from '../model/comunidad.model';
+import { PartidoEleccionResumen } from '../model/partido-eleccion.model';
 
 
 @Injectable({
   providedIn: 'root',
 })
 export class EleccionService {
+
   private apiUrl = 'http://localhost:8080/api';
 
   constructor(private http: HttpClient) {}
 
-  getTiposElecciones(): Observable<Eleccion[]> {
-    return this.http.get<Eleccion[]>(`${this.apiUrl}/elecciones/tipos`);
+  getElecciones(): Observable<Eleccion[]> {
+    return this.http.get<Eleccion[]>(this.apiUrl);
   }
 
-  getPartidosByEleccion(tipo: string, ambito: string): Observable<Partido[]> {
-    return this.http.get<Partido[]>(`${this.apiUrl}/elecciones/${tipo}/${ambito}/partidos`);
+  getPartidosByEleccion(tipo: string, ambito: string): Observable<PartidoEleccionResumen[]> {
+    return this.http.get<PartidoEleccionResumen[]>(`${this.apiUrl}/elecciones/${tipo}/${ambito}/partidos`);
   }
 
   getMunicipios(): Observable<Municipio[]> {
