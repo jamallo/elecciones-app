@@ -5,12 +5,21 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class EventoDTO {
+public class EventoDetalleDTO {
     private Long id;
     private String titulo;
     private String descripcion;
     private LocalDateTime fecha;
     private String lugar;
     private String tipo;
-    private Long partidoEleccionId;
+
+    //Info. partido
+    private Long partidoId;
+    private String partidoNombre;
+    private String partidoSiglas;
+    private String partidoLogoUrl;
+
+    //Info. eleccion
+    private String eleccionTipo;
+    private String eleccionAmbito;
 }

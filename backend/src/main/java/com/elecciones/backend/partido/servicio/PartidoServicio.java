@@ -9,7 +9,13 @@ import com.elecciones.backend.partido.modelo.dto.PartidoDTO;
 import com.elecciones.backend.partido.modelo.dto.PartidoResumenDTO;
 import com.elecciones.backend.partido.modelo.entidad.InformacionPartido;
 import com.elecciones.backend.partido.modelo.entidad.Partido;
+import com.elecciones.backend.partido.repositorio.InformacionPartidoRepositorio;
 import com.elecciones.backend.partido.repositorio.PartidoRepositorio;
+import com.elecciones.backend.partidoEleccion.mapeador.PartidoEleccionMapeador;
+import com.elecciones.backend.partidoEleccion.modelo.dto.PartidoEleccionDTO;
+import com.elecciones.backend.partidoEleccion.modelo.dto.PartidoEleccionResumenDTO;
+import com.elecciones.backend.partidoEleccion.modelo.entidad.PartidoEleccion;
+import com.elecciones.backend.partidoEleccion.repositorio.PartidoEleccionRepositorio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,8 +28,13 @@ public class PartidoServicio {
 
     private final PartidoRepositorio partidoRepositorio;
     private final EleccionRepositorio eleccionRepositorio;
+    private final InformacionPartidoRepositorio informacionPartidoRepositorio;
     private final PartidoMapeador partidoMapeador;
+    private final PartidoEleccionRepositorio partidoEleccionRepositorio;
+    private final PartidoEleccionMapeador partidoEleccionMapeador;
 
+
+    //PARA PARTIDO
     @Transactional(readOnly = true)
     public List<PartidoResumenDTO> listarTodos() {
         return partidoRepositorio.findAll()
@@ -41,6 +52,88 @@ public class PartidoServicio {
         return partidoMapeador.toDTO(partido);
     }
 
+    @Transactional
+    public PartidoDTO crearPartido(PartidoDTO partidoDTO) {
+        Partido partido = partidoMapeador.toEntity(partidoDTO);
+        partido = partidoRepositorio.save(partido);
+        return partidoMapeador.toDTO(partido);
+    }
+
+    //PARA PARTICIPACIÓN (PARTIDO-ELECCIÓN)
+    @Transactional
+    public PartidoEleccionDTO crearParticipacion(PartidoEleccionDTO participacionDTO) {
+        // Buscar el partido
+        Partido partido = partidoRepositorio.findById(participacionDTO.getPartidoId())
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("Partido no encontrado con id: " + participacionDTO.getPartidoId()));
+
+        // Buscar la elección
+        Eleccion eleccion = eleccionRepositorio.findById(participacionDTO.getEleccionId())
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("Elección no encontrada con id: " + participacionDTO.getEleccionId()));
+
+        // Verificar si ya existe la relación
+        if (partidoEleccionRepositorio.findByPartidoIdAndEleccionId(partido.getId(), eleccion.getId()).isPresent()) {
+            throw new RuntimeException("El partido ya está asociado a esta elección");
+        }
+
+        // Crear la relación PartidoEleccion
+        PartidoEleccion partidoEleccion = new PartidoEleccion();
+        partidoEleccion.setPartido(partido);
+        partidoEleccion.setEleccion(eleccion);
+
+        // Si tiene información específica, guardarla
+        if (participacionDTO.getInformacion() != null) {
+            InformacionPartido informacion = partidoMapeador.toInformacionEntity(participacionDTO.getInformacion());
+            informacion.setPartidoEleccion(partidoEleccion);
+            partidoEleccion.setInformacion(informacion);
+        }
+
+        partidoEleccion = partidoEleccionRepositorio.save(partidoEleccion);
+
+        return partidoEleccionMapeador.toDTO(partidoEleccion);
+    }
+
+    @Transactional
+    public InformacionPartidoDTO actualizarInformacion(Long partidoEleccionId, InformacionPartidoDTO informacionDTO) {
+        PartidoEleccion partidoEleccion = partidoEleccionRepositorio.findById(partidoEleccionId)
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("Participación electoral no encontrada con id: " + partidoEleccionId));
+
+        InformacionPartido informacion = partidoEleccion.getInformacion();
+        if (informacion == null) {
+            informacion = new InformacionPartido();
+            informacion.setPartidoEleccion(partidoEleccion);
+        }
+
+        informacion.setHistoriaResumen(informacionDTO.getHistoriaResumen());
+        informacion.setHistoriaCompleta(informacionDTO.getHistoriaCompleta());
+        informacion.setProgramaResumen(informacionDTO.getProgramaResumen());
+        informacion.setProgramaCompleto(informacionDTO.getProgramaCompleto());
+        informacion.setEmailContacto(informacionDTO.getEmailContacto());
+        informacion.setTelefonoContacto(informacionDTO.getTelefonoContacto());
+        informacion.setWebUrl(informacionDTO.getWebUrl());
+
+        informacion = informacionPartidoRepositorio.save(informacion);
+        partidoEleccion.setInformacion(informacion);
+        partidoEleccionRepositorio.save(partidoEleccion);
+
+        return partidoMapeador.toInformacionDTO(informacion);
+    }
+
+    @Transactional(readOnly = true)
+    public InformacionPartidoDTO obtenerInformacion(Long partidoEleccionId) {
+        InformacionPartido informacion = informacionPartidoRepositorio.findByPartidoEleccionId(partidoEleccionId)
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("Información no encontrada para la participación electoral: " + partidoEleccionId));
+        return partidoMapeador.toInformacionDTO(informacion);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PartidoResumenDTO> buscarPorEleccion(Long eleccionId) {
+        return partidoEleccionRepositorio.findByEleccionId(eleccionId)
+                .stream()
+                .map(pe -> partidoMapeador.toResumenDTO(pe.getPartido()))
+                .toList();
+    }
+
+
     @Transactional(readOnly = true)
     public PartidoResumenDTO buscarResumenPorId(Long id) {
         Partido partido = partidoRepositorio.findById(id)
@@ -50,11 +143,12 @@ public class PartidoServicio {
         return partidoMapeador.toResumenDTO(partido);
     }
 
+
     @Transactional(readOnly = true)
-    public List<PartidoResumenDTO> buscarPorEleccion(Long eleccionId) {
-        return partidoRepositorio.findByEleccionId(eleccionId)
+    public List<PartidoResumenDTO> buscarPorEleccionTipoAmbito(String tipo, String ambito) {
+        return partidoEleccionRepositorio.findByEleccionTipoAndAmbito(tipo, ambito)
                 .stream()
-                .map(partidoMapeador::toResumenDTO)
+                .map(pe -> partidoMapeador.toResumenDTO(pe.getPartido()))
                 .toList();
     }
 
@@ -66,38 +160,50 @@ public class PartidoServicio {
                 .toList();
     }
 
-    @Transactional
+    /*@Transactional
     public PartidoDTO crear(PartidoDTO partidoDTO) {
+        //Buscar elección
         Eleccion eleccion = eleccionRepositorio.findById(partidoDTO.getEleccionId())
                 .orElseThrow(() ->
                         new RecursoNoEncontradoExcepcion("Elección no encontrada con id: " + partidoDTO.getEleccionId()));
 
-        Partido partido = partidoMapeador.toEntity(partidoDTO);
-        partido.setEleccion(eleccion);
+        // Buscar si el partido ya existe (por siglas)
+        Partido partido = partidoRepositorio.findBySiglas(partidoDTO.getSiglas())
+                .orElse(null);
 
-        //Si tiene información asociada
-        if (partidoDTO.getInformacion() != null) {
-            InformacionPartido informacion = partidoMapeador
-                    .toInformacionEntity(partidoDTO
-                            .getInformacion());
-            informacion.setPartido(partido);
-            partido.setInformacion(informacion);
+        //Crear partido
+        if (partido == null) {
+            // Crear nuevo partido
+            partido = partidoMapeador.toEntity(partidoDTO);
+            partido = partidoRepositorio.save(partido);
         }
 
-        partido = partidoRepositorio.save(partido);
+        // Verificar si ya existe la relación partido-elección
+        if (partidoEleccionRepositorio.findByPartidoIdAndEleccionId(
+                partido.getId(),
+                eleccion.getId()).
+                isEmpty()) {
+            //Crear relación PartidoElección
+            PartidoEleccion pe = new PartidoEleccion();
+            pe.setPartido(partido);
+            pe.setEleccion(eleccion);
+
+            //Guardar
+            partidoEleccionRepositorio.save(pe);
+        }
         return partidoMapeador.toDTO(partido);
-    }
+    }*/
 
-    @Transactional
-    public InformacionPartidoDTO actualizarInformacion(Long partidoId, InformacionPartidoDTO informacionDTO) {
-        Partido partido = partidoRepositorio.findById(partidoId)
+    /*@Transactional
+    public InformacionPartidoDTO actualizarInformacion(Long partidoEleccionId, InformacionPartidoDTO informacionDTO) {
+        PartidoEleccion partidoEleccion = partidoEleccionRepositorio.findById(partidoEleccionId)
                 .orElseThrow(() ->
-                        new RecursoNoEncontradoExcepcion("Partido no encontrado con id: " + partidoId));
+                        new RecursoNoEncontradoExcepcion("Partido no encontrado con id: " + partidoEleccionId));
 
-        InformacionPartido informacion = partido.getInformacion();
+        InformacionPartido informacion = partidoEleccion.getInformacion();
         if (informacion == null) {
             informacion = new InformacionPartido();
-            informacion.setPartido(partido);
+            informacion.setPartidoEleccion(partidoEleccion);
         }
 
         informacion.setHistoriaResumen(informacionDTO.getHistoriaResumen());
@@ -108,9 +214,26 @@ public class PartidoServicio {
         informacion.setTelefonoContacto(informacionDTO.getTelefonoContacto());
         informacion.setWebUrl(informacionDTO.getWebUrl());
 
-        partido.setInformacion(informacion);
-        partidoRepositorio.save(partido);
+        informacion = informacionPartidoRepositorio.save(informacion);
+
+        partidoEleccion.setInformacion(informacion);
+        partidoEleccionRepositorio.save(partidoEleccion);
 
         return partidoMapeador.toInformacionDTO(informacion);
+    }*/
+
+    /*@Transactional(readOnly = true)
+    public InformacionPartidoDTO obtenerInformacion(Long partidoEleccionId) {
+        InformacionPartido informacion = informacionPartidoRepositorio.findByPartidoEleccionId(partidoEleccionId)
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("Información no encontrada para la participación electoral: " + partidoEleccionId));
+        return partidoMapeador.toInformacionDTO(informacion);
+    }*/
+
+    @Transactional(readOnly = true)
+    public List<PartidoEleccionResumenDTO> listarParticipacionesPorEleccion(Long eleccionId) {
+        return partidoEleccionRepositorio.findByEleccionId(eleccionId)
+                .stream()
+                .map(partidoEleccionMapeador::toResumenDTO)
+                .toList();
     }
 }

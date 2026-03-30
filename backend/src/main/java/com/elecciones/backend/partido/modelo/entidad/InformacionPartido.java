@@ -1,19 +1,17 @@
 package com.elecciones.backend.partido.modelo.entidad;
 
+import com.elecciones.backend.partidoEleccion.modelo.entidad.PartidoEleccion;
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
+@Table(name = "informacion_partidos")
 @Data
 public class InformacionPartido {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "partido_id")
-    private Partido partido;
 
     @Column(columnDefinition = "TEXT")
     private String historiaResumen;
@@ -30,4 +28,8 @@ public class InformacionPartido {
     private String emailContacto;
     private String telefonoContacto;
     private String webUrl;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "partido_eleccion_id")
+    private PartidoEleccion partidoEleccion;
 }

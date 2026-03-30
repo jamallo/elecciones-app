@@ -15,15 +15,16 @@ public interface PartidoMapeador {
 /*    @Mapping(target = "candidatos", ignore = true)
     @Mapping(target = "eventos", ignore = true)
     @Mapping(target = "sedes", ignore = true)*/
-    @Mapping(target = "eleccionId", source = "eleccion.id")
+    //@Mapping(target = "eleccionId", source = "eleccion.id")
     PartidoDTO toDTO(Partido partido);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "eleccion", ignore = true)
+/*    @Mapping(target = "eleccion", ignore = true)
     @Mapping(target = "candidatos", ignore = true)
     @Mapping(target = "eventos", ignore = true)
     @Mapping(target = "sedes", ignore = true)
-    @Mapping(target = "informacion", ignore = true)
+    @Mapping(target = "informacion", ignore = true)*/
+    @Mapping(target = "participaciones", ignore = true)
     Partido toEntity(PartidoDTO partidoDTO);
 
     PartidoResumenDTO toResumenDTO(Partido partido);
@@ -31,6 +32,6 @@ public interface PartidoMapeador {
     InformacionPartidoDTO toInformacionDTO(InformacionPartido informacion);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "partido", ignore = true)
+    @Mapping(target = "partidoEleccion", ignore = true)
     InformacionPartido toInformacionEntity(InformacionPartidoDTO informacionDTO);
 }

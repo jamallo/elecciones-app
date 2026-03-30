@@ -9,6 +9,9 @@ import com.elecciones.backend.partido.modelo.dto.PartidoDTO;
 import com.elecciones.backend.partido.modelo.dto.PartidoResumenDTO;
 import com.elecciones.backend.partido.repositorio.PartidoRepositorio;
 import com.elecciones.backend.partido.servicio.PartidoServicio;
+import com.elecciones.backend.partidoEleccion.modelo.dto.PartidoEleccionDTO;
+import com.elecciones.backend.partidoEleccion.modelo.entidad.PartidoEleccion;
+import com.elecciones.backend.partidoEleccion.repositorio.PartidoEleccionRepositorio;
 import com.elecciones.backend.sede.modelo.entidad.Sede;
 import com.elecciones.backend.sede.repositorio.SedeRepositorio;
 import com.elecciones.backend.tema.modelo.dto.TemaDTO;
@@ -29,10 +32,12 @@ import java.util.List;
 public class PartidoControlador {
 
     private final PartidoServicio partidoServicio;
+    private final PartidoEleccionRepositorio partidoEleccionRepositorio;
     private final CandidatoRepositorio candidatoRepositorio;
     private final EventoRepositorio eventoRepositorio;
     private final SedeRepositorio sedeRepositorio;
 
+    //Para partidos
     @GetMapping
     @Operation(summary = "Listar todos los partidos")
     public ResponseEntity<List<PartidoResumenDTO>> listarTodos() {
@@ -45,10 +50,17 @@ public class PartidoControlador {
         return ResponseEntity.ok(partidoServicio.buscarPorId(id));
     }
 
-    @GetMapping("/{id}/resumen")
-    @Operation(summary = "Obtener resumen del partido")
-    public ResponseEntity<PartidoResumenDTO> obtenerResumen(@PathVariable Long id) {
-        return ResponseEntity.ok(partidoServicio.buscarResumenPorId(id));
+    @PostMapping
+    @Operation(summary = "Crear nuevo partido")
+    public ResponseEntity<PartidoDTO> crearPartido(@RequestBody PartidoDTO partidoDTO) {
+        return new ResponseEntity<>(partidoServicio.crearPartido(partidoDTO), HttpStatus.CREATED);
+    }
+
+    //Para participación (Partido-elección)
+    @PostMapping("/participacion")
+    @Operation(summary = "Asociar un partido a una elección con información específica")
+    public ResponseEntity<PartidoEleccionDTO> crearParticipacion(@RequestBody PartidoEleccionDTO participacionDTO) {
+        return new ResponseEntity<>(partidoServicio.crearParticipacion(participacionDTO), HttpStatus.CREATED);
     }
 
     @GetMapping("/eleccion/{eleccionId}")
@@ -57,49 +69,34 @@ public class PartidoControlador {
         return ResponseEntity.ok(partidoServicio.buscarPorEleccion(eleccionId));
     }
 
-    @GetMapping("/buscar")
-    @Operation(summary = "Buscar partidos por nombre")
-    public ResponseEntity<List<PartidoResumenDTO>> buscarPorNombre(@RequestParam String nombre) {
-        return ResponseEntity.ok(partidoServicio.buscarPorNombre(nombre));
+    @GetMapping("/eleccion/{tipo}/{ambito}")
+    @Operation(summary = "Listar partidos por tipo y ámbito de elección")
+    public ResponseEntity<List<PartidoResumenDTO>> listarPorEleccionTipoAmbito(
+            @PathVariable String tipo,
+            @PathVariable String ambito) {
+        return ResponseEntity.ok(partidoServicio.buscarPorEleccionTipoAmbito(tipo, ambito));
     }
 
-    @GetMapping("/{id}/candidatos")
-    @Operation(summary = "Obtener candidatos de un partido")
-    public ResponseEntity<List<Candidato>> obtenerCandidato(@PathVariable Long id) {
-        return ResponseEntity.ok(candidatoRepositorio.findByPartidoIdOrderByPosicionListaAsc(id));
-    }
-
-    @GetMapping("/{id}/eventos")
-    @Operation(summary = "Obtener eventos de un partido")
-    public ResponseEntity<List<Evento>> obtenerEventos(@PathVariable Long id) {
-        return ResponseEntity.ok(eventoRepositorio.findByPartidoIdOrderByFechaAsc(id));
-    }
-
-    @GetMapping("/{id}/sedes")
-    @Operation(summary = "Obtener sedes de un partido")
-    public ResponseEntity<List<Sede>> obtenerSedes(@PathVariable Long id) {
-        return ResponseEntity.ok(sedeRepositorio.findByPartidoIdAndTipo(id, "SEDE_PARTIDO"));
-    }
-
-    @GetMapping("/{id}/información")
-    @Operation(summary = "Obtener información detallada de un partido")
-    public ResponseEntity<InformacionPartidoDTO> obtenerInformacion(@PathVariable Long id) {
-        PartidoDTO partido = partidoServicio.buscarPorId(id);
-        return ResponseEntity.ok(partido.getInformacion());
-    }
-
-    @PostMapping
-    @Operation(summary = "Crear nuevo partido")
-    public ResponseEntity<PartidoDTO> crear(@RequestBody PartidoDTO partidoDTO) {
-        return new ResponseEntity<>(partidoServicio.crear(partidoDTO), HttpStatus.CREATED);
+        // Obtener información de un partido para una elección específica
+    @GetMapping("/participacion/{partidoEleccionId}/informacion")
+    @Operation(summary = "Obtener información detallada de un partido para una elección específica")
+    public ResponseEntity<InformacionPartidoDTO> obtenerInformacionPorParticipacion(
+            @PathVariable Long partidoEleccionId) {
+        return ResponseEntity.ok(partidoServicio.obtenerInformacion(partidoEleccionId));
     }
 
     @PutMapping("/{id}/información")
     @Operation(summary = "Actualizar información de un partido")
     public ResponseEntity<InformacionPartidoDTO> actualizarInformacion(
-            @PathVariable Long id,
+            @PathVariable Long partidoEleccionid,
             @RequestBody InformacionPartidoDTO informacionDTO) {
-        return ResponseEntity.ok(partidoServicio.actualizarInformacion(id, informacionDTO));
+        return ResponseEntity.ok(partidoServicio.actualizarInformacion(partidoEleccionid, informacionDTO));
+    }
+
+    @GetMapping("/buscar")
+    @Operation(summary = "Buscar partidos por nombre")
+    public ResponseEntity<List<PartidoResumenDTO>> buscarPorNombre(@RequestParam String nombre) {
+        return ResponseEntity.ok(partidoServicio.buscarPorNombre(nombre));
     }
 
     @GetMapping("/{id}/tema")
@@ -118,6 +115,91 @@ public class PartidoControlador {
 
         return ResponseEntity.ok(tema);
     }
+
+    @GetMapping("/{id}/resumen")
+    @Operation(summary = "Obtener resumen del partido")
+    public ResponseEntity<PartidoResumenDTO> obtenerResumen(@PathVariable Long id) {
+        return ResponseEntity.ok(partidoServicio.buscarResumenPorId(id));
+    }
+
+
+
+
+    /*@GetMapping("/{id}/candidatos")
+    @Operation(summary = "Obtener candidatos de un partido")
+    public ResponseEntity<List<Candidato>> obtenerCandidato(@PathVariable Long id) {
+        return ResponseEntity.ok(candidatoRepositorio.findByPartidoIdOrderByPosicionListaAsc(id));
+    }*/
+
+    // Obtener candidatos de un partido para una elección específica
+    @GetMapping("/{partidoId}/eleccion/{eleccionId}/candidatos")
+    @Operation(summary = "Obtener candidatos de un partido para una elección específica")
+    public ResponseEntity<List<Candidato>> obtenerCandidatosPorPartidoYEleccion(
+            @PathVariable Long partidoId,
+            @PathVariable Long eleccionId) {
+        PartidoEleccion partidoEleccion = partidoEleccionRepositorio
+                .findByPartidoIdAndEleccionId(partidoId, eleccionId)
+                .orElseThrow(() -> new RuntimeException("Participación electoral no encontrada"));
+        return ResponseEntity.ok(candidatoRepositorio.findByPartidoEleccionIdOrderByPosicionListaAsc(partidoEleccion.getId()));
+    }
+
+    @GetMapping("/{id}/eventos")
+    @Operation(summary = "Obtener eventos de un partido")
+    public ResponseEntity<List<Evento>> obtenerEventos(@PathVariable Long id) {
+        return ResponseEntity.ok(eventoRepositorio.findByPartidoEleccionIdOrderByFechaAsc(id));
+    }
+
+    // Obtener eventos de un partido para una elección específica
+    @GetMapping("/{partidoId}/eleccion/{eleccionId}/eventos")
+    @Operation(summary = "Obtener eventos de un partido para una elección específica")
+    public ResponseEntity<List<Evento>> obtenerEventosPorPartidoYEleccion(
+            @PathVariable Long partidoId,
+            @PathVariable Long eleccionId) {
+        PartidoEleccion partidoEleccion = partidoEleccionRepositorio
+                .findByPartidoIdAndEleccionId(partidoId, eleccionId)
+                .orElseThrow(() -> new RuntimeException("Participación electoral no encontrada"));
+        return ResponseEntity.ok(eventoRepositorio.findByPartidoEleccionIdOrderByFechaAsc(partidoEleccion.getId()));
+    }
+
+    @GetMapping("/{id}/sedes")
+    @Operation(summary = "Obtener sedes de un partido")
+    public ResponseEntity<List<Sede>> obtenerSedes(@PathVariable Long id) {
+        return ResponseEntity.ok(sedeRepositorio.findByPartidoEleccionIdAndTipo(id, "SEDE_PARTIDO"));
+    }
+
+    // Obtener sedes de un partido para una elección específica
+    @GetMapping("/{partidoId}/eleccion/{eleccionId}/sedes")
+    @Operation(summary = "Obtener sedes de un partido para una elección específica")
+    public ResponseEntity<List<Sede>> obtenerSedesPorPartidoYEleccion(
+            @PathVariable Long partidoId,
+            @PathVariable Long eleccionId) {
+        PartidoEleccion partidoEleccion = partidoEleccionRepositorio
+                .findByPartidoIdAndEleccionId(partidoId, eleccionId)
+                .orElseThrow(() -> new RuntimeException("Participación electoral no encontrada"));
+        return ResponseEntity.ok(sedeRepositorio.findByPartidoEleccionIdAndTipo(partidoEleccion.getId(), "SEDE_PARTIDO"));
+    }
+
+    /*@GetMapping("/{id}/información")
+    @Operation(summary = "Obtener información detallada de un partido")
+    public ResponseEntity<InformacionPartidoDTO> obtenerInformacion(@PathVariable Long id) {
+        PartidoDTO partido = partidoServicio.buscarPorId(id);
+        return ResponseEntity.ok(partido.getInformacion());
+    }*/
+
+    // Obtener información de un partido para una elección específica
+    @GetMapping("/{partidoId}/eleccion/{eleccionId}/informacion")
+    @Operation(summary = "Obtener información detallada de un partido para una elección específica")
+    public ResponseEntity<InformacionPartidoDTO> obtenerInformacionPorPartidoYEleccion(
+            @PathVariable Long partidoId,
+            @PathVariable Long eleccionId) {
+        PartidoEleccion partidoEleccion = partidoEleccionRepositorio
+                .findByPartidoIdAndEleccionId(partidoId, eleccionId)
+                .orElseThrow(() -> new RuntimeException("Participación electoral no encontrada"));
+        return ResponseEntity.ok(partidoServicio.actualizarInformacion(partidoEleccion.getId(), null));
+        // TODO: crear método getInformacion
+    }
+
+
 
 
 

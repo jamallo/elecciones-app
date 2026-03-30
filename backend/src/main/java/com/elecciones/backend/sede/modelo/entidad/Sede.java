@@ -1,10 +1,13 @@
 package com.elecciones.backend.sede.modelo.entidad;
 
+import com.elecciones.backend.eleccion.modelo.entidad.Eleccion;
 import com.elecciones.backend.partido.modelo.entidad.Partido;
+import com.elecciones.backend.partidoEleccion.modelo.entidad.PartidoEleccion;
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
+@Table(name = "sedes")
 @Data
 public class Sede {
 
@@ -18,7 +21,7 @@ public class Sede {
     private String tipo; //SEDE_PARTIDO, COLEGIO_ELECTORAL, RECINTO_ELECTORAL
     private String municipio;
 
-    @ManyToOne
-    @JoinColumn(name = "partido_id")
-    private Partido partido;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "partido_eleccion_id")
+    private PartidoEleccion partidoEleccion;
 }

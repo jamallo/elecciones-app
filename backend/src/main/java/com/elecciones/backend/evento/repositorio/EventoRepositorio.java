@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface EventoRepositorio extends JpaRepository<Evento, Long> {
-    List<Evento> findByPartidoIdOrderByFechaAsc(Long partidoId);
+    //List<Evento> findByPartidoIdOrderByFechaAsc(Long partidoId);
+    List<Evento> findByPartidoEleccionIdOrderByFechaAsc(Long partidoEleccionId);
     List<Evento> findByFechaBetween(LocalDateTime inicio, LocalDateTime fin);
 }

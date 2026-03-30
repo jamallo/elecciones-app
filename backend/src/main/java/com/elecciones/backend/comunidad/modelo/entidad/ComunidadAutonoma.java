@@ -20,7 +20,7 @@ public class ComunidadAutonoma {
     private String nombre;
 
     private String capital;
-    private Integer pobracion;
+    private Integer poblacion;
 
     //Colores personalizados para la comunidad
     private String colorPrimario;

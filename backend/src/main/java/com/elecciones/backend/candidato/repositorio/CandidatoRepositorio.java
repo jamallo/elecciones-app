@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CandidatoRepositorio extends JpaRepository<Candidato, Long> {
-    List<Candidato> findByPartidoIdOrderByPosicionListaAsc(Long partidoId);
+    List<Candidato> findByPartidoEleccionIdOrderByPosicionListaAsc(Long partidoEleccionId);
 }

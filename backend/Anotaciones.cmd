@@ -11,7 +11,8 @@ src/main/java/com/elecciones/backend/
 ├── config/                          # Configuración global
 │   ├── CorsConfig.java [x] *****
 │   ├── SwaggerConfig.java [x] *****
-│   └── SeguridadConfig.java
+│   ├── CargadorDatosIniciales.java [x] *****
+│   └── SeguridadConfig.java [x] *****
 │
 ├── excepcion/                        # Manejo de errores
 │   ├── RecursoNoEncontradoExcepcion.java [x] *****
@@ -79,49 +80,50 @@ src/main/java/com/elecciones/backend/
 │   ├── controlador/
 │   │   └── CandidatoControlador.java
 │   ├── servicio/
-│   │   └── CandidatoServicio.java
+│   │   └── CandidatoServicio.java [x] *****
 │   ├── repositorio/
 │   │   └── CandidatoRepositorio.java [x] *****
 │   ├── modelo/
 │   │   ├── entidad/
 │   │   │   └── Candidato.java [x] *****
 │   │   └── dto/
-│   │       ├── CandidatoDTO.java
-│   │       └── CandidatoDetalleDTO.java
+│   │       ├── CandidatoDTO.java [x] *****
+│   │       └── CandidatoDetalleDTO.java [x] *****
 │   └── mapeador/
-│       └── CandidatoMapeador.java
+│       └── CandidatoMapeador.java [x] *****
 │
 ├── evento/                           # Módulo evento
 │   ├── controlador/
 │   │   └── EventoControlador.java
 │   ├── servicio/
-│   │   └── EventoServicio.java
+│   │   └── EventoServicio.java [x] *****
 │   ├── repositorio/
 │   │   └── EventoRepositorio.java [x] *****
 │   ├── modelo/
 │   │   ├── entidad/
 │   │   │   └── Evento.java [x] *****
 │   │   └── dto/
-│   │       ├── EventoDTO.java
+│   │       ├── EventoDTO.java [x] *****
+│   │       ├── EventoDetalleDTO.java [x] *****
 │   │       └── EventoCalendarioDTO.java
 │   └── mapeador/
-│       └── EventoMapeador.java
+│       └── EventoMapeador.java [x] *****
 │
 ├── sede/                             # Módulo sede (incluye colegios electorales)
 │   ├── controlador/
 │   │   └── SedeControlador.java
 │   ├── servicio/
-│   │   └── SedeServicio.java
+│   │   └── SedeServicio.java [x] *****
 │   ├── repositorio/
 │   │   └── SedeRepositorio.java [x] *****
 │   ├── modelo/
 │   │   ├── entidad/
 │   │   │   └── Sede.java [x] *****
 │   │   └── dto/
-│   │       ├── SedeDTO.java
-│   │       └── SedeMapaDTO.java
+│   │       ├── SedeDTO.java [x] *****
+│   │       └── SedeMapaDTO.java [x] *****
 │   └── mapeador/
-│       └── SedeMapeador.java
+│       └── SedeMapeador.java [x] *****
 │
 ├── resultado/                        # Módulo resultados electorales
 │   ├── controlador/
@@ -138,6 +140,30 @@ src/main/java/com/elecciones/backend/
 │   │       └── GraficoResultadoDTO.java
 │   └── mapeador/
 │       └── ResultadoMapeador.java
+│
+├── comunidad/                        # Módulo comunidad Autónoma
+│   ├── controlador/
+│   │   └── ComunidadControlador.java
+│   ├── servicio/
+│   │   └── ComunidadServicio.java [x] *****
+│   ├── repositorio/
+│   │   └── ComunidadRepositorio.java [x] *****
+│   ├── modelo/
+│   │   ├── entidad/
+│   │   │   └── ComunidadAutonoma.java [x] *****
+│   │   └── dto/
+│   │       └──  ComunidadDTO.java [x] *****
+│   └── mapeador/
+│       └── ComunidadMapeador.java [x] *****
+│
+├── nacional/                        # Módulo nacional (España)
+│   └── controlador/
+│       └── NacionalControlador.java
+│
+├── tema/                        # Módulo tema (colores)
+│   └── modelo/
+│       └── dto/
+│           └── TemaControlador.java
 │
 └── censo/                            # Módulo censo electoral
     ├── controlador/
@@ -219,14 +245,20 @@ frontend/src/app/
 ├── calendario-eventos/
 ├── mapa-sedes/
 ├── services/
-│   ├── eleccion.ts [x] *****
-│   ├── partido.ts [x] *****
-│   ├── sede.ts [x] *****
-│   └── evento.ts
+│   ├── candidato.service.ts [x] *****
+│   ├── eleccion.service.ts [x] *****
+│   ├── partido.service.ts [x] *****
+│   ├── sede.service.ts [x] *****
+│   └── evento.service.ts [x] *****
 ├── models/
-│   ├── partido.ts [x] *****
-│   ├── eleccion.ts [x] *****
-│   └── candidato.ts
+│   ├── candidato.model.ts [x] *****
+│   ├── comunidad.model.ts [x] *****
+│   ├── eleccion.model.ts [x] *****
+│   ├── evento.model.ts [x] *****
+│   ├── municipio.model.ts [x] *****
+│   ├── partido-eleccion.model.ts [x] *****
+│   ├── partido.model.ts [x] *****
+│   └── sede.model.ts [x] *****
 └── shared/
     └── constants.ts
 

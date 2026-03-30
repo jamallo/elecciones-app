@@ -12,6 +12,6 @@ public class PartidoDTO {
     private String colorSecundario;
     private String colorAcento;
     private String colorFondo;
-    private Long eleccionId;
-    private InformacionPartidoDTO informacion;
+    //private Long eleccionId;
+    //private InformacionPartidoDTO informacion;
 }

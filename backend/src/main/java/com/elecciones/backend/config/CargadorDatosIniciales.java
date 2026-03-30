@@ -10,7 +10,10 @@ import com.elecciones.backend.municipio.modelo.entidad.Municipio;
 import com.elecciones.backend.municipio.repositorio.MunicipioRepositorio;
 import com.elecciones.backend.partido.modelo.entidad.InformacionPartido;
 import com.elecciones.backend.partido.modelo.entidad.Partido;
+import com.elecciones.backend.partido.repositorio.InformacionPartidoRepositorio;
 import com.elecciones.backend.partido.repositorio.PartidoRepositorio;
+import com.elecciones.backend.partidoEleccion.modelo.entidad.PartidoEleccion;
+import com.elecciones.backend.partidoEleccion.repositorio.PartidoEleccionRepositorio;
 import com.elecciones.backend.resultado.modelo.entidad.ResultadoAnterior;
 import com.elecciones.backend.resultado.repositorio.ResultadoRepositorio;
 import com.elecciones.backend.sede.modelo.entidad.Sede;
@@ -33,6 +36,8 @@ public class CargadorDatosIniciales implements CommandLineRunner {
     private final MunicipioRepositorio municipioRepositorio;
     private final EleccionRepositorio eleccionRepositorio;
     private final PartidoRepositorio partidoRepositorio;
+    private final PartidoEleccionRepositorio partidoEleccionRepositorio;
+    private final InformacionPartidoRepositorio informacionPartidoRepositorio;
     private final CandidatoRepositorio candidatoRepositorio;
     private final EventoRepositorio eventoRepositorio;
     private final SedeRepositorio sedeRepositorio;
@@ -86,11 +91,88 @@ public class CargadorDatosIniciales implements CommandLineRunner {
 
         System.out.println("Elecciones creadas");
 
-        // PARTIDOS PARA OVIEDO
-        List<Partido> partidosOviedo = crearPartidosMunicipales(municipal);
-        partidoRepositorio.saveAll(partidosOviedo);
+        // PARTIDOS
 
-        //PARTIDOS PARA ASTURIAS
+        Partido pp = new Partido();
+        pp.setNombre("Partido Popular");
+        pp.setSiglas("PP");
+        pp.setLogoUrl("/assets/partidos/pp.png");
+        pp.setColorPrimario("#1E88E5");
+        pp.setColorSecundario("#0D47A1");
+        pp.setColorAcento("#42A5F5");
+        pp.setColorFondo("#E3F2FD");
+        partidoRepositorio.save(pp);
+
+        Partido psoe = new Partido();
+        psoe.setNombre("Partido Socialista Obrero Español");
+        psoe.setSiglas("PSOE");
+        psoe.setLogoUrl("/assets/partidos/psoe.png");
+        psoe.setColorPrimario("#E63946");
+        psoe.setColorSecundario("#C1121F");
+        psoe.setColorAcento("#FF6B6B");
+        psoe.setColorFondo("#FFEBEE");
+        partidoRepositorio.save(psoe);
+
+        Partido vox = new Partido();
+        vox.setNombre("Vox");
+        vox.setSiglas("VOX");
+        vox.setLogoUrl("/assets/partidos/vox.png");
+        vox.setColorPrimario("#2E7D32");
+        vox.setColorSecundario("#1B5E20");
+        vox.setColorAcento("#66BB6A");
+        vox.setColorFondo("#E8F5E9");
+        partidoRepositorio.save(vox);
+
+        Partido sumar = new Partido();
+        sumar.setNombre("Sumar");
+        sumar.setSiglas("SUMAR");
+        sumar.setLogoUrl("/assets/partidos/sumar.png");
+        sumar.setColorPrimario("#FF9800");
+        sumar.setColorSecundario("#E65100");
+        sumar.setColorAcento("#FFB74D");
+        sumar.setColorFondo("#FFF3E0");
+        partidoRepositorio.save(sumar);
+
+        System.out.println("Partidos base creados");
+
+        // PARTIDOS-ELECCIÓN PARA OVIEDO
+        PartidoEleccion ppOviedo = new PartidoEleccion();
+        ppOviedo.setPartido(pp);
+        ppOviedo.setEleccion(municipal);
+        partidoEleccionRepositorio.save(ppOviedo);
+
+        PartidoEleccion psoeOviedo = new PartidoEleccion();
+        psoeOviedo.setPartido(psoe);
+        psoeOviedo.setEleccion(municipal);
+        partidoEleccionRepositorio.save(psoeOviedo);
+
+        PartidoEleccion voxOviedo = new PartidoEleccion();
+        voxOviedo.setPartido(vox);
+        voxOviedo.setEleccion(municipal);
+        partidoEleccionRepositorio.save(voxOviedo);
+
+        PartidoEleccion sumarOviedo = new PartidoEleccion();
+        sumarOviedo.setPartido(sumar);
+        sumarOviedo.setEleccion(municipal);
+        partidoEleccionRepositorio.save(sumarOviedo);
+
+        System.out.println("Relaciones partido-elección creadas");
+
+        //INFORMACIÓN ESPECÍFICA POR ELECCIÓN
+        InformacionPartido infoPpOviedo = new InformacionPartido();
+        infoPpOviedo.setHistoriaResumen("Partido Popular en Oviedo. Centro-derecha.");
+        infoPpOviedo.setHistoriaCompleta("Historia completa del PP en Oviedo...");
+        infoPpOviedo.setProgramaResumen("Programa para Oviedo: empleo, infraestructuras, bajada de impuestos.");
+        infoPpOviedo.setProgramaCompleto("Programa completo para Oviedo...");
+        infoPpOviedo.setEmailContacto("oviedo@pp.es");
+        infoPpOviedo.setTelefonoContacto("985123456");
+        infoPpOviedo.setWebUrl("https://www.pp.es/oviedo");
+        infoPpOviedo.setPartidoEleccion(ppOviedo);
+        informacionPartidoRepositorio.save(infoPpOviedo);
+        ppOviedo.setInformacion(infoPpOviedo);
+        partidoEleccionRepositorio.save(ppOviedo);
+
+        /*//PARTIDOS PARA ASTURIAS
         List<Partido> partidosAsturias = crearPartidosAutonomicas(autonomica);
         partidoRepositorio.saveAll(partidosAsturias);
 
@@ -98,32 +180,79 @@ public class CargadorDatosIniciales implements CommandLineRunner {
         List<Partido> partidoEspania = crearPartidosNacionales(nacional);
         partidoRepositorio.saveAll(partidoEspania);
 
-        System.out.println("Partidos creados");
+        System.out.println("Partidos creados");*/
 
         //CANDIDATOS
-        List<Candidato> candidatos = crearCandidatos(partidosOviedo);
-        candidatoRepositorio.saveAll(candidatos);
+        Candidato cabezaPp = new Candidato();
+        cabezaPp.setNombre("Alfonso González");
+        cabezaPp.setCargo("Cabeza de lista");
+        cabezaPp.setFotoUrl("/assets/candidatos/pp-cabeza.png");
+        cabezaPp.setBiografia("Experiencia política y profesional destacada.");
+        cabezaPp.setPosicionLista(1);
+        cabezaPp.setPartidoEleccion(ppOviedo);
+        candidatoRepositorio.save(cabezaPp);
+
+        Candidato numero2Pp = new Candidato();
+        numero2Pp.setNombre("Elena López");
+        numero2Pp.setCargo("Número 2");
+        numero2Pp.setFotoUrl("/assets/candidatos/pp-numero2.png");
+        numero2Pp.setBiografia("Comprometida con los valores del partido.");
+        numero2Pp.setPosicionLista(2);
+        numero2Pp.setPartidoEleccion(ppOviedo);
+        candidatoRepositorio.save(numero2Pp);
+
         System.out.println("Candidatos creados");
 
         //EVENTOS
-        List<Evento> eventos = crearEventos(partidosOviedo);
-        eventoRepositorio.saveAll(eventos);
+        Evento mitinPp = new Evento();
+        mitinPp.setTitulo("Mitin electoral del Partido Popular");
+        mitinPp.setDescripcion("Presentación de propuestas y encuentro con ciudadanos.");
+        mitinPp.setFecha(LocalDateTime.now().plusDays(15));
+        mitinPp.setLugar("Plaza Mayor, Oviedo");
+        mitinPp.setTipo("MITIN");
+        mitinPp.setPartidoEleccion(ppOviedo);
+        eventoRepositorio.save(mitinPp);
+
         System.out.println("Eventos creados");
 
         //SEDES
-        List<Sede> sedes = crearSedes(oviedo, partidosOviedo);
-        sedeRepositorio.saveAll(sedes);
+        Sede sedePp = new Sede();
+        sedePp.setNombre("Sede del Partido Popular en Oviedo");
+        sedePp.setDireccion("Calle Uría 12, Oviedo");
+        sedePp.setLatitud(43.3625);
+        sedePp.setLongitud(-5.8480);
+        sedePp.setTipo("SEDE_PARTIDO");
+        sedePp.setMunicipio("Oviedo");
+        sedePp.setPartidoEleccion(ppOviedo);
+        sedeRepositorio.save(sedePp);
+
+        //COLEGIOS ELECTORALES
+        Sede colegio1 = new Sede();
+        colegio1.setNombre("C.P. La Corredoria");
+        colegio1.setDireccion("Calle de los Prados, Oviedo");
+        colegio1.setLatitud(43.3720);
+        colegio1.setLongitud(-5.8380);
+        colegio1.setTipo("COLEGIO_ELECTORAL");
+        colegio1.setMunicipio("Oviedo");
+        sedeRepositorio.save(colegio1);
+
         System.out.println("Sedes creadas");
 
         // RESULTADOS ANTERIORES
-        List<ResultadoAnterior> resultados = crearResultadosAnteriores(municipal);
-        resultadoRepositorio.saveAll(resultados);
-        System.out.println("Resultados anteriores creados");
+        ResultadoAnterior resultado2019 = new ResultadoAnterior();
+        resultado2019.setAnio(2019);
+        resultado2019.setPartidoNombre("PP");
+        resultado2019.setVotos(35000);
+        resultado2019.setPorcentaje(32.5);
+        resultado2019.setConcejales(12);
+        resultado2019.setEleccion(municipal);
+        resultadoRepositorio.save(resultado2019);
 
+        System.out.println("Resultados anteriores creados");
         System.out.println("Datos iniciales cargados correctamente!");
     }
 
-    private List<Partido> crearPartidosMunicipales(Eleccion eleccion) {
+    /*private List<Partido> crearPartidosMunicipales(Eleccion eleccion) {
         return Arrays.asList(
                 crearPartido("Partido Popular",
                         "PP",
@@ -478,5 +607,5 @@ public class CargadorDatosIniciales implements CommandLineRunner {
         resultado.setEleccion(eleccion);
 
         return resultado;
-    }
+    }*/
 }

@@ -8,5 +8,6 @@ public class PartidoResumenDTO {
     private String nombre;
     private String siglas;
     private String logoUrl;
-    private String color;
+    private String colorPrimario;
+    private String colorSecundario;
 }
