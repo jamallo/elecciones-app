@@ -21,3 +21,6 @@ cors:
 logging:
   level:
     com.elecciones: DEBUG
+
+jwt:
+  expiration: 36000000
