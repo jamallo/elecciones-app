@@ -1,0 +1,38 @@
+<div class="eventos-container">
+  @if (loading) {
+    <div class="loading-spinner">
+      <mat-spinner diameter="30"></mat-spinner>
+    </div>
+  }
+
+  @if (!loading && eventos.length === 0) {
+    <div class="no-eventos">
+      <mat-icon>event_busy</mat-icon>
+      <p>No hay eventos programados para esta fecha</p>
+    </div>
+  }
+
+  @for (evento of eventos; track evento.id) {
+    <div class="evento-card" [style.borderLeftColor]="getColorPartido(evento.partidoSiglas)">
+      <div class="evento-fecha">
+        <span class="dia">{{ evento.fecha | date:'dd' }}</span>
+        <span class="mes">{{ evento.fecha | date:'MMM' }}</span>
+      </div>
+      <div class="evento-contenido">
+        <h4>{{ evento.titulo }}</h4>
+        <p>{{ evento.descripcion }}</p>
+        <div class="evento-metadata">
+          <span class="lugar">
+            <mat-icon>place</mat-icon>
+            {{ evento.lugar }}
+          </span>
+          @if (evento.partidoSiglas) {
+            <span class="partido" [style.backgroundColor]="getColorPartido(evento.partidoSiglas)">
+              {{ evento.partidoSiglas }}
+            </span>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

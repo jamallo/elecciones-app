@@ -2,18 +2,39 @@
   <mat-icon class="logo-icon">how_to_vote</mat-icon>
   <span class="toolbar-title">Elecciones 2027</span>
   <span class="spacer"></span>
-  <button mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+
+  <button mat-button routerLink="/" routerLinkActive="active">
     <mat-icon>home</mat-icon>
     Inicio
   </button>
-  <button mat-button>
-    <mat-icon>info</mat-icon>
-    Información
-  </button>
-  <button mat-button>
-    <mat-icon>contact_mail</mat-icon>
-    Contacto
-  </button>
+
+  @if ((authService.currentUser$ | async); as user) {
+    <button mat-button [matMenuTriggerFor]="menu">
+      <mat-icon>account_circle</mat-icon>
+      {{ user.nombre }}
+    </button>
+    <mat-menu #menu="matMenu">
+      @if (user.rol !== 'USUARIO') {
+        <button mat-menu-item routerLink="/admin">
+          <mat-icon>admin_panel_settings</mat-icon>
+          Panel de administración
+        </button>
+      }
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Cerrar sesión
+      </button>
+    </mat-menu>
+  } @else {
+    <button mat-button routerLink="/login">
+      <mat-icon>login</mat-icon>
+      Iniciar sesión
+    </button>
+    <button mat-button routerLink="/registro">
+      <mat-icon>person_add</mat-icon>
+      Registrarse
+    </button>
+  }
 </mat-toolbar>
 
 <router-outlet></router-outlet>

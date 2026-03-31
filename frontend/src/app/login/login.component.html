@@ -1,0 +1,43 @@
+<div class="login-container">
+  <mat-card class="login-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>how_to_vote</mat-icon>
+        Iniciar sesión
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" [(ngModel)]="credentials.email" name="email" required>
+          <mat-icon matSuffix>email</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Contraseña</mat-label>
+          <input matInput type="password" [(ngModel)]="credentials.password" name="password" required>
+          <mat-icon matSuffix>lock</mat-icon>
+        </mat-form-field>
+
+        <div *ngIf="error" class="error-message">
+          <mat-icon>error</mat-icon>
+          {{ error }}
+        </div>
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid || loading" class="full-width">
+          <mat-icon *ngIf="!loading">login</mat-icon>
+          <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+          {{ loading ? 'Iniciando...' : 'Iniciar sesión' }}
+        </button>
+      </form>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-button routerLink="/registro">
+        ¿No tienes cuenta? Regístrate
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
