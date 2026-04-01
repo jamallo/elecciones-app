@@ -1,129 +1,131 @@
-<div class="home-container" appTema>
-  <!-- BARRA SUPERIOR -->
-  <div class="top-bar" [style.background]="'var(--header-gradient)'">
-    <div class="logo"></div>
-    <div class="buscador" [style.borderColor]="'var(--primary-color)'">
-      <mat-icon [style.color]="'var(--primary-color)'">search</mat-icon>
-      <input type="text" placeholder="Buscar partido...">
+<div class="home-container">
+  <!-- HERO SECTION DORADO METÁLICO -->
+  <div class="hero-section metallic-bg">
+    <div class="hero-content">
+      <mat-icon class="hero-icon">how_to_vote</mat-icon>
+      <h1>Elecciones 2027</h1>
+      <p>Información electoral transparente y accesible para todos los ciudadanos</p>
     </div>
   </div>
 
-  <!-- Selector de elecciones -->
-  <div class="selector-elecciones">
-    <select (change)="onEleccionChange($event)" [value]="eleccionSeleccionada?.id">
-      @for (eleccion of elecciones; track eleccion.id) {
-        <option [value]="eleccion.id">
-          {{ eleccion.tipo === 'MUNICIPAL' ? 'Municipales - ' :
-             eleccion.tipo === 'AUTONOMICA' ? 'Autonómicas - ' : 'Nacionales - ' }}
-          {{ eleccion.ambito }} ({{ eleccion.anio }})
-        </option>
-      }
-    </select>
-  </div>
+  <div class="container">
+    <!-- SELECTOR JERÁRQUICO -->
+    <div class="selector-jerarquico">
+      <div class="niveles">
+        @for (nivel of niveles; track nivel.tipo) {
+          <button
+            class="nivel-btn"
+            [class.active]="nivelSeleccionado === nivel.tipo"
+            (click)="onNivelChange(nivel.tipo)">
+            <mat-icon>{{ nivel.icon }}</mat-icon>
+            <span>{{ nivel.nombre }}</span>
+          </button>
+        }
+      </div>
 
-  <!-- GRID DE PARTIDOS -->
-  <div class="partidos-grid-section">
-    <div class="grid">
-      @for (participacion of partidosParticipacion; track participacion.id) {
-        <div class="partido-item" (click)="verPartido(participacion.id)">
-          <div class="logo-wrapper" [style.borderColor]="participacion.partidoColorPrimario">
-            <img [src]="participacion.partidoLogoUrl" [alt]="participacion.partidoNombre">
-          </div>
-          <div class="partido-nombre">{{ participacion.partidoSiglas }}</div>
+      <!-- Selector de Comunidad -->
+      @if (mostrarSelectorComunidad) {
+        <div class="selector-comunidad">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Selecciona una comunidad autónoma</mat-label>
+            <mat-select (selectionChange)="onComunidadChange($event.value)">
+              @for (comunidad of comunidades; track comunidad.id) {
+                <mat-option [value]="comunidad">
+                  <div class="comunidad-option">
+                    <div class="color-dot" [style.backgroundColor]="comunidad.colorPrimario"></div>
+                    {{ comunidad.nombre }}
+                  </div>
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+      }
+
+      <!-- Selector de Municipio -->
+      @if (mostrarSelectorMunicipio && nivelSeleccionado === 'MUNICIPAL') {
+        <div class="selector-municipio">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Selecciona un municipio</mat-label>
+            <mat-select (selectionChange)="onMunicipioChange($event.value)">
+              @for (municipio of municipios; track municipio.id) {
+                <mat-option [value]="municipio">
+                  {{ municipio.nombre }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
         </div>
       }
     </div>
-  </div>
 
-  <!-- RESULTADOS ANTERIORES -->
-  <div class="resultados-section">
-    <div class="section-header">
-      <h3>RESULTADOS</h3>
-      <select class="fecha-selector" (change)="onAnioChange($event)">
-        @for (anio of aniosAnteriores; track anio) {
-          <option [value]="anio" [selected]="anio === anioSeleccionado">
-            {{ anio }}
-          </option>
-        }
-      </select>
-    </div>
-
-    <div class="grafico-barras">
-      <div class="barra-container">
-        @for (resultado of resultadosActuales; track resultado.partido) {
-          <div class="barra-item">
-            <div class="barra" [style.height.%]="resultado.porcentaje"
-                 [style.backgroundColor]="'var(--primary-color)'"></div>
-            <div class="partido-label">{{ resultado.partido }}</div>
-          </div>
-        }
-      </div>
-    </div>
-  </div>
-
-  <!-- PRÓXIMAS ELECCIONES -->
-  <div class="proximas-elecciones">
-    <h2>Próximas elecciones<br>domingo, 28 de mayo de {{ anioSeleccionado + 4 }}</h2>
-  </div>
-
-  <!-- EVENTOS -->
-  <div class="eventos-section">
-    <div class="section-header">
-      <h3>EVENTOS</h3>
-      <input type="date" class="fecha-selector" (change)="onFechaChange($event)">
-    </div>
-
-    @for (evento of eventos; track evento.id) {
-      <div class="evento-item">
-        <div class="evento-icono" [style.backgroundColor]="'var(--primary-color)'"></div>
-        <div class="evento-info">
-          <p>{{ evento.descripcion }}</p>
+    <!-- PARTIDOS (según selección) -->
+    @if (partidos.length > 0) {
+      <div class="partidos-section">
+        <h2>Partidos que se presentan</h2>
+        <div class="partidos-grid">
+          @for (partido of partidos; track partido.id) {
+            <div class="partido-card" (click)="verPartido(partido.id)">
+              <div class="logo-container">
+                <img [src]="partido.partidoLogoUrl" [alt]="partido.partidoNombre">
+              </div>
+              <div class="partido-info">
+                <h3>{{ partido.partidoNombre }}</h3>
+                <span class="siglas">{{ partido.partidoSiglas }}</span>
+              </div>
+            </div>
+          }
         </div>
       </div>
     }
-    @if (eventos.length === 0) {
-      <div class="evento-item">
-        <div class="evento-info">
-          <p>Selecciona una fecha para ver eventos</p>
-        </div>
-      </div>
-    }
-  </div>
 
-  <!-- MAPA -->
-  <div class="mapa-section">
-    <h3>BÚSQUEDA (Colegios o recintos electorales y sedes).</h3>
-    <div class="mapa-container">
-      <img src="/assets/mapa-oviedo.png" alt="Mapa de {{ municipioActual }}">
-      <div class="zoom-controls">
-        <button>+</button>
-        <button>-</button>
+    <!-- EVENTOS RECIENTES -->
+    <div class="eventos-section">
+      <h2>
+        <mat-icon>event</mat-icon>
+        Últimos eventos
+      </h2>
+      <div class="eventos-list">
+        @for (evento of eventos; track evento.id) {
+          <div class="evento-card" (click)="verEvento(evento.id)">
+            <div class="evento-icon" [class]="evento.tipo.toLowerCase()">
+              <mat-icon>
+                @switch (evento.tipo) {
+                  @case ('NACIONAL') { public }
+                  @case ('COMUNIDAD') { account_balance }
+                  @case ('MUNICIPAL') { location_city }
+                  @default { event }
+                }
+              </mat-icon>
+            </div>
+            <div class="evento-info">
+              <h4>{{ evento.titulo }}</h4>
+              <p>{{ evento.lugar }}</p>
+              <span class="fecha">{{ evento.fecha | date:'dd/MM/yyyy' }}</span>
+            </div>
+          </div>
+        }
       </div>
     </div>
-  </div>
 
-  <!-- BOTONES ACCIÓN -->
-  <div class="action-buttons">
-    <button (click)="verMesas()">Mesas electorales</button>
-    <button (click)="verCenso()">Censo electoral</button>
-  </div>
-
-  <!-- BARRA INFERIOR -->
-  <div class="bottom-bar">
-    <button routerLink="/">
-      <mat-icon>home</mat-icon>
-    </button>
-    <button>
-      <mat-icon>search</mat-icon>
-    </button>
-    <button>
-      <mat-icon>bar_chart</mat-icon>
-    </button>
-    <button>
-      <mat-icon>calendar_today</mat-icon>
-    </button>
-    <button>
-      <mat-icon>place</mat-icon>
-    </button>
+    <!-- MAPA INTERACTIVO DE ESPAÑA -->
+    <div class="mapa-section">
+      <h2>
+        <mat-icon>map</mat-icon>
+        Mapa electoral
+      </h2>
+      <div class="mapa-container">
+        <app-mapa-espania
+          [comunidadSeleccionada]="comunidadSeleccionada"
+          [municipioSeleccionado]="municipioSeleccionado"
+          (onComunidadClick)="onComunidadChange($event)"
+          (onMunicipioClick)="onMunicipioChange($event)">
+        </app-mapa-espania>
+        <div class="zoom-controls">
+          <button (click)="zoomIn()">+</button>
+          <button (click)="zoomOut()">-</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

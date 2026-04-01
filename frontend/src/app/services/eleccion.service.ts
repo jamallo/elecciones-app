@@ -33,4 +33,26 @@ export class EleccionService {
     return this.http.get<Comunidad[]>(`${this.apiUrl}/comunidades`);
   }
 
+  //Para elección (CRUD - CREATE, READ, UPDATE, DELETE)
+
+  //CRUD (CREAR ELECCIÓN - CREATE) - SOLO ADMINISTRADORES
+  crearEleccion(eleccion: any): Observable<Eleccion> {
+    return this.http.post<Eleccion>(`${this.apiUrl}/admin`, eleccion);
+  }
+
+  //CRUD (BUSCAR LISTAR TODOS LAS ELECCIONES - READ)
+  listarTodas(): Observable<Eleccion[]> {
+    return this.http.get<Eleccion[]>(`${this.apiUrl}`);
+  }
+
+  //CRUD (ACTUALIZAR ELECCIÓN - UPDATE) - SOLO PARA ADMINISTRADORES
+  actualizarEleccion(id: number, eleccion: any): Observable<Eleccion> {
+    return this.http.put<Eleccion>(`${this.apiUrl}/admin/${id}`, eleccion);
+  }
+
+  //CRUD (ELIMINAR ELECCIÓN - DELETE)
+  eliminarEleccion(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/admin/${id}`);
+  }
+
 }

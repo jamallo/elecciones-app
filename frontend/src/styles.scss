@@ -1,39 +1,51 @@
-// Colores corporativos
-$azul-oscuro: #00236C;
-$azul-claro: #1985FF;
-$verde-vox: #1BA637;
-$rojo-iu: #DF0126;
-$morado-somos: #742F68;
-$rosa-andecha: #AD0049;
-$verde-pacma: #AEBD46;
+// ========== TEMA NEUTRAL DORADO METÁLICO ==========
+:root {
+  // Colores neutrales (dorado metálico)
+  --primary-color: #D4AF37;
+  --primary-dark: #B8860B;
+  --primary-light: #F5E56B;
+  --secondary-color: #C5A028;
+  --accent-color: #E5B83C;
+  --bg-color: #FFFDF7;
+  --text-color: #4A3B1A;
+  --header-gradient: linear-gradient(135deg, #F5E56B 0%, #D4AF37 50%, #B8860B 100%);
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  // Colores por comunidad (se sobrescribirán dinámicamente)
+  --comunidad-primary: var(--primary-color);
+  --comunidad-secondary: var(--secondary-color);
+
+  // Espaciados
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+
+  // Radios
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
 }
 
-body {
-  font-family: 'Murecho', 'Roboto', sans-serif;
-  background-color: #FFFFFF;
-  color: $azul-oscuro;
+// Animación metálica
+@keyframes metallicShine {
+  0% {
+    background-position: -100% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
-// Scroll suave
-html {
-  scroll-behavior: smooth;
-}
-
-// Personalizar scrollbar
-::-webkit-scrollbar {
-  width: 4px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-  background: $azul-claro;
-  border-radius: 4px;
+.metallic-bg {
+  background: linear-gradient(
+    90deg,
+    #D4AF37 0%,
+    #F5E56B 25%,
+    #D4AF37 50%,
+    #F5E56B 75%,
+    #D4AF37 100%
+  );
+  background-size: 200% auto;
+  animation: metallicShine 3s linear infinite;
 }

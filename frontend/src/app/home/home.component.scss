@@ -1,97 +1,47 @@
-.home-container {
-  min-height: 100vh;
-  background: #f5f5f5;
-}
-
+// ========== HERO SECTION ==========
 .hero-section {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 60px 20px;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  padding: 32px 20px;
   text-align: center;
-  margin-bottom: 40px;
+  color: white;
 
-  .hero-content {
-    max-width: 800px;
-    margin: 0 auto;
+  h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+  }
 
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 16px;
-      font-weight: 500;
-    }
-
-    p {
-      font-size: 1.2rem;
-      opacity: 0.9;
-    }
+  p {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    line-height: 1.4;
   }
 }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
+// ========== SELECTOR ELECCIONES ==========
 .selector-card {
-  margin-bottom: 40px;
+  margin: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 
-  mat-card-content h2 {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 20px;
-    font-size: 1.5rem;
+  mat-card-content {
+    padding: 16px;
 
-    mat-icon {
-      color: #667eea;
-    }
-  }
-}
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--primary-color);
 
-.section-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 40px 0 20px;
-  font-size: 1.5rem;
-  color: #333;
-
-  mat-icon {
-    color: #667eea;
-  }
-}
-
-.results-card,
-.events-card,
-.map-card {
-  margin-bottom: 30px;
-
-  mat-card-header {
-    margin-bottom: 16px;
-
-    mat-icon {
-      color: #667eea;
-    }
-  }
-
-  mat-form-field {
-    width: 200px;
-    margin-bottom: 20px;
-  }
-}
-
-.action-buttons {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  margin: 40px 0 60px;
-
-  button {
-    padding: 10px 24px;
-
-    mat-icon {
-      margin-right: 8px;
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
     }
   }
 }
@@ -100,22 +50,594 @@
   width: 100%;
 }
 
-@media (max-width: 768px) {
-  .hero-section .hero-content h1 {
-    font-size: 1.8rem;
+// ========== GRID PARTIDOS ==========
+.partidos-grid-section {
+  padding: 0 16px;
+  margin-bottom: 24px;
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 16px;
+
+    .partido-item {
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+
+      &:active {
+        transform: scale(0.95);
+      }
+
+      .logo-wrapper {
+        width: 70px;
+        height: 70px;
+        margin: 0 auto 8px;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+
+        img {
+          max-width: 100%;
+          max-height: 100%;
+          object-fit: contain;
+        }
+      }
+
+      .partido-nombre {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text-color);
+      }
+    }
   }
+}
 
-  .action-buttons {
-    flex-direction: column;
+// ========== RESULTADOS SECTION ==========
+.resultados-section {
+  margin: 24px 16px;
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
+    margin-bottom: 16px;
 
-    button {
-      width: 100%;
-      max-width: 300px;
+    h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+
+    .fecha-selector {
+      padding: 8px 12px;
+      border: 1px solid var(--primary-color);
+      border-radius: 20px;
+      font-size: 12px;
+      background: white;
+      color: var(--primary-color);
     }
   }
 
-  mat-form-field {
-    width: 100% !important;
+  .info-electoral {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-color);
+  }
+
+  .grafico-barras {
+    .barra-container {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 180px;
+      margin-top: 20px;
+
+      .barra-item {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .barra {
+          width: 100%;
+          background: var(--primary-color);
+          border-radius: 4px 4px 0 0;
+          transition: height 0.3s ease;
+          min-height: 4px;
+        }
+
+        .partido-label {
+          font-size: 9px;
+          font-weight: 500;
+          margin-top: 8px;
+          color: var(--text-color);
+        }
+      }
+    }
+  }
+}
+
+// ========== PRÓXIMAS ELECCIONES ==========
+.proximas-elecciones {
+  background: linear-gradient(135deg, rgba(25, 133, 255, 0.1), rgba(25, 133, 255, 0.05));
+  padding: 24px 20px;
+  text-align: center;
+  margin: 24px 0;
+
+  h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    line-height: 1.4;
+  }
+}
+
+// ========== EVENTOS ==========
+.eventos-section {
+  padding: 0 16px;
+  margin-bottom: 24px;
+
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+
+    .fecha-selector {
+      padding: 8px 12px;
+      border: 1px solid var(--primary-color);
+      border-radius: 20px;
+      font-size: 12px;
+    }
+  }
+
+  .evento-item {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 12px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+    .evento-icono {
+      width: 48px;
+      height: 48px;
+      background: var(--primary-color);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+
+      mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    .evento-info {
+      flex: 1;
+
+      p {
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 1.4;
+        color: var(--text-color);
+      }
+
+      .evento-fecha {
+        font-size: 11px;
+        color: #666;
+        margin-top: 4px;
+      }
+    }
+  }
+}
+
+// ========== MAPA ==========
+.mapa-section {
+  margin-bottom: 24px 16PX;
+
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text-color);
+
+    mat-icon {
+      color: var(--primary-color);
+    }
+  }
+
+  .mapa-container {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: #f0f0f0;
+
+    app-mapa-espania {
+      display: block;
+      width: 100%;
+      height: 400px;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .zoom-controls {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 1000;
+
+      button {
+        width: 32px;
+        height: 36px;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s;
+
+        &:hover {
+          background: #f5f5f5;
+        }
+
+        &:active {
+          transform: scale(0.95);
+        }
+      }
+    }
+  }
+}
+
+// ========== BOTONES ACCIÓN ==========
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  padding: 0 16px;
+  margin-bottom: 80px;
+
+  button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    cursor: pointer;
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}
+
+// ========== MEDIA QUERIES ==========
+@media (min-width: 768px) {
+  .partidos-grid-section .grid {
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+
+    .partido-item .logo-wrapper {
+      width: 90px;
+      height: 90px;
+    }
+  }
+
+  .mapa-section .mapa-container {
+    app-mapa-espania{
+    height: 500px;
+    }
+  }
+}
+
+@media (min-width: 1024) {
+  .mapa-section .mapa-container {
+    app-mapa-espania {
+      height: 600px;
+    }
+  }
+}
+
+// ========== SELECTOR JERÁRQUICO ==========
+.selector-jerarquico {
+  margin: 20px;
+
+  .niveles {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+
+    .nivel-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 12px;
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+        color: #999;
+      }
+
+      span {
+        font-size: 11px;
+        font-weight: 500;
+        color: #666;
+      }
+
+      &.active {
+        background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        border-color: transparent;
+
+        mat-icon, span {
+          color: white;
+        }
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+    }
+  }
+
+  .selector-comunidad, .selector-municipio {
+    margin-top: 16px;
+  }
+}
+
+.comunidad-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .color-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+  }
+}
+
+// ========== EVENTOS ==========
+.eventos-section {
+  margin: 24px 16px;
+
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text-color);
+
+    mat-icon {
+      color: var(--primary-color);
+    }
+  }
+
+  .eventos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .evento-card {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: transform 0.2s;
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    .evento-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      mat-icon {
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+        color: white;
+      }
+
+      &.nacional {
+        background: linear-gradient(135deg, #C0392B, #F1C40F);
+      }
+
+      &.comunidad {
+        background: linear-gradient(135deg, #4B0082, #9B59B6);
+      }
+
+      &.municipal {
+        background: linear-gradient(135deg, #00236C, #1985FF);
+      }
+    }
+
+    .evento-info {
+      flex: 1;
+
+      h4 {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      p {
+        font-size: 12px;
+        color: #666;
+        margin-bottom: 4px;
+      }
+
+      .fecha {
+        font-size: 10px;
+        color: #999;
+      }
+    }
+  }
+}
+
+// ========== MAPA ==========
+.mapa-section {
+  margin: 24px 16px;
+
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text-color);
+
+    mat-icon {
+      color: var(--primary-color);
+    }
+  }
+
+  .mapa-container {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+    .zoom-controls {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 1000;
+
+      button {
+        width: 36px;
+        height: 36px;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+        &:active {
+          transform: scale(0.95);
+        }
+      }
+    }
+  }
+}
+
+// ========== PARTIDOS ==========
+.partidos-section {
+  margin: 24px 16px;
+
+  h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text-color);
+  }
+
+  .partidos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 16px;
+  }
+
+  .partido-card {
+    text-align: center;
+    padding: 12px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: transform 0.2s;
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    .logo-container {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+    }
+
+    .partido-info {
+      h3 {
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 2px;
+      }
+
+      .siglas {
+        font-size: 10px;
+        color: #999;
+      }
+    }
   }
 }

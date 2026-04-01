@@ -42,6 +42,7 @@ import { EventoService } from './services/evento.service';
 import { SedeService } from './services/sede.service';
 import { LoginComponent } from './login/login.component';
 import { authInterceptor } from './core/interceptors/auth-interceptor';
+import { MapaEspaniaComponent } from './mapa-espania/mapa-espania.component';
 
 
 @NgModule({
@@ -54,7 +55,8 @@ import { authInterceptor } from './core/interceptors/auth-interceptor';
     MapaSedesComponent,
     ResultadosGraficoComponent,
     CalendarioEventosComponent,
-    LoginComponent
+    LoginComponent,
+    MapaEspaniaComponent
   ],
   imports: [
     BrowserModule,

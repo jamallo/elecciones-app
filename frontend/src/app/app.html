@@ -1,40 +1,99 @@
-<mat-toolbar color="primary" class="toolbar">
-  <mat-icon class="logo-icon">how_to_vote</mat-icon>
-  <span class="toolbar-title">Elecciones 2027</span>
-  <span class="spacer"></span>
-
-  <button mat-button routerLink="/" routerLinkActive="active">
-    <mat-icon>home</mat-icon>
-    Inicio
-  </button>
-
-  @if ((authService.currentUser$ | async); as user) {
-    <button mat-button [matMenuTriggerFor]="menu">
-      <mat-icon>account_circle</mat-icon>
-      {{ user.nombre }}
+<div class="app-container" appTema>
+  <!-- BARRA SUPERIOR MOBILE -->
+  <mat-toolbar color="primary" class="toolbar-mobile">
+    <button mat-icon-button (click)="toggleMenu()" class="menu-button">
+      <mat-icon>menu</mat-icon>
     </button>
-    <mat-menu #menu="matMenu">
-      @if (user.rol !== 'USUARIO') {
-        <button mat-menu-item routerLink="/admin">
-          <mat-icon>admin_panel_settings</mat-icon>
-          Panel de administración
-        </button>
-      }
-      <button mat-menu-item (click)="logout()">
-        <mat-icon>logout</mat-icon>
-        Cerrar sesión
+    <div class="logo-container">
+      <mat-icon class="logo-icon">how_to_vote</mat-icon>
+      <span class="toolbar-title">Elecciones 2027</span>
+    </div>
+    <div class="spacer"></div>
+    @if ((authService.currentUser$ | async); as user) {
+      <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-button">
+        <mat-icon>account_circle</mat-icon>
       </button>
-    </mat-menu>
-  } @else {
-    <button mat-button routerLink="/login">
-      <mat-icon>login</mat-icon>
-      Iniciar sesión
-    </button>
-    <button mat-button routerLink="/registro">
-      <mat-icon>person_add</mat-icon>
-      Registrarse
-    </button>
-  }
-</mat-toolbar>
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item disabled>
+          <mat-icon>person</mat-icon>
+          {{ user.nombre }}
+        </button>
+        <mat-divider></mat-divider>
+        @if (user.rol !== 'USUARIO') {
+          <button mat-menu-item routerLink="/admin">
+            <mat-icon>admin_panel_settings</mat-icon>
+            Administración
+          </button>
+        }
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          Cerrar sesión
+        </button>
+      </mat-menu>
+    } @else {
+      <button mat-icon-button routerLink="/login" class="login-button">
+        <mat-icon>login</mat-icon>
+      </button>
+    }
+  </mat-toolbar>
 
-<router-outlet></router-outlet>
+  <!-- MENÚ LATERAL MOBILE -->
+  <div class="side-menu" [class.open]="menuOpen" (click)="closeMenu()">
+    <div class="side-menu-content" (click)="$event.stopPropagation()">
+      <div class="menu-header">
+        <mat-icon>how_to_vote</mat-icon>
+        <span>Elecciones 2027</span>
+        <button mat-icon-button (click)="closeMenu()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <mat-nav-list>
+        <a mat-list-item routerLink="/" (click)="closeMenu()">
+          <mat-icon matListItemIcon>home</mat-icon>
+          <span matListItemTitle>Inicio</span>
+        </a>
+        <a mat-list-item routerLink="/mapa" (click)="closeMenu()">
+          <mat-icon matListItemIcon>map</mat-icon>
+          <span matListItemTitle>Mapa electoral</span>
+        </a>
+        <a mat-list-item routerLink="/resultados" (click)="closeMenu()">
+          <mat-icon matListItemIcon>bar_chart</mat-icon>
+          <span matListItemTitle>Resultados</span>
+        </a>
+        <a mat-list-item routerLink="/calendario" (click)="closeMenu()">
+          <mat-icon matListItemIcon>event</mat-icon>
+          <span matListItemTitle>Calendario</span>
+        </a>
+      </mat-nav-list>
+    </div>
+  </div>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- BARRA INFERIOR MOBILE (TAB BAR) -->
+  <div class="bottom-tab-bar">
+    <button (click)="navigateTo('/')" [class.active]="isActive('/')">
+      <mat-icon>home</mat-icon>
+      <span>Inicio</span>
+    </button>
+    <button (click)="navigateTo('/mapa')" [class.active]="isActive('/mapa')">
+      <mat-icon>map</mat-icon>
+      <span>Mapa</span>
+    </button>
+    <button (click)="navigateTo('/resultados')" [class.active]="isActive('/resultados')">
+      <mat-icon>bar_chart</mat-icon>
+      <span>Resultados</span>
+    </button>
+    <button (click)="navigateTo('/calendario')" [class.active]="isActive('/calendario')">
+      <mat-icon>event</mat-icon>
+      <span>Eventos</span>
+    </button>
+    <button (click)="navigateTo('/partidos')" [class.active]="isActive('/partidos')">
+      <mat-icon>groups</mat-icon>
+      <span>Partidos</span>
+    </button>
+  </div>
+</div>

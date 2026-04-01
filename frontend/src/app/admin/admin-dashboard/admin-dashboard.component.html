@@ -1,0 +1,105 @@
+<div class="admin-dashboard">
+  <div class="dashboard-header">
+    <h1>Panel de Administración</h1>
+    <p>Gestiona todo el contenido de la aplicación electoral</p>
+  </div>
+
+  <div class="stats-grid">
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon partidos-icon">
+          <mat-icon>groups</mat-icon>
+        </div>
+        <div class="stat-info">
+          <h3>{{ stats.partidos }}</h3>
+          <p>Partidos políticos</p>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button routerLink="/admin/partidos">Gestionar</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon elecciones-icon">
+          <mat-icon>how_to_vote</mat-icon>
+        </div>
+        <div class="stat-info">
+          <h3>{{ stats.elecciones }}</h3>
+          <p>Elecciones</p>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button routerLink="/admin/elecciones">Gestionar</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon candidatos-icon">
+          <mat-icon>person</mat-icon>
+        </div>
+        <div class="stat-info">
+          <h3>{{ stats.candidatos || 0 }}</h3>
+          <p>Candidatos</p>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button routerLink="/admin/candidatos">Gestionar</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon eventos-icon">
+          <mat-icon>event</mat-icon>
+        </div>
+        <div class="stat-info">
+          <h3>{{ stats.eventos || 0 }}</h3>
+          <p>Eventos</p>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button routerLink="/admin/eventos">Gestionar</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <mat-card-content>
+        <div class="stat-icon sedes-icon">
+          <mat-icon>place</mat-icon>
+        </div>
+        <div class="stat-info">
+          <h3>{{ stats.sedes || 0 }}</h3>
+          <p>Sedes y colegios</p>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button routerLink="/admin/sedes">Gestionar</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <mat-card class="quick-actions">
+    <mat-card-header>
+      <mat-card-title>Acciones rápidas</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="actions-grid">
+        <button mat-raised-button color="primary" routerLink="/admin/partidos">
+          <mat-icon>add</mat-icon>
+          Nuevo partido
+        </button>
+        <button mat-raised-button color="accent" routerLink="/admin/candidatos">
+          <mat-icon>person_add</mat-icon>
+          Nuevo candidato
+        </button>
+        <button mat-raised-button color="warn" routerLink="/admin/eventos">
+          <mat-icon>event_add</mat-icon>
+          Nuevo evento
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

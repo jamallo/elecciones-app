@@ -1,0 +1,83 @@
+<div class="partidos-admin">
+  <div class="admin-header">
+    <h1>Gestión de Partidos Políticos</h1>
+    <button mat-raised-button color="primary" (click)="abrirDialogo()">
+      <mat-icon>add</mat-icon>
+      Nuevo partido
+    </button>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <div class="filter-container">
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Buscar partido</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Ej: Partido Popular">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="table-container" *ngIf="!loading; else loadingSpinner">
+        <table mat-table [dataSource]="dataSource" matSort>
+          <ng-container matColumnDef="logo">
+            <th mat-header-cell *matHeaderCellDef>Logo</th>
+            <td mat-cell *matCellDef="let partido">
+              <img [src]="partido.logoUrl" [alt]="partido.nombre" class="logo-mini">
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+            <td mat-cell *matCellDef="let partido">{{ partido.nombre }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="siglas">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Siglas</th>
+            <td mat-cell *matCellDef="let partido">
+              <mat-chip>{{ partido.siglas }}</mat-chip>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="colorPrimario">
+            <th mat-header-cell *matHeaderCellDef>Color</th>
+            <td mat-cell *matCellDef="let partido">
+              <div class="color-preview" [style.backgroundColor]="partido.colorPrimario"></div>
+              {{ partido.colorPrimario }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="elecciones">
+            <th mat-header-cell *matHeaderCellDef>Participaciones</th>
+            <td mat-cell *matCellDef="let partido">
+              <span class="badge">{{ partido.participaciones?.length || 0 }}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let partido">
+              <button mat-icon-button color="primary" (click)="abrirDialogo(partido)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="eliminarPartido(partido.id, partido.nombre)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
+      </div>
+
+      <ng-template #loadingSpinner>
+        <div class="loading-spinner">
+          <mat-spinner diameter="40"></mat-spinner>
+          <p>Cargando partidos...</p>
+        </div>
+      </ng-template>
+    </mat-card-content>
+  </mat-card>
+</div>
