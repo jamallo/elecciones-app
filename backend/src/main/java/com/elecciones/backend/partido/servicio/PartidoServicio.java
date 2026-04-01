@@ -2,6 +2,7 @@ package com.elecciones.backend.partido.servicio;
 
 import com.elecciones.backend.eleccion.modelo.entidad.Eleccion;
 import com.elecciones.backend.eleccion.repositorio.EleccionRepositorio;
+import com.elecciones.backend.excepcion.ErrorValidacionExcepcion;
 import com.elecciones.backend.excepcion.RecursoNoEncontradoExcepcion;
 import com.elecciones.backend.partido.mapeador.PartidoMapeador;
 import com.elecciones.backend.partido.modelo.dto.InformacionPartidoDTO;
@@ -34,7 +35,21 @@ public class PartidoServicio {
     private final PartidoEleccionMapeador partidoEleccionMapeador;
 
 
-    //PARA PARTIDO
+    //PARA PARTIDO (Implementar métodos CRUD - CREATE, READ, UPDATE, DELETE)
+
+    //CRUD (CREAR PARTIDO - CREATE)
+    @Transactional
+    public PartidoDTO crearPartido(PartidoDTO partidoDTO) {
+        //Verificar si existe por siglas
+        if (partidoRepositorio.findBySiglas(partidoDTO.getSiglas()).isPresent()) {
+            throw new ErrorValidacionExcepcion(("Ya existe un partido con las siglas: " + partidoDTO.getSiglas()));
+        }
+        Partido partido = partidoMapeador.toEntity(partidoDTO);
+        partido = partidoRepositorio.save(partido);
+        return partidoMapeador.toDTO(partido);
+    }
+
+    //CRUD (BUSCAR LISTAR TODOS LOS PARTIDOS - READ)
     @Transactional(readOnly = true)
     public List<PartidoResumenDTO> listarTodos() {
         return partidoRepositorio.findAll()
@@ -43,6 +58,7 @@ public class PartidoServicio {
                 .toList();
     }
 
+    //CRUD (BUSCAR PARTIDO - READ)
     @Transactional(readOnly = true)
     public PartidoDTO buscarPorId(Long id) {
         Partido partido = partidoRepositorio.findById(id)
@@ -52,12 +68,41 @@ public class PartidoServicio {
         return partidoMapeador.toDTO(partido);
     }
 
+    //CRUD (ACTUALIZAR PARTIDO - UPDATE)
     @Transactional
-    public PartidoDTO crearPartido(PartidoDTO partidoDTO) {
-        Partido partido = partidoMapeador.toEntity(partidoDTO);
+    public PartidoDTO actualizarPartido(Long id, PartidoDTO partidoDTO) {
+        Partido partido = partidoRepositorio.findById(id)
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("Partido no encontrado con id: " + id));
+
+        //Actuarlizar campos
+        partido.setNombre(partidoDTO.getNombre());
+        partido.setSiglas(partidoDTO.getSiglas());
+        partido.setLogoUrl(partidoDTO.getLogoUrl());
+        partido.setColorPrimario(partidoDTO.getColorPrimario());
+        partido.setColorSecundario(partidoDTO.getColorSecundario());
+        partido.setColorAcento(partidoDTO.getColorAcento());
+        partido.setColorFondo(partidoDTO.getColorFondo());
+
         partido = partidoRepositorio.save(partido);
+
         return partidoMapeador.toDTO(partido);
     }
+
+    //CRUD (ELIMINAR PARTIDO - DELETE)
+    @Transactional
+    public void eliminarPartido(Long id) {
+        Partido partido = partidoRepositorio.findById(id)
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("Partido no encontrado con id: " + id));
+
+        //Verificar si tiene participaciones
+        if (!partido.getParticipaciones().isEmpty()) {
+            throw  new ErrorValidacionExcepcion("No se puede eliminar el partido porque tiene participaciones en elecciones");
+        }
+
+        partidoRepositorio.delete(partido);
+    }
+
+    //------------------------------------------
 
     //PARA PARTICIPACIÓN (PARTIDO-ELECCIÓN)
     @Transactional
@@ -91,6 +136,7 @@ public class PartidoServicio {
 
         return partidoEleccionMapeador.toDTO(partidoEleccion);
     }
+
 
     @Transactional
     public InformacionPartidoDTO actualizarInformacion(Long partidoEleccionId, InformacionPartidoDTO informacionDTO) {

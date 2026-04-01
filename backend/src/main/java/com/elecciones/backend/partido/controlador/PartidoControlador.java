@@ -37,24 +37,48 @@ public class PartidoControlador {
     private final EventoRepositorio eventoRepositorio;
     private final SedeRepositorio sedeRepositorio;
 
-    //Para partidos
+    //Para partidos (CRUD - CREATE, READ, UPDATE, DELETE)
+
+    //CRUD (CREAR PARTIDO - CREATE) - SOLO ADMINISTRADORES
+    @PostMapping("/admin")
+    @Operation(summary = "Crear nuevo partido (solo administradores")
+    public ResponseEntity<PartidoDTO> crearPartido(@RequestBody PartidoDTO partidoDTO) {
+        return new ResponseEntity<>(partidoServicio.crearPartido(partidoDTO), HttpStatus.CREATED);
+    }
+
+    //CRUD (BUSCAR LISTAR TODOS LOS PARTIDOS - READ)
     @GetMapping
     @Operation(summary = "Listar todos los partidos")
     public ResponseEntity<List<PartidoResumenDTO>> listarTodos() {
         return ResponseEntity.ok(partidoServicio.listarTodos());
     }
 
+    //CRUD (BUSCAR PARTIDO - READ)
     @GetMapping("/{id}")
     @Operation(summary = "Obtener partido por ID con toda la información")
     public ResponseEntity<PartidoDTO> obtenerPorId(@PathVariable Long id) {
         return ResponseEntity.ok(partidoServicio.buscarPorId(id));
+
     }
 
-    @PostMapping
-    @Operation(summary = "Crear nuevo partido")
-    public ResponseEntity<PartidoDTO> crearPartido(@RequestBody PartidoDTO partidoDTO) {
-        return new ResponseEntity<>(partidoServicio.crearPartido(partidoDTO), HttpStatus.CREATED);
+    //CRUD (ACTUALIZAR PARTIDO - UPDATE) - SOLO PARA ADMINISTRADORES
+    @PutMapping("/admin/{id}")
+    @Operation(summary = "Actualizar partido existente (solo administradores")
+    public ResponseEntity<PartidoDTO> actualizarPartido(
+            @PathVariable Long id,
+            @RequestBody PartidoDTO partidoDTO) {
+        return ResponseEntity.ok(partidoServicio.actualizarPartido(id, partidoDTO));
     }
+
+    //CRUD (ELIMINAR PARTIDO - DELETE)
+    @DeleteMapping("/admin/{id}")
+    @Operation(summary = "Eliminar partido (solo administradores")
+    public ResponseEntity<Void> eliminarPartido(@PathVariable Long id) {
+        partidoServicio.eliminarPartido(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    //----------------------------------------------
 
     //Para participación (Partido-elección)
     @PostMapping("/participacion")
@@ -198,10 +222,6 @@ public class PartidoControlador {
         return ResponseEntity.ok(partidoServicio.actualizarInformacion(partidoEleccion.getId(), null));
         // TODO: crear método getInformacion
     }
-
-
-
-
 
 
 }

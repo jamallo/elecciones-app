@@ -22,22 +22,9 @@ public class CandidatoServicio {
     private final PartidoEleccionRepositorio partidoEleccionRepositorio;
     private final CandidatoMapeador candidatoMapeador;
 
-    @Transactional(readOnly = true)
-    public List<CandidatoDetalleDTO> listarPorPartidoEleccion(Long partidoEleccionId) {
-        return candidatoRepositorio.findByPartidoEleccionIdOrderByPosicionListaAsc(partidoEleccionId)
-                .stream()
-                .map(candidatoMapeador::toDetalleDTO)
-                .toList();
-    }
+    //Para candidato (Implementar CRUD - CREATE, READ, UPDATE, DELETE)
 
-    @Transactional(readOnly = true)
-    public CandidatoDetalleDTO buscarPorId(Long id) {
-        Candidato candidato = candidatoRepositorio.findById(id)
-                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("Candidato no encontrado con id: " + id));
-
-        return candidatoMapeador.toDetalleDTO(candidato);
-    }
-
+    //CRUD (CREAR CANDIDATO - CREATE)
     @Transactional
     public CandidatoDTO crear(CandidatoDTO candidatoDTO) {
         PartidoEleccion partidoEleccion = partidoEleccionRepositorio.findById(candidatoDTO.getPartidoEleccionId())
@@ -48,4 +35,64 @@ public class CandidatoServicio {
         candidato = candidatoRepositorio.save(candidato);
         return candidatoMapeador.toDTO(candidato);
     }
+
+    //CRUD (BUSCAR LISTAR TODOS LOS CANDIDATOS - READ)
+    public List<CandidatoDetalleDTO> listarTodos() {
+        return candidatoRepositorio.findAll()
+                .stream()
+                .map(candidatoMapeador::toDetalleDTO)
+                .toList();
+    }
+
+    //CRUD (BUSCAR CANDIDATO - READ)
+    @Transactional(readOnly = true)
+    public CandidatoDetalleDTO buscarPorId(Long id) {
+        Candidato candidato = candidatoRepositorio.findById(id)
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("Candidato no encontrado con id: " + id));
+
+        return candidatoMapeador.toDetalleDTO(candidato);
+    }
+
+    //CRUD (ACTUALIZAR CANDIDATO - UPDATE)
+    public CandidatoDTO actualizar(Long id, CandidatoDTO candidatoDTO) {
+        Candidato candidato = candidatoRepositorio.findById(id)
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("Candidato no encontrado con id: " + id));
+
+        candidato.setNombre(candidatoDTO.getNombre());
+        candidato.setCargo(candidatoDTO.getCargo());
+        candidato.setFotoUrl(candidatoDTO.getFotoUrl());
+        candidato.setBiografia(candidatoDTO.getBiografia());
+        candidato.setPosicionLista(candidatoDTO.getPosicionLista());
+
+        if (candidatoDTO.getPartidoEleccionId() != null) {
+            PartidoEleccion partidoEleccion = partidoEleccionRepositorio.findById(candidatoDTO.getPartidoEleccionId())
+                    .orElseThrow(() -> new RecursoNoEncontradoExcepcion("Participación electoral no encontrada"));
+
+            candidato.setPartidoEleccion(partidoEleccion);
+        }
+
+        candidato = candidatoRepositorio.save(candidato);
+
+        return candidatoMapeador.toDTO(candidato);
+    }
+
+    //CRUD (ELIMINAR CANDIDATO - DELETE)
+    public void eliminar(Long id) {
+        if (!candidatoRepositorio.existsById(id)) {
+            throw new RecursoNoEncontradoExcepcion("Candidato no encontrado con id: " + id);
+        }
+
+        candidatoRepositorio.deleteById(id);
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<CandidatoDetalleDTO> listarPorPartidoEleccion(Long partidoEleccionId) {
+        return candidatoRepositorio.findByPartidoEleccionIdOrderByPosicionListaAsc(partidoEleccionId)
+                .stream()
+                .map(candidatoMapeador::toDetalleDTO)
+                .toList();
+    }
+
+
 }

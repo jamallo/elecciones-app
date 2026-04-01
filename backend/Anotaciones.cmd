@@ -227,30 +227,69 @@ mapeador/: Conversión entre entidad ↔ DTO
 ------------------------------
 DÍA 3 (28/03/2026)
 
--> Comiendo frontend.
+-> Comienzo frontend.
 -> estructura/arquitectura:
 frontend/src/app/
 ├── app.module.ts
 ├── app-routing.module.ts
 ├── app.html
 ├── app.ts
+├── admin/
+│   ├── admin-dashboard/
+│   │    ├── admin-dashboard.component.html [x] *****
+│   │    ├── admin-dashboard.component.scss
+│   │    ├── admin-dashboard.component.spec.ts
+│   │    └── admin-dashboard.component.ts [x] *****
+│   ├── candidatos-admin/
+│   │    ├── candidatos-admin.component.html
+│   │    ├── candidatos-admin.component.scss
+│   │    ├── candidatos-admin.component.spec.ts
+│   │    └── candidatos-admin.component.ts
+│   ├── elecciones-admin/
+│   │    ├── elecciones-admin.component.html
+│   │    ├── elecciones-admin.component.scss
+│   │    ├── elecciones-admin.component.spec.ts
+│   │    └── elecciones-admin.component.ts
+│   ├── eventos-admin/
+│   │    ├── eventos-admin.component.html
+│   │    ├── eventos-admin.component.scss
+│   │    ├── eventos-admin.component.spec.ts
+│   │    └── eventos-admin.component.ts
+│   ├── partidos-admin/
+│   │    ├── partido-dialog/
+│   │    │    ├── partido-dialog.component.html
+│   │    │    ├── partido-dialog.component.scss
+│   │    │    ├── partido-dialog.component.spec.ts
+│   │    │    └── partido-dialog.component.ts [x] *****
+│   │    ├── partidos-admin.component.html [x] *****
+│   │    ├── partidos-admin.component.scss
+│   │    ├── partidos-admin.component.spec.ts
+│   │    └── partidos-admin.component.ts [x] *****
+│   ├── sedes-admin/
+│   │    ├── sedes-admin.component.html
+│   │    ├── sedes-admin.component.scss
+│   │    ├── sedes-admin.component.spec.ts
+│   │    └── sedes-admin.component.ts
+│   ├── admin-module.ts
+│   └── admin-routing-module.ts
+├── calendario-eventos/
+│   ├── calendario-eventos.component.html
+│   ├── calendario-eventos.component.scss
+│   ├── calendario-eventos.component.spec.ts
+│   └── calendario-eventos.component.ts
+├── candidato-detalle/
+│   ├── calendario-eventos.component.html
+│   ├── calendario-eventos.component.scss
+│   ├── calendario-eventos.component.spec.ts
+│   └── calendario-eventos.component.ts
+├── core/
 ├── home/
 │   ├── home.html
 │   ├── home.ts
 │   └── home.scss
-├── partidos-grid/
-├── partido-detalle/
-├── candidato-detalle/
-├── resultados-grafico/
-├── calendario-eventos/
+├── login/
 ├── mapa-sedes/
-├── services/
-│   ├── candidato.service.ts [x] *****
-│   ├── eleccion.service.ts [x] *****
-│   ├── partido.service.ts [x] *****
-│   ├── sede.service.ts [x] *****
-│   └── evento.service.ts [x] *****
-├── models/
+├── model/
 │   ├── candidato.model.ts [x] *****
 │   ├── comunidad.model.ts [x] *****
 │   ├── eleccion.model.ts [x] *****
@@ -259,7 +298,31 @@ frontend/src/app/
 │   ├── partido-eleccion.model.ts [x] *****
 │   ├── partido.model.ts [x] *****
 │   └── sede.model.ts [x] *****
+├── partido-detalle/
+├── partidos-grid/
+├── resultados-grafico/
+├── services/
+│   ├── candidato.service.ts [x] *****
+│   ├── eleccion.service.ts [x] *****
+│   ├── partido.service.ts [x] *****
+│   ├── sede.service.ts [x] *****
+│   └── evento.service.ts [x] *****
 └── shared/
     └── constants.ts
 
+Día 4 (30/03/2026)
+Creación de el paquete partidoEleccion como auxiliar para la conexión para el mismo partido con Objetos iguales y objetos diferentes.
 
+Día 5 (31/03/2026)
+Creación de Usuario para inicio de sesión o registro junto con seguridad JWT.
+
+Día 6 (01/04/2026)
+Creación de Administrador para modificar datos.
+Componente	Funcionalidad
+AdminDashboard	Panel con estadísticas y accesos rápidos
+PartidosAdmin	CRUD completo de partidos políticos
+PartidoDialog	Formulario para crear/editar partidos
+CandidatosAdmin	(Pendiente) Gestión de candidatos
+EventosAdmin	(Pendiente) Gestión de eventos
+EleccionesAdmin	(Pendiente) Gestión de elecciones
+SedesAdmin	(Pendiente) Gestión de sedes
