@@ -3,19 +3,49 @@
   background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
   padding: 32px 20px;
   text-align: center;
-  color: white;
+  color: #4A3B1A;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      45deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.3) 50%,
+      transparent 70%
+    );
+    animation: shine 5s infinite;
+    z-index: 9800
+  }
+
+  .hero-icon {
+    margin-bottom: 16px;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
+  }
 
   h1 {
     font-size: 1.8rem;
     font-weight: 700;
     margin-bottom: 12px;
     letter-spacing: -0.5px;
+    z-index: 10;
   }
 
   p {
     font-size: 0.9rem;
     opacity: 0.9;
     line-height: 1.4;
+  }
+
+  @keyframes shine {
+    0% { transform: translateX(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) rotate(45deg); }
   }
 }
 
@@ -51,47 +81,77 @@
 }
 
 // ========== GRID PARTIDOS ==========
-.partidos-grid-section {
-  padding: 0 16px;
-  margin-bottom: 24px;
+.partidos-section {
+  margin: 24px 16px;
 
-  .grid {
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text-color);
+
+    lucide-angular {
+      color: var(--primary-color);
+    }
+  }
+
+  .partidos-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
     gap: 16px;
+  }
 
-    .partido-item {
-      text-align: center;
-      cursor: pointer;
-      transition: transform 0.2s;
+  .partido-card {
+    text-align: center;
+    padding: 16px 12px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    transition: all 0.3s ease;
 
-      &:active {
-        transform: scale(0.95);
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    .logo-container {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f8f9fa;
+      border-radius: 16px;
+      padding: 12px;
+
+      img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+    }
+
+    .partido-info {
+      h3 {
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 4px;
+        color: #333;
       }
 
-      .logo-wrapper {
-        width: 70px;
-        height: 70px;
-        margin: 0 auto 8px;
-        background: white;
-        border-radius: 16px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 12px;
-
-        img {
-          max-width: 100%;
-          max-height: 100%;
-          object-fit: contain;
-        }
-      }
-
-      .partido-nombre {
+      .siglas {
         font-size: 11px;
+        color: #999;
         font-weight: 500;
-        color: var(--text-color);
       }
     }
   }
@@ -184,77 +244,7 @@
 
 // ========== EVENTOS ==========
 .eventos-section {
-  padding: 0 16px;
-  margin-bottom: 24px;
-
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-
-    h3 {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--primary-color);
-    }
-
-    .fecha-selector {
-      padding: 8px 12px;
-      border: 1px solid var(--primary-color);
-      border-radius: 20px;
-      font-size: 12px;
-    }
-  }
-
-  .evento-item {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 16px;
-    padding: 12px;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-
-    .evento-icono {
-      width: 48px;
-      height: 48px;
-      background: var(--primary-color);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-
-      mat-icon {
-        font-size: 24px;
-        width: 24px;
-        height: 24px;
-      }
-    }
-
-    .evento-info {
-      flex: 1;
-
-      p {
-        font-size: 13px;
-        font-weight: 500;
-        line-height: 1.4;
-        color: var(--text-color);
-      }
-
-      .evento-fecha {
-        font-size: 11px;
-        color: #666;
-        margin-top: 4px;
-      }
-    }
-  }
-}
-
-// ========== MAPA ==========
-.mapa-section {
-  margin-bottom: 24px 16PX;
+  margin: 24px 16px;
 
   h2 {
     display: flex;
@@ -265,17 +255,104 @@
     margin-bottom: 16px;
     color: var(--text-color);
 
-    mat-icon {
+    lucide-angular {
+      color: var(--primary-color);
+    }
+  }
+
+  .eventos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .evento-card {
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:active {
+      transform: scale(0.99);
+    }
+
+    .evento-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      lucide-angular {
+        color: white;
+      }
+
+      &.nacional {
+        background: linear-gradient(135deg, #C0392B, #F1C40F);
+      }
+
+      &.comunidad {
+        background: linear-gradient(135deg, #4B0082, #9B59B6);
+      }
+
+      &.municipal {
+        background: linear-gradient(135deg, #00236C, #1985FF);
+      }
+    }
+
+    .evento-info {
+      flex: 1;
+
+      h4 {
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 4px;
+        color: #333;
+      }
+
+      p {
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 4px;
+      }
+
+      .fecha {
+        font-size: 11px;
+        color: #999;
+      }
+    }
+  }
+}
+
+// ========== MAPA ==========
+.mapa-section {
+  margin: 24px 16px;
+  padding-bottom: 80px;
+
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text-color);
+
+    lucide-angular {
       color: var(--primary-color);
     }
   }
 
   .mapa-container {
     position: relative;
-    border-radius: 16px;
+    border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    background: #f0f0f0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 
     app-mapa-espania {
       display: block;
@@ -283,15 +360,9 @@
       height: 400px;
     }
 
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
     .zoom-controls {
       position: absolute;
-      right: 12px;
+      right: 16px;
       top: 50%;
       transform: translateY(-50%);
       display: flex;
@@ -300,23 +371,29 @@
       z-index: 1000;
 
       button {
-        width: 32px;
-        height: 36px;
+        width: 40px;
+        height: 40px;
         background: white;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        font-size: 18px;
-        font-weight: bold;
+        border: none;
+        border-radius: 12px;
         cursor: pointer;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
         transition: all 0.2s;
 
         &:hover {
           background: #f5f5f5;
+          transform: scale(1.05);
         }
 
         &:active {
           transform: scale(0.95);
+        }
+
+        lucide-angular {
+          color: #333;
         }
       }
     }
@@ -379,7 +456,7 @@
 
   .niveles {
     display: flex;
-    gap: 8px;
+    gap: 12px;
     margin-bottom: 20px;
 
     .nivel-btn {
@@ -393,26 +470,27 @@
       border: 1px solid #e0e0e0;
       border-radius: 16px;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: all 0.3s ease;
 
-      mat-icon {
-        font-size: 24px;
-        width: 24px;
-        height: 24px;
+      lucide-angular {
         color: #999;
+        transition: all 0.3s ease;
       }
 
       span {
         font-size: 11px;
-        font-weight: 500;
+        font-weight: 600;
         color: #666;
+        transition: all 0.3s ease;
       }
 
       &.active {
         background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
         border-color: transparent;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 
-        mat-icon, span {
+        lucide-angular, span {
           color: white;
         }
       }
@@ -421,22 +499,6 @@
         transform: scale(0.98);
       }
     }
-  }
-
-  .selector-comunidad, .selector-municipio {
-    margin-top: 16px;
-  }
-}
-
-.comunidad-option {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-
-  .color-dot {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
   }
 }
 
@@ -639,5 +701,21 @@
         color: #999;
       }
     }
+  }
+}
+
+// ========== NO DATA ==========
+.no-data {
+  text-align: center;
+  padding: 40px 20px;
+
+  lucide-angular {
+    color: #ccc;
+    margin-bottom: 16px;
+  }
+
+  p {
+    color: #999;
+    font-size: 14px;
   }
 }

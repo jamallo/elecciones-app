@@ -2,7 +2,7 @@
   <!-- HERO SECTION DORADO METÁLICO -->
   <div class="hero-section metallic-bg">
     <div class="hero-content">
-      <mat-icon class="hero-icon">how_to_vote</mat-icon>
+      <lucide-angular name="Vote" class="hero-icon" [size]="48" [strokeWidth]="1.5"></lucide-angular>
       <h1>Elecciones 2027</h1>
       <p>Información electoral transparente y accesible para todos los ciudadanos</p>
     </div>
@@ -17,7 +17,8 @@
             class="nivel-btn"
             [class.active]="nivelSeleccionado === nivel.tipo"
             (click)="onNivelChange(nivel.tipo)">
-            <mat-icon>{{ nivel.icon }}</mat-icon>
+            <lucide-angular [name]="nivel.icon === 'public' ? 'Globe' : (nivel.icon === 'account_balance' ? 'Building2' : 'Building')"
+                            [size]="24" [strokeWidth]="1.5"></lucide-angular>
             <span>{{ nivel.nombre }}</span>
           </button>
         }
@@ -43,14 +44,16 @@
       }
 
       <!-- Selector de Municipio -->
-      @if (mostrarSelectorMunicipio && nivelSeleccionado === 'MUNICIPAL') {
+      @if (mostrarSelectorMunicipio && nivelSeleccionado === 'MUNICIPAL' && municipios.length > 0) {
         <div class="selector-municipio">
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Selecciona un municipio</mat-label>
             <mat-select (selectionChange)="onMunicipioChange($event.value)">
               @for (municipio of municipios; track municipio.id) {
                 <mat-option [value]="municipio">
-                  {{ municipio.nombre }}
+                  <div class="muicipio-option">
+                    {{ municipio.nombre }}
+                  </div>
                 </mat-option>
               }
             </mat-select>
@@ -60,9 +63,14 @@
     </div>
 
     <!-- PARTIDOS (según selección) -->
+     <div style="display: none;">Partidos cargados: {{partidos.length}}</div>
+
     @if (partidos.length > 0) {
       <div class="partidos-section">
-        <h2>Partidos que se presentan</h2>
+        <h2>
+          <lucide-angular name="Users" [size]="20"></lucide-angular>
+          Partidos que se presentan para las elecciones de {{ eleccionSeleccionada?.ambito }}
+        </h2>
         <div class="partidos-grid">
           @for (partido of partidos; track partido.id) {
             <div class="partido-card" (click)="verPartido(partido.id)">
@@ -77,26 +85,36 @@
           }
         </div>
       </div>
+    } @else if (nivelSeleccionado === 'NACIONAL' && !loading && partidos.length === 0) {
+      <div class="no-data">
+        <lucide-angular name="AlertCircle" [size]="48" [strokeWidth]="1.5"></lucide-angular>
+        <p>No hay partidos registrados para esta elección</p>
+        <button (click)="cargarPartidosNacionales()" class="retry-btn">
+          <lucide-angular name="RefreshCw" [size]="16"></lucide-angular>
+          Reintentar
+        </button>
+      </div>
     }
+
+    <!-- Mostrar mensaje si no hay partidos -->
+  @if (partidos.length === 0 && nivelSeleccionado === 'NACIONAL') {
+    <div class="no-data" style="padding: 40px; text-align: center; background: #f5f5f5; margin: 20px; border-radius: 16px;">
+      <p>No hay partidos para mostrar. Partidos.length = {{ partidos.length }}</p>
+    </div>
+  }
 
     <!-- EVENTOS RECIENTES -->
     <div class="eventos-section">
       <h2>
-        <mat-icon>event</mat-icon>
+        <lucide-angular name="Calendar" [size]="20"></lucide-angular>
         Últimos eventos
       </h2>
       <div class="eventos-list">
         @for (evento of eventos; track evento.id) {
           <div class="evento-card" (click)="verEvento(evento.id)">
             <div class="evento-icon" [class]="evento.tipo.toLowerCase()">
-              <mat-icon>
-                @switch (evento.tipo) {
-                  @case ('NACIONAL') { public }
-                  @case ('COMUNIDAD') { account_balance }
-                  @case ('MUNICIPAL') { location_city }
-                  @default { event }
-                }
-              </mat-icon>
+              <lucide-angular [name]="evento.tipo === 'NACIONAL' ? 'Globe' : (evento.tipo === 'COMUNIDAD' ? 'Building2' : 'Building')"
+                              [size]="24" [strokeWidth]="1.5"></lucide-angular>
             </div>
             <div class="evento-info">
               <h4>{{ evento.titulo }}</h4>
@@ -111,7 +129,7 @@
     <!-- MAPA INTERACTIVO DE ESPAÑA -->
     <div class="mapa-section">
       <h2>
-        <mat-icon>map</mat-icon>
+        <lucide-angular name="Map" [size]="20"></lucide-angular>
         Mapa electoral
       </h2>
       <div class="mapa-container">
@@ -119,11 +137,16 @@
           [comunidadSeleccionada]="comunidadSeleccionada"
           [municipioSeleccionado]="municipioSeleccionado"
           (onComunidadClick)="onComunidadChange($event)"
-          (onMunicipioClick)="onMunicipioChange($event)">
+          (onMunicipioClick)="onMunicipioChange($event)"
+          >
         </app-mapa-espania>
         <div class="zoom-controls">
-          <button (click)="zoomIn()">+</button>
-          <button (click)="zoomOut()">-</button>
+          <button (click)="zoomIn()">
+            <lucide-angular name="Plus" [size]="16"></lucide-angular>
+          </button>
+          <button (click)="zoomOut()">
+            <lucide-angular name="Minus" [size]="16"></lucide-angular>
+          </button>
         </div>
       </div>
     </div>

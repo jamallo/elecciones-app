@@ -24,12 +24,12 @@ export class TemaService {
 
   getTemaNeutral(): Tema {
     return {
-      colorPrincipal: '#00236C',
-      colorSecundario: '#1985FF',
-      colorAcento: '#6c757d',
-      colorFondo: '#FFFFFF',
+      colorPrincipal: '#D4AF37',  // Dorado metálico
+      colorSecundario: '#C5A028',
+      colorAcento: '#E5B83C',
+      colorFondo: '#FFFDF7',
       tipo: 'NEUTRAL',
-      nombre: 'Neutral'
+      nombre: 'Elecciones 2027'
     };
   }
 
@@ -51,11 +51,7 @@ export class TemaService {
     .pipe(tap(tema => this.temaSubject.next(tema)));
   }
 
-  //Tema nacional (España)
-  cargarTemaNacional(): Observable<Tema> {
-    return this.http.get<Tema>(`${this.apiUrl}/nacional/tema`)
-    .pipe(tap(tema => this.temaSubject.next(tema)));
-  }
+
 
   setTema(tema: Tema): void {
     this.temaSubject.next(tema);
@@ -64,4 +60,15 @@ export class TemaService {
   resetToNeutral(): void {
     this.temaSubject.next(this.getTemaNeutral());
   }
+
+  //Tema nacional (España)
+  cargarTemaNacional(): Observable<Tema> {
+    return this.http.get<Tema>(`${this.apiUrl}/nacional/tema`)
+      .pipe(tap(tema => {
+        console.log('Tema nacional cargando: ', tema);
+        this.temaSubject.next(tema);
+      })
+    );
+  }
 }
+

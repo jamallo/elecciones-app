@@ -2,37 +2,37 @@
   <!-- BARRA SUPERIOR MOBILE -->
   <mat-toolbar color="primary" class="toolbar-mobile">
     <button mat-icon-button (click)="toggleMenu()" class="menu-button">
-      <mat-icon>menu</mat-icon>
+      <lucide-angular name="Menu" [size]="22" [strokeWidth]="1.5"></lucide-angular>
     </button>
     <div class="logo-container">
-      <mat-icon class="logo-icon">how_to_vote</mat-icon>
+      <lucide-angular name="Vote" class="logo-icon" [size]="24" [strokeWidth]="1.5"></lucide-angular>
       <span class="toolbar-title">Elecciones 2027</span>
     </div>
     <div class="spacer"></div>
     @if ((authService.currentUser$ | async); as user) {
       <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-button">
-        <mat-icon>account_circle</mat-icon>
+        <lucide-angular name="User" [size]="22" [strokeWidth]="1.5"></lucide-angular>
       </button>
       <mat-menu #userMenu="matMenu">
         <button mat-menu-item disabled>
-          <mat-icon>person</mat-icon>
+          <lucide-angular name="User" [size]="16"></lucide-angular>
           {{ user.nombre }}
         </button>
         <mat-divider></mat-divider>
         @if (user.rol !== 'USUARIO') {
           <button mat-menu-item routerLink="/admin">
-            <mat-icon>admin_panel_settings</mat-icon>
+            <lucide-angular name="Shield" [size]="16"></lucide-angular>
             Administración
           </button>
         }
         <button mat-menu-item (click)="logout()">
-          <mat-icon>logout</mat-icon>
+          <lucide-angular name="LogOut" [size]="16"></lucide-angular>
           Cerrar sesión
         </button>
       </mat-menu>
     } @else {
       <button mat-icon-button routerLink="/login" class="login-button">
-        <mat-icon>login</mat-icon>
+        <lucide-angular name="LogIn" [size]="22" [strokeWidth]="1.5"></lucide-angular>
       </button>
     }
   </mat-toolbar>
@@ -41,28 +41,32 @@
   <div class="side-menu" [class.open]="menuOpen" (click)="closeMenu()">
     <div class="side-menu-content" (click)="$event.stopPropagation()">
       <div class="menu-header">
-        <mat-icon>how_to_vote</mat-icon>
+        <lucide-angular name="Vote" [size]="28"></lucide-angular>
         <span>Elecciones 2027</span>
         <button mat-icon-button (click)="closeMenu()">
-          <mat-icon>close</mat-icon>
+          <lucide-angular name="X" [size]="20"></lucide-angular>
         </button>
       </div>
       <mat-nav-list>
         <a mat-list-item routerLink="/" (click)="closeMenu()">
-          <mat-icon matListItemIcon>home</mat-icon>
+          <lucide-angular name="Home" [size]="20" class="menu-icon"></lucide-angular>
           <span matListItemTitle>Inicio</span>
         </a>
         <a mat-list-item routerLink="/mapa" (click)="closeMenu()">
-          <mat-icon matListItemIcon>map</mat-icon>
+          <lucide-angular name="Map" [size]="20" class="menu-icon"></lucide-angular>
           <span matListItemTitle>Mapa electoral</span>
         </a>
         <a mat-list-item routerLink="/resultados" (click)="closeMenu()">
-          <mat-icon matListItemIcon>bar_chart</mat-icon>
+          <lucide-angular name="BarChart3" [size]="20" class="menu-icon"></lucide-angular>
           <span matListItemTitle>Resultados</span>
         </a>
         <a mat-list-item routerLink="/calendario" (click)="closeMenu()">
-          <mat-icon matListItemIcon>event</mat-icon>
+          <lucide-angular name="Calendar" [size]="20" class="menu-icon"></lucide-angular>
           <span matListItemTitle>Calendario</span>
+        </a>
+        <a mat-list-item routerLink="/partidos" (click)="closeMenu()">
+          <lucide-angular name="Users" [size]="20" class="menu-icon"></lucide-angular>
+          <span matListItemTitle>Partidos</span>
         </a>
       </mat-nav-list>
     </div>
@@ -76,23 +80,23 @@
   <!-- BARRA INFERIOR MOBILE (TAB BAR) -->
   <div class="bottom-tab-bar">
     <button (click)="navigateTo('/')" [class.active]="isActive('/')">
-      <mat-icon>home</mat-icon>
+      <lucide-angular name="Home" [size]="22"></lucide-angular>
       <span>Inicio</span>
     </button>
     <button (click)="navigateTo('/mapa')" [class.active]="isActive('/mapa')">
-      <mat-icon>map</mat-icon>
+      <lucide-angular name="Map" [size]="22"></lucide-angular>
       <span>Mapa</span>
     </button>
     <button (click)="navigateTo('/resultados')" [class.active]="isActive('/resultados')">
-      <mat-icon>bar_chart</mat-icon>
+      <lucide-angular name="BarChart3" [size]="22"></lucide-angular>
       <span>Resultados</span>
     </button>
     <button (click)="navigateTo('/calendario')" [class.active]="isActive('/calendario')">
-      <mat-icon>event</mat-icon>
+      <lucide-angular name="Calendar" [size]="22"></lucide-angular>
       <span>Eventos</span>
     </button>
     <button (click)="navigateTo('/partidos')" [class.active]="isActive('/partidos')">
-      <mat-icon>groups</mat-icon>
+      <lucide-angular name="Users" [size]="22"></lucide-angular>
       <span>Partidos</span>
     </button>
   </div>

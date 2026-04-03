@@ -2,9 +2,10 @@ export interface Comunidad {
   id: number;
   nombre: string;
   capital: string;
-  poblacion: number;
+  poblacion?: number;
   colorPrimario: string;
   colorSecundario: string;
   colorAcento: string;
   colorFondo: string;
+  centro?: [number, number];
 }

@@ -17,20 +17,42 @@ export class EleccionService {
 
   constructor(private http: HttpClient) {}
 
+  //ELECCIONES
+
   getElecciones(): Observable<Eleccion[]> {
-    return this.http.get<Eleccion[]>(this.apiUrl);
+    return this.http.get<Eleccion[]>(`${this.apiUrl}/elecciones`);
+  }
+
+  getEleccion(id: number): Observable<Eleccion> {
+    return this.http.get<Eleccion>(`${this.apiUrl}/elecciones/${id}`);
   }
 
   getPartidosByEleccion(tipo: string, ambito: string): Observable<PartidoEleccionResumen[]> {
     return this.http.get<PartidoEleccionResumen[]>(`${this.apiUrl}/elecciones/${tipo}/${ambito}/partidos`);
   }
 
+  //MUNICIPIOS
+
   getMunicipios(): Observable<Municipio[]> {
     return this.http.get<Municipio[]>(`${this.apiUrl}/municipios`);
   }
 
+  gerMunicipio(id: number): Observable<Municipio> {
+    return this.http.get<Municipio>(`${this.apiUrl}/municipios/${id}`);
+  }
+
+  getMunicipiosByComunidad(comunidad: string): Observable<Municipio[]> {
+    return this.http.get<Municipio[]>(`${this.apiUrl}/municipios/comunidad/${comunidad}`);
+  }
+
+  //COMUNIDADES
+
   getComunidades(): Observable<Comunidad[]> {
     return this.http.get<Comunidad[]>(`${this.apiUrl}/comunidades`);
+  }
+
+  getComunidad(id: number): Observable<Comunidad> {
+    return this.http.get<Comunidad>(`${this.apiUrl}/comunidades/${id}`);
   }
 
   //Para elección (CRUD - CREATE, READ, UPDATE, DELETE)

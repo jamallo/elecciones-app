@@ -44,6 +44,9 @@ import { LoginComponent } from './login/login.component';
 import { authInterceptor } from './core/interceptors/auth-interceptor';
 import { MapaEspaniaComponent } from './mapa-espania/mapa-espania.component';
 
+//Iconos
+import { LucideAngularModule, Home, Map, BarChart3, Calendar, Users, Vote, Globe, Building2, Building, Phone, Mail, ExternalLink, ChevronDown, ChevronUp, Plus, Minus, Search, Menu, X, User, LogIn, LogOut, Shield, Settings, AlertCircle, RefreshCw } from 'lucide-angular';
+
 
 @NgModule({
   declarations: [
@@ -78,7 +81,35 @@ import { MapaEspaniaComponent } from './mapa-espania/mapa-espania.component';
     MatTooltipModule,
     MatDividerModule,
     MatProgressSpinnerModule,
-    MatMenuModule
+    MatMenuModule,
+    LucideAngularModule.pick({
+      Home,
+      Map,
+      BarChart3,
+      Calendar,
+      Users,
+      Vote,
+      Globe,
+      Building2,
+      Building,
+      Phone,
+      Mail,
+      ExternalLink,
+      ChevronDown,
+      ChevronUp,
+      Plus,
+      Minus,
+      Search,
+      Menu,
+      X,
+      User,
+      LogIn,
+      LogOut,
+      Shield,
+      Settings,
+      AlertCircle,
+      RefreshCw
+    })
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),
@@ -91,7 +122,8 @@ import { MapaEspaniaComponent } from './mapa-espania/mapa-espania.component';
     TemaService,
     CandidatoService,
     EventoService,
-    SedeService
+    SedeService,
+
   ],
   bootstrap: [App]
 })
