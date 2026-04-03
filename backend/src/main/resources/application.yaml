@@ -1,8 +1,10 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/elecciones_db
-    username: postgres
-    password: postgres
+    url: **************************************************
+    username: ******************
+    password: ***********************
+    driver-class-name: org.postgresql.Driver
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -11,6 +13,9 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
 
 server:
   port: 8080
@@ -20,7 +25,10 @@ cors:
 
 logging:
   level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.desciptor.sql.BasicBinder: TRACE
     com.elecciones: DEBUG
 
 jwt:
+  secret: mi_clave_super_segura_12345678901234567890
   expiration: 36000000

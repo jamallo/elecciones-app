@@ -9,12 +9,22 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ComunidadServicio {
 
     private final ComunidadRepositorio comunidadRepositorio;
     private final ComunidadMapeador comunidadMapeador;
+
+    @Transactional(readOnly = true)
+    public List<ComunidadDTO> listarTodas() {
+        return comunidadRepositorio.findAll()
+                .stream()
+                .map(comunidadMapeador::toDTO)
+                .toList();
+    }
 
     @Transactional(readOnly = true)
     public ComunidadDTO buscarPorId(Long id) {
