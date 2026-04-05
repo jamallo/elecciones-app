@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +25,7 @@ public class MunicipioServicio {
                 .findAll()
                 .stream()
                 .map(municipioMapeador::toDTO)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
@@ -57,5 +58,14 @@ public class MunicipioServicio {
         municipio = municipioRepositorio.save(municipio);
 
         return municipioMapeador.toDTO(municipio);
+    }
+
+    @Transactional(readOnly = true)
+    public List<MunicipioDTO> buscarPorComunidad(String comunidad) {
+        // Buscar municipios cuya comunidadAutonoma coincida
+        List<Municipio> municipios = municipioRepositorio.findByComunidadAutonomaIgnoreCase(comunidad);
+        return municipios.stream()
+                .map(municipioMapeador::toDTO)
+                .collect(Collectors.toList());
     }
 }

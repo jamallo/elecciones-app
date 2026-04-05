@@ -10,4 +10,6 @@ public interface EventoRepositorio extends JpaRepository<Evento, Long> {
     //List<Evento> findByPartidoIdOrderByFechaAsc(Long partidoId);
     List<Evento> findByPartidoEleccionIdOrderByFechaAsc(Long partidoEleccionId);
     List<Evento> findByFechaBetween(LocalDateTime inicio, LocalDateTime fin);
+    // Últimos 5 eventos por fecha
+    List<Evento> findTop5ByOrderByFechaDesc();
 }

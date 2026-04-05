@@ -1,5 +1,7 @@
 package com.elecciones.backend.evento.servicio;
 
+import com.elecciones.backend.eleccion.modelo.entidad.Eleccion;
+import com.elecciones.backend.eleccion.repositorio.EleccionRepositorio;
 import com.elecciones.backend.evento.mapeador.EventoMapeador;
 import com.elecciones.backend.evento.modelo.dto.EventoDTO;
 import com.elecciones.backend.evento.modelo.dto.EventoDetalleDTO;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.plaf.PanelUI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +25,7 @@ public class EventoServicio {
     private final EventoRepositorio eventoRepositorio;
     private final PartidoEleccionRepositorio partidoEleccionRepositorio;
     private final EventoMapeador eventoMapeador;
+    private final EleccionRepositorio eleccionRepositorio;
 
 
     //PARA EVENTO (Implementar métodos CRUD - CREATE, READ, UPDATE, DELETE)
@@ -92,4 +96,29 @@ public class EventoServicio {
                 .toList();
     }
 
+    // ========== MÉTODOS PÚBLICOS ==========
+
+    @Transactional(readOnly = true)
+    public List<EventoDetalleDTO> findByEleccionTipoAndAmbito(String tipo, String ambito) {
+        // Buscar la elección por tipo y ámbito
+        Eleccion eleccion = eleccionRepositorio.findByTipoAndAmbito(tipo, ambito)
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("Elección no encontrada: " + tipo + " - " + ambito));
+
+        // Buscar todas las participaciones de esa elección
+        List<PartidoEleccion> participaciones = partidoEleccionRepositorio.findByEleccionId(eleccion.getId());
+
+        // Recoger todos los eventos de esas participaciones
+        return participaciones.stream()
+                .flatMap(pe -> pe.getEventos().stream())
+                .map(eventoMapeador::toDetalleDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<EventoDetalleDTO> findTop5ByOrderByFechaDesc() {
+        return eventoRepositorio.findTop5ByOrderByFechaDesc()
+                .stream()
+                .map(eventoMapeador::toDetalleDTO)
+                .collect(Collectors.toList());
+    }
 }

@@ -61,4 +61,22 @@ public class EventoControlador {
     public ResponseEntity<List<EventoDetalleDTO>> listarPorParticipacion(@PathVariable Long partidoEleccionId) {
         return ResponseEntity.ok(eventoServicio.litarPorPartidoEleccion(partidoEleccionId));
     }
+
+    // ========== ENDPOINTS PÚBLICOS ==========
+
+    @GetMapping("/eleccion/{tipo}/{ambito}")
+    @Operation(summary = "Obtener eventos por tipo y ámbito de elección")
+    public ResponseEntity<List<EventoDetalleDTO>> getEventosByEleccion(
+            @PathVariable String tipo,
+            @PathVariable String ambito) {
+        List<EventoDetalleDTO> eventos = eventoServicio.findByEleccionTipoAndAmbito(tipo, ambito);
+        System.out.println("Eventos encontrados para " + tipo + " - " + ambito + ": " + eventos.size());
+        return ResponseEntity.ok(eventos);
+    }
+
+    @GetMapping("/ultimos")
+    @Operation(summary = "Obtener últimos 5 eventos")
+    public ResponseEntity<List<EventoDetalleDTO>> getUltimosEventos() {
+        return ResponseEntity.ok(eventoServicio.findTop5ByOrderByFechaDesc());
+    }
 }

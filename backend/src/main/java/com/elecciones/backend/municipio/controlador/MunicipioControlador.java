@@ -60,4 +60,10 @@ public class MunicipioControlador {
 
         return ResponseEntity.ok(tema);
     }
+
+    @GetMapping("/comunidad/{comunidad}")
+    @Operation(summary = "Obtener municipios por nombre de comunidad autónoma")
+    public ResponseEntity<List<MunicipioDTO>> getMunicipiosByComunidad(@PathVariable String comunidad) {
+        return ResponseEntity.ok(municipioServicio.buscarPorComunidad(comunidad));
+    }
 }
