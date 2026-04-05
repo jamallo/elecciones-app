@@ -4,29 +4,28 @@
 }
 
 #mapa-sedes {
-  height: 400px;
+  height: 300px;
   width: 100%;
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
+@media (min-width: 768px) {
+  #mapa-sedes {
+    height: 400px;
+  }
+}
+
+// Estilos para los marcadores
 ::ng-deep {
   .colegio-marker {
-    background: none;
-    border: none;
-
     .colegio-icon {
       font-size: 24px;
       filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.2));
-      cursor: pointer;
     }
   }
 
   .partido-marker {
-    background: none;
-    border: none;
-
     .partido-icon {
       width: 30px;
       height: 30px;
@@ -38,12 +37,15 @@
       font-weight: bold;
       font-size: 12px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-      cursor: pointer;
-      transition: transform 0.2s;
+    }
+  }
 
-      &:hover {
-        transform: scale(1.1);
-      }
+  .leaflet-popup-content {
+    min-width: 150px;
+
+    b {
+      display: block;
+      margin-bottom: 4px;
     }
   }
 }

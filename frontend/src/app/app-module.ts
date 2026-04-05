@@ -8,8 +8,14 @@ import { HomeComponent } from './home/home.component';
 import { PartidosGrid } from './partidos-grid/partidos-grid';
 import { CandidatoDetalle } from './candidato-detalle/candidato-detalle';
 import { provideHttpClient, withInterceptors, withInterceptorsFromDi } from '@angular/common/http';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+//import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+//import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { PartidoDetalleComponent } from './partido-detalle/partido-detalle.component';
+import { MapaSedesComponent } from './mapa-sedes/mapa-sedes.component';
+import { ResultadosGraficoComponent } from './resultados-grafico/resultados-grafico.component';
+import { CalendarioEventosComponent } from './calendario-eventos/calendario-eventos.component';
+import { LoginComponent } from './login/login.component';
+import { MapaEspaniaComponent } from './mapa-espania/mapa-espania.component';
 
 //Anguar Material
 import { FormsModule } from '@angular/forms';
@@ -29,10 +35,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
-import { PartidoDetalleComponent } from './partido-detalle/partido-detalle.component';
-import { MapaSedesComponent } from './mapa-sedes/mapa-sedes.component';
-import { ResultadosGraficoComponent } from './resultados-grafico/resultados-grafico.component';
-import { CalendarioEventosComponent } from './calendario-eventos/calendario-eventos.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
+
+//Servicios
 import { EleccionService } from './services/eleccion.service';
 import { PartidoService } from './services/partido.service';
 import { AuthService } from './services/auth.service';
@@ -40,14 +46,49 @@ import { TemaService } from './services/tema.service';
 import { CandidatoService } from './services/candidato.service';
 import { EventoService } from './services/evento.service';
 import { SedeService } from './services/sede.service';
-import { LoginComponent } from './login/login.component';
-import { authInterceptor } from './core/interceptors/auth-interceptor';
-import { MapaEspaniaComponent } from './mapa-espania/mapa-espania.component';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatInputModule } from '@angular/material/input';
 
-//Iconos
-import { LucideAngularModule, Home, Map, BarChart3, Calendar, Users, Vote, Globe, Building2, Building, Phone, Mail, ExternalLink, ChevronDown, ChevronUp, Plus, Minus, Search, Menu, X, User, LogIn, LogOut, Shield, Settings, AlertCircle, RefreshCw, CalendarX, MapPin, Mic2 } from 'lucide-angular';
+//Interceptor
+import { authInterceptor } from './core/interceptors/auth-interceptor';
+//Iconos Lucide
+import {
+  LucideAngularModule,
+  Home,
+  Map,
+  BarChart3,
+  Calendar,
+  Users,
+  Vote,
+  Globe,
+  Building2,
+  Building,
+  Phone,
+  Mail,
+  ExternalLink,
+  ChevronDown,
+  ChevronUp,
+  Plus,
+  Minus,
+  Search,
+  Menu,
+  X,
+  User,
+  LogIn,
+  LogOut,
+  Shield,
+  Settings,
+  AlertCircle,
+  RefreshCw,
+  CalendarX,
+  MapPin,
+  Mic2,
+  ArrowLeft,
+  History,
+  FileText, CalendarDays,
+  BookOpen,
+  FileCheck,
+  CalendarClock,
+  ChevronLeft
+ } from 'lucide-angular';
 
 
 @NgModule({
@@ -115,14 +156,22 @@ import { LucideAngularModule, Home, Map, BarChart3, Calendar, Users, Vote, Globe
       RefreshCw,
       CalendarX,
       MapPin,
-      Mic2
+      Mic2,
+      ArrowLeft,
+      History,
+      FileText,
+      CalendarDays,
+      BookOpen,
+      FileCheck,
+      CalendarClock,
+      ChevronLeft
     })
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideHttpClient(withInterceptorsFromDi()),
-    provideAnimationsAsync(),
+    //provideAnimationsAsync(),
     EleccionService,
     PartidoService,
     AuthService,

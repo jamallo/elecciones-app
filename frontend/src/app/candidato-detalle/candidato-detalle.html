@@ -1,10 +1,114 @@
-<div class="container mt-4">
-  <div class="alert alert-info">
-    <h3>Detalle del Candidato</h3>
-    <p>ID del candidato: {{ candidatoId }}</p>
-    <button mat-raised-button color="primary" routerLink="/">
-      <mat-icon>arrow_back</mat-icon>
-      Volver al inicio
-    </button>
-  </div>
+<div class="candidato-container" appTema [style.backgroundColor]="'var(--bg-color)'">
+  @if (loading) {
+    <div class="loading-spinner">
+      <mat-spinner [style.color]="'var(--primary-color)'"></mat-spinner>
+    </div>
+  }
+
+  @if (!loading && candidato) {
+    <!-- Cabecera -->
+    <div class="candidato-header" [style.background]="'var(--header-gradient)'">
+      <button class="back-button" (click)="volverAlInicio()">
+        <lucide-angular name="ArrowLeft" [size]="20" [strokeWidth]="1.5"></lucide-angular>
+      </button>
+      <div class="foto-container">
+        <img [src]="candidato.fotoUrl" [alt]="candidato.nombre" (error)="handleImageError($event)">
+      </div>
+      <h1 [style.color]="'var(--primary-color)'">{{ candidato.nombre }}</h1>
+      <p class="cargo">{{ candidato.cargo }}</p>
+      <div class="partido-info" (click)="volverAlPartido()">
+        <lucide-angular name="Building" [size]="16" [strokeWidth]="1.5"></lucide-angular>
+        <span>{{ candidato.partidoNombre }} ({{ candidato.partidoSiglas }})</span>
+      </div>
+      <div class="eleccion-info">
+        <lucide-angular name="Vote" [size]="14" [strokeWidth]="1.5"></lucide-angular>
+        <span>{{ candidato.eleccionTipo === 'MUNICIPAL' ? 'Elecciones Municipales' :
+               candidato.eleccionTipo === 'AUTONOMICA' ? 'Elecciones Autonómicas' : 'Elecciones Nacionales' }}
+               - {{ candidato.eleccionAmbito }} {{ candidato.eleccionAnio }}
+        </span>
+      </div>
+      <div class="posicion-badge">
+        <lucide-angular name="Award" [size]="14" [strokeWidth]="1.5"></lucide-angular>
+        <span>{{ candidato.posicionLista }}º en la lista electoral</span>
+      </div>
+    </div>
+
+    <!-- Biografía -->
+    <div class="biografia-section">
+      <h2>
+        <lucide-angular name="BookOpen" [size]="20" [strokeWidth]="1.5"></lucide-angular>
+        Biografía
+      </h2>
+      <div class="biografia-content">
+        <p class="resumen">{{ candidato.biografia | slice:0:200 }}...</p>
+        <button class="leer-mas" (click)="abrirBiografiaCompleta()">
+          Leer más
+          <lucide-angular name="ChevronRight" [size]="14" [strokeWidth]="1.5"></lucide-angular>
+        </button>
+      </div>
+    </div>
+
+    <!-- Información adicional -->
+    <div class="info-adicional">
+      <div class="info-card">
+        <lucide-angular name="MapPin" [size]="20" [strokeWidth]="1.5"></lucide-angular>
+        <div>
+          <h4>Ámbito</h4>
+          <p>{{ candidato.eleccionTipo === 'MUNICIPAL' ? 'Municipal' :
+                 candidato.eleccionTipo === 'AUTONOMICA' ? 'Autonómico' : 'Nacional' }}</p>
+        </div>
+      </div>
+      <div class="info-card">
+        <lucide-angular name="Calendar" [size]="20" [strokeWidth]="1.5"></lucide-angular>
+        <div>
+          <h4>Año electoral</h4>
+          <p>{{ candidato.eleccionAnio }}</p>
+        </div>
+      </div>
+      <div class="info-card">
+        <lucide-angular name="Users" [size]="20" [strokeWidth]="1.5"></lucide-angular>
+        <div>
+          <h4>Posición</h4>
+          <p>{{ candidato.posicionLista }}º en la lista</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enlace al partido -->
+    <div class="partido-link">
+      <button (click)="volverAlPartido()">
+        <lucide-angular name="Building2" [size]="18" [strokeWidth]="1.5"></lucide-angular>
+        Ver información del partido
+        <lucide-angular name="ArrowRight" [size]="16" [strokeWidth]="1.5"></lucide-angular>
+      </button>
+    </div>
+  }
+
+  <!-- Modal biografía completa -->
+  @if (mostrarBiografiaCompleta && candidato) {
+    <div class="modal-overlay" (click)="cerrarModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>
+            <lucide-angular name="BookOpen" [size]="24" [strokeWidth]="1.5"></lucide-angular>
+            Biografía de {{ candidato.nombre }}
+          </h2>
+          <button class="close-modal" (click)="cerrarModal()">
+            <lucide-angular name="X" [size]="20" [strokeWidth]="1.5"></lucide-angular>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="foto-mini">
+            <img [src]="candidato.fotoUrl" [alt]="candidato.nombre">
+          </div>
+          <h3>{{ candidato.nombre }}</h3>
+          <p class="cargo-modal">{{ candidato.cargo }}</p>
+          <p class="biografia-completa">{{ candidato.biografia }}</p>
+        </div>
+        <div class="modal-footer">
+          <button (click)="cerrarModal()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  }
 </div>

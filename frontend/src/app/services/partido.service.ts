@@ -26,6 +26,7 @@ export class PartidoService {
 
   //PARTICIPACIONES
   getParticipacionesPorEleccion(eleccionId: number): Observable<PartidoEleccionResumen[]> {
+    console.log('API call: /api/partidos/eleccion/' + eleccionId);
     return this.http.get<PartidoEleccionResumen[]>(`${this.apiUrl}/eleccion/${eleccionId}`);
   }
 

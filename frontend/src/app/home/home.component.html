@@ -96,18 +96,25 @@
             Partidos que se presentan para las elecciones en {{ comunidadSeleccionada.nombre }}
           } @else if (nivelSeleccionado === 'MUNICIPAL' && municipioSeleccionado) {
             Partidos que se presentan para las elecciones en {{ municipioSeleccionado.nombre }}
+          } @else {
+            Partidos que se presentan
           }
 
         </h2>
         <div class="partidos-grid">
           @for (partido of partidos; track partido.id) {
             <div class="partido-card" (click)="verPartido(partido.id)">
+              <!-- ********Mostrar debug********** -->
+              <div class="debug" style="font-size: 10px; color: red;">
+                ID partido: {{ partido.id }} | Tipo: {{ partido.eleccionTipo }}
+              </div>
               <div class="logo-container">
                 <img [src]="partido.partidoLogoUrl" [alt]="partido.partidoNombre">
               </div>
               <div class="partido-info">
                 <h3>{{ partido.partidoNombre }}</h3>
                 <span class="siglas">{{ partido.partidoSiglas }}</span>
+                <span class="eleccion-tipo">{{ partido.eleccionTipo }} - {{ partido.eleccionAmbito }}</span>
               </div>
             </div>
           }

@@ -8,7 +8,7 @@ export interface Candidato {
   partidoEleccionId?: number;
 }
 
-export interface CandidatoDetalle extends Candidato {
+export interface CandidatoDetalles extends Candidato {
   partidoId: number;
   partidoNombre: string;
   partidoSiglas: string;

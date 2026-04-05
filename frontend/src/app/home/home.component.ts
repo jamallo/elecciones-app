@@ -148,6 +148,11 @@ export class HomeComponent implements OnInit {
     this.loading = true;
     this.partidoService.getParticipacionesPorEleccion(eleccionId).subscribe({
       next: (partidos) => {
+        console.log('Partidos recibidos del API:', partidos);
+        // Verificar la estructura de cada partido
+        partidos.forEach(p => {
+          console.log(`Partido: ${p.partidoNombre}, ID participación: ${p.id}, partidoId: ${p.partidoId}`);
+        });
         this.partidos = partidos;
         this.loading = false;
         this.cdr.detectChanges();
@@ -292,22 +297,43 @@ export class HomeComponent implements OnInit {
   }
 
   cargarPartidosPorComunidad(comunidadNombre: string): void {
-    const eleccion = this.elecciones.find(e => e.tipo === 'AUTONOMICA' && e.ambito === comunidadNombre);
-    if (eleccion) {
-      this.cargarPartidosPorEleccionId(eleccion.id);
-    } else {
-      console.error('No se encontró la elección autonómica para:', comunidadNombre);
-    }
+    this.loading = true;
+
+    this.partidoService
+      .getParticipacionesPorTipoAmbito('AUTONOMICA', comunidadNombre)
+      .subscribe({
+        next: (partidos) => {
+          console.log('Partidos AUTONÓMICOS:', partidos);
+          this.partidos = partidos;
+          this.loading = false;
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          console.error('Error cargando partidos autonómicos:', error);
+          this.partidos = [];
+          this.loading = false;
+        }
+      });
     this.cdr.detectChanges();
   }
 
   cargarPartidosPorMunicipio(municipioNombre: string): void {
-    const eleccion = this.elecciones.find(e => e.tipo === 'MUNICIPAL' && e.ambito === municipioNombre);
-    if (eleccion) {
-      this.cargarPartidosPorEleccionId(eleccion.id);
-    } else {
-      console.error('No se encontró la elección municipal para:', municipioNombre);
-    }
+    this.loading = true;
+
+  this.partidoService
+    .getParticipacionesPorTipoAmbito('MUNICIPAL', municipioNombre)
+    .subscribe({
+      next: (partidos) => {
+        this.partidos = partidos;
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error cargando partidos municipales:', error);
+        this.partidos = [];
+        this.loading = false;
+      }
+    });
     this.cdr.detectChanges();
   }
 
@@ -320,6 +346,10 @@ export class HomeComponent implements OnInit {
   }
 
   verPartido(partidoId: number): void {
+    console.log('verPartido llamado con ID:', partidoId);
+    // Buscar el partido en la lista actual
+    const partido = this.partidos.find(p => p.id === partidoId);
+    console.log('Partido encontrado:', partido);
     this.router.navigate(['/partido', partidoId]);
   }
 

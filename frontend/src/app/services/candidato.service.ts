@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Candidato, CandidatoDetalle } from '../model/candidato.model';
+import { Candidato, CandidatoDetalles } from '../model/candidato.model';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -11,12 +11,12 @@ export class CandidatoService {
 
   constructor(private http: HttpClient) { }
 
-  getCandidatosPorParticipacion(partidoEleccionId: number): Observable<CandidatoDetalle[]> {
-    return this.http.get<CandidatoDetalle[]>(`${this.apiUrl}/participacion/${partidoEleccionId}`);
+  getCandidatosPorParticipacion(partidoEleccionId: number): Observable<CandidatoDetalles[]> {
+    return this.http.get<CandidatoDetalles[]>(`${this.apiUrl}/participacion/${partidoEleccionId}`);
   }
 
-  getCandidato(id: number): Observable<CandidatoDetalle> {
-    return this.http.get<CandidatoDetalle>(`${this.apiUrl}/${id}`);
+  getCandidato(id: number): Observable<CandidatoDetalles> {
+    return this.http.get<CandidatoDetalles>(`${this.apiUrl}/${id}`);
   }
 
   //Para candidatos (CRUD - CREATE, READ, UPDATE, DELETE)
@@ -27,13 +27,13 @@ export class CandidatoService {
   }
 
   //CRUD (BUSCAR LISTAR TODOS LOS CANDIDATOS - READ) - SOLO ADMINISTRADORES
-  listarTodos(): Observable<CandidatoDetalle[]> {
-    return this.http.get<CandidatoDetalle[]>(`${this.apiUrl}/admin`);
+  listarTodos(): Observable<CandidatoDetalles[]> {
+    return this.http.get<CandidatoDetalles[]>(`${this.apiUrl}/admin`);
   }
 
   //CRUD (BUSCAR CANDIDATO - READ)
-  ObtenerCandidatoPorId(id: number): Observable<CandidatoDetalle> {
-    return this.http.get<CandidatoDetalle>(`${this.apiUrl}/${id}`);
+  ObtenerCandidatoPorId(id: number): Observable<CandidatoDetalles> {
+    return this.http.get<CandidatoDetalles>(`${this.apiUrl}/${id}`);
   }
 
   //CRUD (ACTUALIZAR CANDIDATO - UPDATE) - SOLO PARA ADMINISTRADORES

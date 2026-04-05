@@ -1,0 +1,361 @@
+@import '../../styles.scss';
+
+// ========== CONTENEDOR PRINCIPAL ==========
+.candidato-container {
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  padding-bottom: 40px;
+}
+
+// ========== LOADING ==========
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}
+
+// ========== CABECERA ==========
+.candidato-header {
+  padding: 40px 20px 30px;
+  text-align: center;
+  position: relative;
+  border-radius: 0 0 40px 40px;
+
+  .back-button {
+    position: absolute;
+    top: 20px;
+    left: 16px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 30px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  .foto-container {
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--primary-color);
+  }
+
+  .cargo {
+    font-size: 0.85rem;
+    font-weight: 500;
+    opacity: 0.8;
+    margin-bottom: 12px;
+  }
+
+  .partido-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 6px 12px;
+    border-radius: 30px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-bottom: 8px;
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    lucide-angular {
+      color: var(--primary-color);
+    }
+  }
+
+  .eleccion-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 6px 12px;
+    border-radius: 30px;
+    font-size: 0.7rem;
+    margin-bottom: 8px;
+  }
+
+  .posicion-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--primary-color);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 30px;
+    font-size: 0.7rem;
+    font-weight: 500;
+
+    lucide-angular {
+      color: white;
+    }
+  }
+}
+
+// ========== BIOGRAFÍA ==========
+.biografia-section {
+  padding: 24px 20px;
+  margin: 0 16px;
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text-color);
+
+    lucide-angular {
+      color: var(--primary-color);
+    }
+  }
+
+  .biografia-content {
+    .resumen {
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: #444;
+      margin-bottom: 12px;
+    }
+
+    .leer-mas {
+      background: none;
+      border: none;
+      color: var(--primary-color);
+      font-size: 0.8rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+
+      &:active {
+        opacity: 0.7;
+      }
+    }
+  }
+}
+
+// ========== INFORMACIÓN ADICIONAL ==========
+.info-adicional {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 20px;
+  margin: 0 16px;
+
+  .info-card {
+    flex: 1;
+    min-width: 100px;
+    background: white;
+    border-radius: 20px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+    lucide-angular {
+      color: var(--primary-color);
+      margin-bottom: 8px;
+    }
+
+    h4 {
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: #888;
+      margin-bottom: 4px;
+    }
+
+    p {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #333;
+    }
+  }
+}
+
+// ========== ENLACE AL PARTIDO ==========
+.partido-link {
+  padding: 0 20px;
+  margin: 20px 0;
+
+  button {
+    width: 100%;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 40px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+}
+
+// ========== MODAL ==========
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+
+  .modal-content {
+    background: white;
+    border-radius: 30px;
+    max-width: 90%;
+    width: 400px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      border-bottom: 1px solid #eee;
+
+      h2 {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 0;
+        color: var(--primary-color);
+      }
+
+      .close-modal {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 50%;
+
+        &:active {
+          transform: scale(0.95);
+        }
+      }
+    }
+
+    .modal-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      text-align: center;
+
+      .foto-mini {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 16px;
+        border-radius: 50%;
+        overflow: hidden;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+
+      h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+
+      .cargo-modal {
+        font-size: 0.8rem;
+        color: #666;
+        margin-bottom: 16px;
+      }
+
+      .biografia-completa {
+        font-size: 0.85rem;
+        line-height: 1.6;
+        color: #333;
+        text-align: left;
+      }
+    }
+
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid #eee;
+
+      button {
+        width: 100%;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 30px;
+        font-weight: 600;
+        cursor: pointer;
+
+        &:active {
+          transform: scale(0.98);
+        }
+      }
+    }
+  }
+}
+
+// ========== MEDIA QUERIES ==========
+@media (min-width: 768px) {
+  .candidato-header .foto-container {
+    width: 180px;
+    height: 180px;
+  }
+
+  .info-adicional .info-card {
+    min-width: 120px;
+  }
+}

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, AfterViewInit, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import * as L from 'leaflet';
 import { SedeMapa } from '../model/sede.model';
 import { SedeService } from '../services/sede.service';
@@ -35,7 +35,10 @@ export class MapaSedesComponent implements OnInit, AfterViewInit, OnChanges {
   private mapInitialized: boolean = false;
   private colegios: any[] = [];
 
-  constructor(private sedeService: SedeService) {}
+  constructor(
+    private sedeService: SedeService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.cargarColegios();
@@ -49,6 +52,7 @@ export class MapaSedesComponent implements OnInit, AfterViewInit, OnChanges {
           if (this.mapInitialized) {
             this.cargarMarcadores();
           }
+          this.cdr.detectChanges();
         },
         error: (error) => console.error('Error cargando colegios:', error)
       });
@@ -59,6 +63,7 @@ export class MapaSedesComponent implements OnInit, AfterViewInit, OnChanges {
     setTimeout(() => {
       this.initMap();
     }, 100);
+    this.cdr.detectChanges();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -68,6 +73,7 @@ export class MapaSedesComponent implements OnInit, AfterViewInit, OnChanges {
     if (this.mapInitialized && (changes['sedes'] || changes['colegios'])) {
       this.cargarMarcadores();
     }
+    this.cdr.detectChanges();
   }
 
   initMap(): void {
@@ -89,6 +95,7 @@ export class MapaSedesComponent implements OnInit, AfterViewInit, OnChanges {
 
     this.mapInitialized = true;
     this.cargarMarcadores();
+    this.cdr.detectChanges();
   }
 
   cargarMarcadores(): void {
@@ -141,6 +148,7 @@ export class MapaSedesComponent implements OnInit, AfterViewInit, OnChanges {
       const group = L.featureGroup(this.markers);
       this.map.fitBounds(group.getBounds().pad(0.1));
     }
+    this.cdr.detectChanges();
   }
 
   agregarMarcadores(sedes: any[]): void {
@@ -153,5 +161,6 @@ export class MapaSedesComponent implements OnInit, AfterViewInit, OnChanges {
       `);
       this.markers.push(marker);
     });
+    this.cdr.detectChanges();
   }
 }

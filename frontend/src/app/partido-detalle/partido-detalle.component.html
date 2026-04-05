@@ -9,7 +9,7 @@
     <!-- Cabecera con logo y enlaces -->
     <div class="partido-header" [style.background]="'var(--header-gradient)'">
       <button class="back-button" (click)="volverAlInicio()">
-        <mat-icon>arrow_back</mat-icon>
+        <lucide-angular name="ArrowLeft" [size]="20" [strokeWidth]="1.5"></lucide-angular>
       </button>
       <div class="logo-container">
         <img [src]="participacion.partidoLogoUrl" [alt]="participacion.partidoNombre">
@@ -17,7 +17,7 @@
       <h1 [style.color]="'var(--primary-color)'">{{ participacion.partidoNombre }}</h1>
       <p class="siglas" [style.color]="'var(--secondary-color)'">{{ participacion.partidoSiglas }}</p>
       <div class="eleccion-info">
-        <mat-icon>how_to_vote</mat-icon>
+        <lucide-angular name="Vote" [size]="16" [strokeWidth]="1.5"></lucide-angular>
         <span>{{ participacion.eleccionTipo === 'MUNICIPAL' ? 'Elecciones Municipales' :
                participacion.eleccionTipo === 'AUTONOMICA' ? 'Elecciones Autonómicas' : 'Elecciones Nacionales' }}
                - {{ participacion.eleccionAmbito }} {{ participacion.eleccionAnio }}
@@ -28,12 +28,12 @@
     <!-- Enlaces rápidos -->
     <div class="quick-links">
       <a (click)="mostrarHistoriaCompleta = true">
-        <mat-icon>history</mat-icon>
+        <lucide-angular name="History" [size]="24" [strokeWidth]="1.5"></lucide-angular>
         <span>Historia</span>
         <p class="resumen">{{ participacion.informacion?.historiaResumen | slice:0:80 }}...</p>
       </a>
       <a (click)="mostrarProgramaCompleto = true">
-        <mat-icon>description</mat-icon>
+        <lucide-angular name="FileText" [size]="24" [strokeWidth]="1.5"></lucide-angular>
         <span>Programa electoral</span>
         <p class="resumen">{{ participacion.informacion?.programaResumen | slice:0:80 }}...</p>
       </a>
@@ -41,7 +41,10 @@
 
     <!-- Candidatos -->
     <div class="candidatos-section">
-      <h2>Candidatos</h2>
+      <h2>
+        <lucide-angular name="Users" [size]="20" [strokeWidth]="1.5"></lucide-angular>
+        Candidatos
+      </h2>
       <div class="candidatos-grid">
         @for (candidato of candidatos; track candidato.id) {
           <div class="candidato-card" (click)="verCandidato(candidato.id)">
@@ -56,18 +59,23 @@
 
     <!-- Eventos -->
     <div class="eventos-section">
-      <h2>Eventos</h2>
+      <h2>
+        <lucide-angular name="Calendar" [size]="20" [strokeWidth]="1.5"></lucide-angular>
+        Eventos
+      </h2>
       <div class="eventos-list">
         @for (evento of eventos; track evento.id) {
           <div class="evento-card">
             <div class="evento-fecha">
-              <mat-icon>event</mat-icon>
+              <lucide-angular name="CalendarDays" [size]="24" [strokeWidth]="1.5"></lucide-angular>
               <span>{{ evento.fecha | date:'dd/MM/yyyy' }}</span>
             </div>
             <div class="evento-info">
               <h3>{{ evento.titulo }}</h3>
               <p>{{ evento.descripcion }}</p>
-              <p class="lugar"><mat-icon>place</mat-icon> {{ evento.lugar }}</p>
+              <p class="lugar">
+                <lucide-angular name="MapPin" [size]="14" [strokeWidth]="1.5"></lucide-angular>
+              </p>
             </div>
           </div>
         }
@@ -76,38 +84,79 @@
 
     <!-- Mapa con sedes -->
     <div class="mapa-section">
-      <h2>Nuestras sedes</h2>
+      <h2>
+        <lucide-angular name="Map" [size]="20" [strokeWidth]="1.5"></lucide-angular>
+        Nuestras sedes
+      </h2>
       <app-mapa-sedes [sedes]="sedes" [municipio]="participacion.eleccionAmbito"></app-mapa-sedes>
     </div>
 
     <!-- Contacto -->
     <div class="contacto-section">
-      <h2>Contacto</h2>
+      <h2>
+        <lucide-angular name="Phone" [size]="20" [strokeWidth]="1.5"></lucide-angular>
+        Contacto
+      </h2>
       <div class="contacto-info">
-        <p><mat-icon>email</mat-icon> {{ participacion.informacion?.emailContacto }}</p>
-        <p><mat-icon>phone</mat-icon> {{ participacion.informacion?.telefonoContacto }}</p>
-        <p><mat-icon>language</mat-icon> <a [href]="participacion.informacion?.webUrl" target="_blank">{{ participacion.informacion?.webUrl }}</a></p>
+        <p>
+          <lucide-angular name="Mail" [size]="16" [strokeWidth]="1.5"></lucide-angular>
+          {{ participacion.informacion?.emailContacto }}
+        </p>
+        <p>
+          <lucide-angular name="Phone" [size]="16" [strokeWidth]="1.5"></lucide-angular>
+          {{ participacion.informacion?.telefonoContacto }}
+        </p>
+        <p>
+          <lucide-angular name="Globe" [size]="16" [strokeWidth]="1.5"></lucide-angular>
+          <a [href]="participacion.informacion?.webUrl" target="_blank">
+            {{ participacion.informacion?.webUrl }}
+          </a>
+        </p>
       </div>
     </div>
   }
 
   <!-- Modales para contenido completo -->
   @if (mostrarHistoriaCompleta && participacion) {
-    <div class="modal-overlay" (click)="mostrarHistoriaCompleta = false">
+    <div class="modal-overlay" (click)="cerrarModal()">
       <div class="modal-content" (click)="$event.stopPropagation()">
-        <h2>Historia de {{ participacion.partidoNombre }}</h2>
-        <p>{{ participacion.informacion?.historiaCompleta }}</p>
-        <button (click)="mostrarHistoriaCompleta = false">Cerrar</button>
+        <div class="modal-header">
+          <h2>
+            <lucide-angular name="History" [size]="24" [strokeWidth]="1.5"></lucide-angular>
+            Historia de {{ participacion.partidoNombre }}
+          </h2>
+          <button class="close-modal" (click)="cerrarModal()">
+            <lucide-angular name="X" [size]="20" [strokeWidth]="1.5"></lucide-angular>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>{{ participacion.informacion?.historiaCompleta }}</p>
+        </div>
+        <div class="modal-footer">
+          <button (click)="cerrarModal()">Cerrar</button>
+        </div>
       </div>
     </div>
   }
 
   @if (mostrarProgramaCompleto && participacion) {
-    <div class="modal-overlay" (click)="mostrarProgramaCompleto = false">
+    <div class="modal-overlay" (click)="cerrarModal()">
       <div class="modal-content" (click)="$event.stopPropagation()">
-        <h2>Programa electoral de {{ participacion.partidoNombre }}</h2>
-        <p>{{ participacion.informacion?.programaCompleto }}</p>
-        <button (click)="mostrarProgramaCompleto = false">Cerrar</button>
+        <div class="modal-header">
+          <h2>
+            <lucide-angular name="FileText" [size]="24" [strokeWidth]="1.5"></lucide-angular>
+            Programa electoral de {{ participacion.partidoNombre }}
+          </h2>
+          <button class="close-modal" (click)="cerrarModal()">
+            <lucide-angular name="X" [size]="20" [strokeWidth]="1.5"></lucide-angular>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>{{ participacion.informacion?.programaCompleto }}</p>
+        </div>
+        <div class="modal-footer">
+          <button (click)="cerrarModal()">Cerrar</button>
+        </div>
       </div>
     </div>
   }

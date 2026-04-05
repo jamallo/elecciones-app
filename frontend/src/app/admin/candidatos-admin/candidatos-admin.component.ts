@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { CandidatoDetalle } from '../../model/candidato.model';
+import { CandidatoDetalles } from '../../model/candidato.model';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { CandidatoService } from '../../services/candidato.service';
@@ -18,7 +18,7 @@ import { CandidatoDialogComponent } from './candidato-dialog/candidato-dialog.co
 })
 export class CandidatosAdminComponent implements OnInit {
   displayedColumns: string [] = ['foto', 'nombre', 'cargo', 'partido', 'eleccion', 'posicion', 'acciones'];
-  dataSource = new MatTableDataSource<CandidatoDetalle>([]);
+  dataSource = new MatTableDataSource<CandidatoDetalles>([]);
   loading = true;
   partidos: any[] = [];
   elecciones: any[] = [];
@@ -70,7 +70,7 @@ export class CandidatosAdminComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  abrirDialogo(candidato?: CandidatoDetalle): void {
+  abrirDialogo(candidato?: CandidatoDetalles): void {
     const dialogoRef = this.dialog.open(CandidatoDialogComponent, {
       width: '600px',
       data: {candidato: candidato || null, partidos: this.partidos, elecciones: this.elecciones}
