@@ -54,7 +54,24 @@ export class TemaService {
 
 
   setTema(tema: Tema): void {
+    console.log('setTema llamado con:', tema);
     this.temaSubject.next(tema);
+
+    // Aplicar directamente las variables CSS
+    if (typeof document !== 'undefined') {
+      document.documentElement.style.setProperty('--primary-color', tema.colorPrincipal);
+      document.documentElement.style.setProperty('--secondary-color', tema.colorSecundario);
+      document.documentElement.style.setProperty('--accent-color', tema.colorAcento);
+      document.documentElement.style.setProperty('--bg-color', tema.colorFondo);
+      document.documentElement.style.setProperty('--text-color', tema.colorPrincipal);
+      document.documentElement.style.setProperty('--header-gradient', `linear-gradient(135deg, ${tema.colorPrincipal}, ${tema.colorSecundario})`);
+
+      console.log('Variables CSS actualizadas:', {
+        '--primary-color': tema.colorPrincipal,
+        '--secondary-color': tema.colorSecundario,
+        '--header-gradient': `linear-gradient(135deg, ${tema.colorPrincipal}, ${tema.colorSecundario})`
+      });
+    }
   }
 
   resetToNeutral(): void {

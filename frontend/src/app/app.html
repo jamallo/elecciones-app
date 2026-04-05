@@ -4,11 +4,14 @@
     <button mat-icon-button (click)="toggleMenu()" class="menu-button">
       <lucide-angular name="Menu" [size]="22" [strokeWidth]="1.5"></lucide-angular>
     </button>
-    <div class="logo-container">
+
+    <!-- Logo y título - CLICABLE para volver al inicio -->
+    <div class="logo-container" (click)="goToHome()" style="cursor: pointer;">
       <lucide-angular name="Vote" class="logo-icon" [size]="24" [strokeWidth]="1.5"></lucide-angular>
       <span class="toolbar-title">Elecciones 2027</span>
     </div>
     <div class="spacer"></div>
+
     @if ((authService.currentUser$ | async); as user) {
       <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-button">
         <lucide-angular name="User" [size]="22" [strokeWidth]="1.5"></lucide-angular>
@@ -48,7 +51,7 @@
         </button>
       </div>
       <mat-nav-list>
-        <a mat-list-item routerLink="/" (click)="closeMenu()">
+        <a mat-list-item (click)="goToHome()" (click)="closeMenu()">
           <lucide-angular name="Home" [size]="20" class="menu-icon"></lucide-angular>
           <span matListItemTitle>Inicio</span>
         </a>
@@ -79,7 +82,7 @@
 
   <!-- BARRA INFERIOR MOBILE (TAB BAR) -->
   <div class="bottom-tab-bar">
-    <button (click)="navigateTo('/')" [class.active]="isActive('/')">
+    <button (click)="goToHome()" [class.active]="isActive('/')">
       <lucide-angular name="Home" [size]="22"></lucide-angular>
       <span>Inicio</span>
     </button>

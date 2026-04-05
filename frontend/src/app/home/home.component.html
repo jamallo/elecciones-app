@@ -1,6 +1,6 @@
 <div class="home-container">
   <!-- HERO SECTION DORADO METÁLICO -->
-  <div class="hero-section metallic-bg">
+  <div class="hero-section metallic-bg" (click)="goToHome()">
     <div class="hero-content">
       <lucide-angular name="Vote" class="hero-icon" [size]="48" [strokeWidth]="1.5"></lucide-angular>
       <h1>Elecciones 2027</h1>
@@ -17,8 +17,9 @@
             class="nivel-btn"
             [class.active]="nivelSeleccionado === nivel.tipo"
             (click)="onNivelChange(nivel.tipo)">
-            <lucide-angular [name]="nivel.icon === 'public' ? 'Globe' : (nivel.icon === 'account_balance' ? 'Building2' : 'Building')"
-                            [size]="24" [strokeWidth]="1.5"></lucide-angular>
+            <lucide-angular [name]="nivel.icon"
+                            [size]="24"
+                            [strokeWidth]="1.5"></lucide-angular>
             <span>{{ nivel.nombre }}</span>
           </button>
         }
@@ -28,9 +29,17 @@
       @if (mostrarSelectorComunidad) {
         <div class="selector-comunidad">
           <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Selecciona una comunidad autónoma</mat-label>
-            <mat-select (selectionChange)="onComunidadChange($event.value)">
-              @for (comunidad of comunidades; track comunidad.id) {
+            <mat-label>Buscar comunidad autónoma</mat-label>
+            <input matInput
+               type="text"
+               placeholder="Escribe el nombre de la comunidad..."
+               [matAutocomplete]="autoComunidad"
+               [(ngModel)]="comunidadSearchText"
+               (input)="onComunidadSearchChange()">
+            <mat-icon matSuffix>search</mat-icon>
+            <mat-autocomplete #autoComunidad="matAutocomplete" (optionSelected)="onComunidadChange($event.option.value)">
+
+              @for (comunidad of comunidadesFiltradas; track comunidad.id) {
                 <mat-option [value]="comunidad">
                   <div class="comunidad-option">
                     <div class="color-dot" [style.backgroundColor]="comunidad.colorPrimario"></div>
@@ -38,29 +47,41 @@
                   </div>
                 </mat-option>
               }
-            </mat-select>
+            </mat-autocomplete>
           </mat-form-field>
         </div>
       }
 
       <!-- Selector de Municipio -->
-      @if (mostrarSelectorMunicipio && nivelSeleccionado === 'MUNICIPAL' && municipios.length > 0) {
-        <div class="selector-municipio">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Selecciona un municipio</mat-label>
-            <mat-select (selectionChange)="onMunicipioChange($event.value)">
-              @for (municipio of municipios; track municipio.id) {
-                <mat-option [value]="municipio">
-                  <div class="muicipio-option">
-                    {{ municipio.nombre }}
-                  </div>
-                </mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-        </div>
-      }
-    </div>
+      @if (mostrarSelectorMunicipio && nivelSeleccionado === 'MUNICIPAL' && comunidadSeleccionada) {
+      <div class="selector-municipio">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Buscar municipio en {{ comunidadSeleccionada.nombre }}</mat-label>
+          <input matInput type="text"
+                placeholder="Escribe el nombre del municipio..."
+                [matAutocomplete]="autoMunicipio"
+                [(ngModel)]="municipioSearchText"
+                (input) ="onMunicipioSearchChange()">
+          <mat-icon matSuffix>search</mat-icon>
+          <mat-autocomplete #autoMunicipio="matAutocomplete" (optionSelected)="onMunicipioChange($event.option.value)">
+            @for (municipio of municipiosFiltrados; track municipio.id) {
+              <mat-option [value]="municipio">
+                <div class="municipio-option">
+                  <div class="color-dot" [style.backgroundColor]="municipio.colorPrimario"></div>
+                  {{ municipio.nombre }}
+                </div>
+              </mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+
+        @if (municipiosFiltrados.length === 0 && municipioSearchText) {
+          <div class="no-results">
+            No se encontraron municipios con "{{ municipioSearchText }}"
+          </div>
+        }
+      </div>
+    }
 
     <!-- PARTIDOS (según selección) -->
      <div style="display: none;">Partidos cargados: {{partidos.length}}</div>
@@ -69,7 +90,14 @@
       <div class="partidos-section">
         <h2>
           <lucide-angular name="Users" [size]="20"></lucide-angular>
-          Partidos que se presentan para las elecciones de {{ eleccionSeleccionada?.ambito }}
+            @if (nivelSeleccionado === 'NACIONAL') {
+            Partidos que se presentan para las elecciones Nacionales
+          } @else if (nivelSeleccionado === 'AUTONOMICA' && comunidadSeleccionada) {
+            Partidos que se presentan para las elecciones en {{ comunidadSeleccionada.nombre }}
+          } @else if (nivelSeleccionado === 'MUNICIPAL' && municipioSeleccionado) {
+            Partidos que se presentan para las elecciones en {{ municipioSeleccionado.nombre }}
+          }
+
         </h2>
         <div class="partidos-grid">
           @for (partido of partidos; track partido.id) {
@@ -107,23 +135,56 @@
     <div class="eventos-section">
       <h2>
         <lucide-angular name="Calendar" [size]="20"></lucide-angular>
-        Últimos eventos
-      </h2>
-      <div class="eventos-list">
-        @for (evento of eventos; track evento.id) {
-          <div class="evento-card" (click)="verEvento(evento.id)">
-            <div class="evento-icon" [class]="evento.tipo.toLowerCase()">
-              <lucide-angular [name]="evento.tipo === 'NACIONAL' ? 'Globe' : (evento.tipo === 'COMUNIDAD' ? 'Building2' : 'Building')"
-                              [size]="24" [strokeWidth]="1.5"></lucide-angular>
-            </div>
-            <div class="evento-info">
-              <h4>{{ evento.titulo }}</h4>
-              <p>{{ evento.lugar }}</p>
-              <span class="fecha">{{ evento.fecha | date:'dd/MM/yyyy' }}</span>
-            </div>
-          </div>
+        @if (nivelSeleccionado === 'NACIONAL') {
+          Eventos nacionales
+        } @else if (nivelSeleccionado === 'AUTONOMICA' && comunidadSeleccionada) {
+          Eventos en {{ comunidadSeleccionada.nombre }}
+        } @else if (nivelSeleccionado === 'MUNICIPAL' && municipioSeleccionado) {
+          Eventos en {{ municipioSeleccionado.nombre }}
+        } @else {
+          Próximos eventos
         }
-      </div>
+      </h2>
+
+
+      @if (eventos.length === 0) {
+        <div class="no-eventos">
+          <lucide-angular name="CalendarX" [size]="40" [strokeWidth]="1.5"></lucide-angular>
+          <p>No hay eventos programados para esta elección</p>
+        </div>
+      } @else {
+        <div class="eventos-list">
+          @for (evento of eventos; track evento.id) {
+            <div class="evento-card" (click)="verEvento(evento.id)">
+              <div class="evento-icon" [class]="evento.eleccionTipo.toLowerCase()">
+                <lucide-angular [name]="evento.tipo === 'DEBATE' ? 'Mic2' : (evento.tipo === 'MITIN' ? 'Users' : 'Calendar')"
+                                [size]="24" [strokeWidth]="1.5"></lucide-angular>
+              </div>
+              <div class="evento-info">
+                <h4>{{ evento.titulo }}</h4>
+                <p>{{ evento.descripcion }}</p>
+                <div class="evento-metadata">
+                  <span class="lugar">
+                    <lucide-angular name="MapPin" [size]="12"></lucide-angular>
+                    {{ evento.lugar }}
+                  </span>
+                  <span class="fecha">
+                    <lucide-angular name="Calendar" [size]="12"></lucide-angular>
+                    {{ evento.fecha | date:'dd/MM/yyyy' }}
+                  </span>
+                  @if (evento.partidoSiglas) {
+                    <span class="partido" [style.backgroundColor]="evento.partidoSiglas === 'PP' ? '#1E88E5' :
+                                                                        (evento.partidoSiglas === 'PSOE' ? '#E63946' :
+                                                                        (evento.partidoSiglas === 'VOX' ? '#2E7D32' : '#666'))">
+                      {{ evento.partidoSiglas }}
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
     </div>
 
     <!-- MAPA INTERACTIVO DE ESPAÑA -->
@@ -140,14 +201,14 @@
           (onMunicipioClick)="onMunicipioChange($event)"
           >
         </app-mapa-espania>
-        <div class="zoom-controls">
+        <!-- <div class="zoom-controls">
           <button (click)="zoomIn()">
             <lucide-angular name="Plus" [size]="16"></lucide-angular>
           </button>
           <button (click)="zoomOut()">
             <lucide-angular name="Minus" [size]="16"></lucide-angular>
           </button>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

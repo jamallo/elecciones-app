@@ -36,4 +36,11 @@ export class App {
   isActive(path: string): boolean {
     return this.router.url === path;
   }
+
+  goToHome(): void {
+    this.router.navigate(['/']).then(() => {
+      // Recargar la página para resetear completamente el estado
+      window.location.reload();
+    });
+  }
 }

@@ -4,7 +4,10 @@ export interface Evento {
   descripcion: string;
   fecha: string;
   lugar: string;
-  tipo: string;
+  tipo: string; //NACIONAL, AUTONÓMICA, MUNICIPAL
+  partidoNombre?: string;
+  partidoSiglas?: string;
+  imagenUrl?: string;
   partidoEleccionId?: number;
 }
 
@@ -13,6 +16,6 @@ export interface EventoDetalle extends Evento {
   partidoNombre: string;
   partidoSiglas: string;
   partidoLogoUrl: string;
-  eleccionTipo: string;
-  eleccionAmbito: string;
+  eleccionTipo: string; //NACIONAL, AUTONÓMICA, MUNICIPAL
+  eleccionAmbito: string; //España, Asturias, Oviedo
 }

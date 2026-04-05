@@ -21,17 +21,17 @@ export class CalendarioEventosComponent implements OnInit, OnChanges{
 
   ngOnInit(): void {
     if (this.fecha) {
-      this.cargarEventos();
+      this.eventoService.getEventosPorParticipacion;
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['fecha'] && !changes['fecha'].firstChange) {
-      this.cargarEventos();
+      this.eventoService.getEventosPorParticipacion;
     }
   }
 
-  cargarEventos(): void {
+  /* cargarEventos(): void {
     if (!this.fecha) {
       this.eventos = [];
       return;
@@ -85,7 +85,7 @@ export class CalendarioEventosComponent implements OnInit, OnChanges{
       }
     ];
     this.loading = false;
-  }
+  } */
 
   getColorPartido(siglas: string): string {
     const colores: { [key: string]: string } = {

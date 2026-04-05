@@ -1,102 +1,100 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Eleccion } from '../model/eleccion.model';
-import { PartidoEleccionResumen } from '../model/partido-eleccion.model';
+import { Router } from '@angular/router';
 import { EleccionService } from '../services/eleccion.service';
 import { PartidoService } from '../services/partido.service';
 import { TemaService } from '../services/tema.service';
-import { Router } from '@angular/router';
+import { EventoService } from '../services/evento.service';
+import { Eleccion } from '../model/eleccion.model';
+import { PartidoEleccionResumen } from '../model/partido-eleccion.model';
+import { Comunidad } from '../model/comunidad.model';
 import { Municipio } from '../model/municipio.model';
-import { Comunidad as ComunidadModel } from '../model/comunidad.model';
-import { LucideAngularModule, AlertCircle, RefreshCw } from 'lucide-angular';
+import { EventoDetalle } from '../model/evento.model';
 
 interface NivelEleccion {
   tipo: string;
   nombre: string;
   icon: string;
-  comunidades?: any[];
-  municipios?: any[];
 }
 
 @Component({
   selector: 'app-home',
   standalone: false,
   templateUrl: './home.component.html',
-  styleUrl: './home.component.scss',
+  styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit{
+export class HomeComponent implements OnInit {
 
-  // Niveles de elección
+  // ========== NIVELES DE ELECCIÓN ==========
   niveles: NivelEleccion[] = [
-    { tipo: 'NACIONAL', nombre: 'Elecciones Nacionales', icon: 'public' },
-    { tipo: 'COMUNIDAD', nombre: 'Elecciones Autonómicas', icon: 'account_balance' },
-    { tipo: 'MUNICIPAL', nombre: 'Elecciones Municipales', icon: 'location_city' }
+    { tipo: 'NACIONAL', nombre: 'Elecciones Nacionales', icon: 'Globe' },
+    { tipo: 'AUTONOMICA', nombre: 'Elecciones Autonómicas', icon: 'Building2' },
+    { tipo: 'MUNICIPAL', nombre: 'Elecciones Municipales', icon: 'Building' }
   ];
 
   nivelSeleccionado: string = '';
-  comunidadSeleccionada: ComunidadModel | null = null;
+  comunidadSeleccionada: Comunidad | null = null;
   municipioSeleccionado: Municipio | null = null;
 
-  // Datos dinámicos
+  // ========== DATOS DINÁMICOS ==========
   elecciones: Eleccion[] = [];
-  comunidades: ComunidadModel[] = [];
+  comunidades: Comunidad[] = [];
+  comunidadesFiltradas: Comunidad[] = [];
   municipios: Municipio[] = [];
+  municipiosFiltrados: Municipio[] = [];
   partidos: PartidoEleccionResumen[] = [];
-  eventos: any[] = [];
-  resultados: any[] = [];
+  eventos: EventoDetalle[] = [];
 
-  // Estados
-  loading = false;
-  mostrarSelectorComunidad = false;
-  mostrarSelectorMunicipio = false;
+  // ========== TEXTO DE BÚSQUEDA ==========
+  comunidadSearchText: string = '';
+  municipioSearchText: string = '';
 
-  // Lista de elecciones disponibles
-  eleccionSeleccionada: Eleccion | null = null;
+  // ========== ESTADOS ==========
+  loading: boolean = false;
+  mostrarSelectorComunidad: boolean = false;
+  mostrarSelectorMunicipio: boolean = false;
+  searchText: string = '';
 
-  // Partidos que participan en la elección seleccionada
-  partidosParticipacion: PartidoEleccionResumen[] = [];
-
-  // Resultados anteriores
+  // ========== RESULTADOS ANTERIORES ==========
   aniosAnteriores: number[] = [2023, 2019, 2015];
   anioSeleccionado: number = 2023;
   resultadosActuales: any[] = [];
-
-  // Eventos
-  fechaEventos: string = '';
-
-  // Estado
-  municipioActual: string = '';
 
   constructor(
     private eleccionService: EleccionService,
     private partidoService: PartidoService,
     private temaService: TemaService,
+    private eventoService: EventoService,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
 
+  // ========== INICIALIZACIÓN ==========
   ngOnInit(): void {
     this.temaService.resetToNeutral();
-    this.cargarComunidades();
     this.cargarElecciones();
-    this.cargarEventosRecientes();
+    this.cargarComunidades();
+    this.cargarUltimosEventos();
+  }
+
+  // ========== CARGA DE DATOS ==========
+  cargarElecciones(): void {
+    this.eleccionService.getElecciones().subscribe({
+      next: (elecciones) => {
+        this.elecciones = elecciones;
+        this.cdr.detectChanges();
+      },
+      error: (error) => console.error('Error cargando elecciones:', error)
+    });
   }
 
   cargarComunidades(): void {
     this.eleccionService.getComunidades().subscribe({
       next: (comunidades) => {
-        console.log('Comunidades cargadas: ', comunidades);
         this.comunidades = comunidades;
+        this.comunidadesFiltradas = [...comunidades];
         this.cdr.detectChanges();
       },
-      error: (error) => {
-        console.error('Error cargando comunidades: ', error);
-        // Datos de ejemplo por si falla el backend
-      this.comunidades = [
-        { id: 1, nombre: 'Andalucía', capital: 'Sevilla', colorPrimario: '#008000', colorSecundario: '#FFFFFF', colorAcento: '#FFD700', colorFondo: '#F0F7F0' },
-        { id: 2, nombre: 'Asturias', capital: 'Oviedo', colorPrimario: '#4B0082', colorSecundario: '#FFD700', colorAcento: '#9B59B6', colorFondo: '#F5F0FF' },
-        { id: 3, nombre: 'Madrid', capital: 'Madrid', colorPrimario: '#ED1C24', colorSecundario: '#FFFFFF', colorAcento: '#FF6B6B', colorFondo: '#FFF0F0' }
-      ];
-      }
+      error: (error) => console.error('Error cargando comunidades:', error)
     });
   }
 
@@ -105,17 +103,111 @@ export class HomeComponent implements OnInit{
     this.eleccionService.getMunicipiosByComunidad(comunidadNombre).subscribe({
       next: (municipios) => {
         this.municipios = municipios;
-        this.cdr.detectChanges();
+        this.municipiosFiltrados = [...municipios];
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error cargando municipios:', error);
+        this.municipios = [];
+        this.municipiosFiltrados = [];
         this.loading = false;
       }
     });
   }
 
+  cargarUltimosEventos(): void {
+    this.eventoService.getUltimosEventos().subscribe({
+      next: (eventos) => {
+        this.eventos = eventos;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error cargando últimos eventos:', error);
+        this.cargarEventosPorEleccion('NACIONAL', 'España');
+      }
+    });
+  }
 
+  cargarEventosPorEleccion(tipo: string, ambito: string): void {
+    this.eventoService.getEventosByEleccion(tipo, ambito).subscribe({
+      next: (eventos) => {
+        this.eventos = eventos
+          .sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime())
+          .slice(0, 5);
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error cargando eventos:', error);
+        this.eventos = [];
+      }
+    });
+  }
+
+  cargarPartidosPorEleccionId(eleccionId: number): void {
+    this.loading = true;
+    this.partidoService.getParticipacionesPorEleccion(eleccionId).subscribe({
+      next: (partidos) => {
+        this.partidos = partidos;
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error cargando partidos:', error);
+        this.partidos = [];
+        this.loading = false;
+      }
+    });
+  }
+
+  // ========== FILTROS DE BÚSQUEDA ==========
+  onComunidadSearchChange(): void {
+    const search = this.comunidadSearchText.toLowerCase();
+    this.comunidadesFiltradas = this.comunidades.filter(c =>
+      c.nombre.toLowerCase().includes(search)
+    );
+    this.cdr.detectChanges();
+  }
+
+  onMunicipioSearchChange(): void {
+    const search = this.municipioSearchText.toLowerCase();
+    this.municipiosFiltrados = this.municipios.filter(m =>
+      m.nombre.toLowerCase().includes(search)
+    );
+    this.cdr.detectChanges();
+  }
+
+  // ========== RESULTADOS ANTERIORES ==========
+  cargarResultados(): void {
+    if (this.anioSeleccionado === 2023) {
+      this.resultadosActuales = [
+        { partido: 'PP', porcentaje: 38, votos: 42000, color: '#1E88E5' },
+        { partido: 'PSOE', porcentaje: 32, votos: 35000, color: '#E63946' },
+        { partido: 'VOX', porcentaje: 15, votos: 16000, color: '#2E7D32' },
+        { partido: 'SUMAR', porcentaje: 10, votos: 11000, color: '#FF9800' },
+        { partido: 'OTROS', porcentaje: 5, votos: 5000, color: '#9E9E9E' }
+      ];
+    } else if (this.anioSeleccionado === 2019) {
+      this.resultadosActuales = [
+        { partido: 'PP', porcentaje: 35, votos: 38000, color: '#1E88E5' },
+        { partido: 'PSOE', porcentaje: 30, votos: 32000, color: '#E63946' },
+        { partido: 'VOX', porcentaje: 18, votos: 19000, color: '#2E7D32' },
+        { partido: 'SUMAR', porcentaje: 12, votos: 13000, color: '#FF9800' },
+        { partido: 'OTROS', porcentaje: 5, votos: 5000, color: '#9E9E9E' }
+      ];
+    } else if (this.anioSeleccionado === 2015) {
+      this.resultadosActuales = [
+        { partido: 'PP', porcentaje: 40, votos: 43000, color: '#1E88E5' },
+        { partido: 'PSOE', porcentaje: 35, votos: 37000, color: '#E63946' },
+        { partido: 'VOX', porcentaje: 10, votos: 10000, color: '#2E7D32' },
+        { partido: 'SUMAR', porcentaje: 10, votos: 10000, color: '#FF9800' },
+        { partido: 'OTROS', porcentaje: 5, votos: 5000, color: '#9E9E9E' }
+      ];
+    }
+    this.cdr.detectChanges();
+  }
+
+  // ========== NAVEGACIÓN POR NIVELES ==========
   onNivelChange(tipo: string): void {
     this.nivelSeleccionado = tipo;
     this.comunidadSeleccionada = null;
@@ -123,369 +215,103 @@ export class HomeComponent implements OnInit{
     this.mostrarSelectorComunidad = tipo !== 'NACIONAL';
     this.mostrarSelectorMunicipio = false;
     this.partidos = [];
-    this.cdr.detectChanges();
-
-    console.log('Nivel seleccionado: ', tipo);
-    console.log('Mostrar selector comunidad: ', this.mostrarSelectorComunidad);
+    this.comunidadSearchText = '';
+    this.municipioSearchText = '';
 
     if (tipo === 'NACIONAL') {
-      this.cargarPartidosNacionales();
-      //Canbiar tema a colores España
-      //this.cargarTemaNacional();
       this.temaService.setTema({
         colorPrincipal: '#C0392B',
-      colorSecundario: '#F1C40F',
-      colorAcento: '#E67E22',
-      colorFondo: '#FFF8F0',
-      tipo: 'NACIONAL',
-      nombre: 'España'
+        colorSecundario: '#F1C40F',
+        colorAcento: '#E67E22',
+        colorFondo: '#FFF8F0',
+        tipo: 'NACIONAL',
+        nombre: 'España'
       });
-      this.cdr.detectChanges();
+      this.cargarPartidosNacionales();
+      this.cargarEventosPorEleccion('NACIONAL', 'España');
     }
+    this.cdr.detectChanges();
   }
 
-  onComunidadChange(comunidad: ComunidadModel): void {
+  onComunidadChange(comunidad: Comunidad): void {
     this.comunidadSeleccionada = comunidad;
     this.municipioSeleccionado = null;
-    this.mostrarSelectorMunicipio = this.nivelSeleccionado === 'MUNICIPAL';
-    this.cdr.detectChanges();
+    this.municipioSearchText = '';
 
-    // Cambiar tema al color de la comunidad
+    // Resetear el texto de búsqueda de comunidad
+    this.comunidadSearchText = comunidad.nombre;
+
     this.temaService.setTema({
       colorPrincipal: comunidad.colorPrimario,
       colorSecundario: comunidad.colorSecundario,
       colorAcento: comunidad.colorAcento || comunidad.colorSecundario,
       colorFondo: comunidad.colorFondo || '#FFFDF7',
-      tipo: 'COMUNIDAD',
+      tipo: 'AUTONOMICA',
       nombre: comunidad.nombre
     });
-    this.cdr.detectChanges();
 
     if (this.nivelSeleccionado === 'MUNICIPAL') {
+      this.mostrarSelectorMunicipio = true;
       this.cargarMunicipios(comunidad.nombre);
     } else {
-      this.cargarPartidosComunidad(comunidad.nombre);
+      this.cargarPartidosPorComunidad(comunidad.nombre);
+      this.cargarEventosPorEleccion('AUTONOMICA', comunidad.nombre);
     }
     this.cdr.detectChanges();
   }
 
   onMunicipioChange(municipio: Municipio): void {
     this.municipioSeleccionado = municipio;
-    // Cambiar tema al color del municipio
-  this.temaService.setTema({
-    colorPrincipal: municipio.colorPrimario || '#00236C',
-    colorSecundario: municipio.colorSecundario || '#1985FF',
-    colorAcento: municipio.colorAcento || '#1985FF',
-    colorFondo: municipio.colorFondo || '#FFFDF7',
-    tipo: 'MUNICIPIO',
-    nombre: municipio.nombre
-  });
-    this.cargarPartidosMunicipio(municipio.id);
+
+    // Resetear el texto de búsqueda de municipio
+    this.municipioSearchText = municipio.nombre;
+
+    this.temaService.setTema({
+      colorPrincipal: municipio.colorPrimario,
+      colorSecundario: municipio.colorSecundario,
+      colorAcento: municipio.colorAcento || municipio.colorSecundario,
+      colorFondo: municipio.colorFondo || '#FFFDF7',
+      tipo: 'MUNICIPAL',
+      nombre: municipio.nombre
+    });
+
+    this.cargarPartidosPorMunicipio(municipio.nombre);
+    this.cargarEventosPorEleccion('MUNICIPAL', municipio.nombre);
     this.cdr.detectChanges();
   }
 
-  cargarTemaNacional(): void {
-    this.temaService.cargarTemaNacional().subscribe();
-    this.cdr.detectChanges();
-  }
-
-  cargarTemaMunicipio(municipioId: number): void {
-    this.temaService.cargarTemaMunicipio(municipioId).subscribe();
-    this.cdr.detectChanges();
-  }
-
+  // ========== CARGA DE PARTIDOS POR NIVEL ==========
   cargarPartidosNacionales(): void {
-    console.log('=== CARGANDO PARTIDOS NACIONALES ===');
-    console.log('Elecciones disponibles:', this.elecciones);
-
-    //Buscar la elección nacional
-    const eleccionNacional = this.elecciones.find(e => e.tipo === 'NACIONAL' && e.ambito === 'España');
-
-    //FORZAR DETECCIÓN DE CAMBIOS
-    this.cdr.detectChanges();
-
-    console.log('Elección nacional encontrada: ', eleccionNacional);
-
-    if(!eleccionNacional) {
-      console.error('No se encontró la elecció nacional');
-      //Intentar con ID 1 como fallback
-      console.log('Intentando con ID 1...')
-      this.cargarPartidosPorId(1);
-      return;
-    }
-    this.cargarPartidosPorId(eleccionNacional.id)
-    this.cdr.detectChanges();
-    /* this.loading = true;
-    this.partidoService.getParticipacionesPorEleccion(eleccionNacional!.id).subscribe({
-      next: (partidos) => {
-        this.partidos = partidos;
-        this.loading = false;
-      },
-      error: () => this.loading = false
-    }); */
-  }
-
-  cargarPartidosPorId(eleccionId: number): void {
-  console.log('Cargando partidos para elección ID:', eleccionId);
-  this.loading = true;
-  this.partidoService.getParticipacionesPorEleccion(eleccionId).subscribe({
-    next: (partidos) => {
-      console.log('Partidos recibidos del backend:', partidos);
-      this.partidos = partidos;
-
-      //FORZAR DETECCIÓN DE CAMBIOS
-      this.cdr.detectChanges();
-      this.loading = false;
-    },
-    error: (error) => {
-      console.error('Error cargando partidos:', error);
-      // Si hay error, cargar datos de ejemplo para mostrar algo
-      this.partidos = this.getPartidosEjemplo();
-      this.loading = false;
-    }
-  });
-}
-
-getPartidosEjemplo(): PartidoEleccionResumen[] {
-  return [
-    {
-      id: 1,
-      partidoId: 1,
-      partidoNombre: 'Partido Popular',
-      partidoSiglas: 'PP',
-      partidoLogoUrl: '/assets/partidos/pp.png',
-      partidoColorPrimario: '#1E88E5',
-      eleccionId: 1,
-      eleccionTipo: 'NACIONAL',
-      eleccionAmbito: 'España'
-    },
-    {
-      id: 2,
-      partidoId: 2,
-      partidoNombre: 'Partido Socialista Obrero Español',
-      partidoSiglas: 'PSOE',
-      partidoLogoUrl: '/assets/partidos/psoe.png',
-      partidoColorPrimario: '#E63946',
-      eleccionId: 1,
-      eleccionTipo: 'NACIONAL',
-      eleccionAmbito: 'España'
-    },
-    {
-      id: 3,
-      partidoId: 3,
-      partidoNombre: 'Vox',
-      partidoSiglas: 'VOX',
-      partidoLogoUrl: '/assets/partidos/vox.png',
-      partidoColorPrimario: '#2E7D32',
-      eleccionId: 1,
-      eleccionTipo: 'NACIONAL',
-      eleccionAmbito: 'España'
-    },
-    {
-      id: 4,
-      partidoId: 4,
-      partidoNombre: 'Sumar',
-      partidoSiglas: 'SUMAR',
-      partidoLogoUrl: '/assets/partidos/sumar.png',
-      partidoColorPrimario: '#FF9800',
-      eleccionId: 1,
-      eleccionTipo: 'NACIONAL',
-      eleccionAmbito: 'España'
-    }
-  ];
-}
-
-  cargarPartidosComunidad(comunidad: string): void {
-    // Buscar la elección autonómica por ID de comunidad
-    const eleccionAutonomica = this.elecciones.find(e => e.tipo === 'AUTONOMICA' && e.ambito === this.comunidadSeleccionada?.nombre);
-
-    this.cdr.detectChanges();
-
-    if (!eleccionAutonomica) {
-      console.error('No se encontró la elección autonómica');
-      return;
-    }
-
-    this.loading = true;
-    this.eleccionService.getPartidosByEleccion('COMUNIDAD', comunidad).subscribe({
-      next: (partidos) => {
-        this.partidos = partidos;
-        this.cdr.detectChanges();
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Error cargando partidos de comunidad: ', error);
-        this.loading = false;
-      }
-    })
-    /* setTimeout(() => {
-      this.partidos = [];
-      this.loading = false;
-    }, 500); */
-  }
-
-  cargarPartidosMunicipio(municipioId: number): void {
-    // Buscar la elección municipal
-    const eleccionMunicipal = this.elecciones.find(e => e.tipo === 'MUNICIPAL' && e.ambito === this.municipioSeleccionado?.nombre);
-
-    this.cdr.detectChanges();
-
-    if (!eleccionMunicipal) {
-      console.error('No se encontró la elección municipal');
-      return;
-    }
-
-    this.loading = true;
-    this.partidoService.getParticipacionesPorEleccion(eleccionMunicipal.id).subscribe({
-      next: (partidos) => {
-        this.partidos = partidos;
-        this.cdr.detectChanges();
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Error cargando partidos de municipio: ', error);
-        this.loading = false;
-      }
-    });
-    /* setTimeout(() => {
-      this.partidos = [];
-      this.loading = false;
-    }, 500); */
-  }
-
-  cargarEventosRecientes(): void {
-    // Cargar últimos 5 eventos
-    this.eventos = [
-      { id: 1, titulo: 'Debate electoral nacional', fecha: '2024-05-15', tipo: 'NACIONAL', lugar: 'Madrid' },
-      { id: 2, titulo: 'Campaña autonómica en Asturias', fecha: '2024-05-10', tipo: 'COMUNIDAD', lugar: 'Oviedo' },
-      { id: 3, titulo: 'Presentación de programa municipal', fecha: '2024-05-05', tipo: 'MUNICIPAL', lugar: 'Gijón' },
-      { id: 4, titulo: 'Rueda de prensa nacional', fecha: '2024-05-01', tipo: 'NACIONAL', lugar: 'Madrid' },
-      { id: 5, titulo: 'Mitin en Avilés', fecha: '2024-04-28', tipo: 'MUNICIPAL', lugar: 'Avilés' }
-    ];
-  }
-
-  verPartido(partidoId: number): void {
-    this.router.navigate(['/partido', partidoId]);
-    this.cdr.detectChanges();
-  }
-
-  verEvento(eventoId: number): void {
-    console.log('Ver evento:', eventoId);
-    this.cdr.detectChanges();
-  }
-
-  zoomIn(): void {
-    console.log('Zoom in');
-    this.cdr.detectChanges();
-  }
-
-  zoomOut(): void {
-    console.log('Zoom out');
-    this.cdr.detectChanges();
-  }
-
-  cargarElecciones(): void {
-    this.loading = true;
-    this.eleccionService.getElecciones().subscribe({
-      next: (elecciones) => {
-        this.elecciones = elecciones;
-        if (this.elecciones.length > 0) {
-          this.eleccionSeleccionada = this.elecciones[0];
-          this.municipioActual = this.eleccionSeleccionada.ambito;
-          this.cargarPartidosPorEleccion();
-          this.cargarTema();
-        }
-        this.cdr.detectChanges();
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Error cargando elecciones:', error);
-        this.loading = false;
-      }
-    });
-  }
-
-  onEleccionChange(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    const eleccionId = Number(select.value);
-    this.eleccionSeleccionada = this.elecciones.find(e => e.id === eleccionId) || null;
-
-    this.cdr.detectChanges();
-
-    if (this.eleccionSeleccionada) {
-      this.municipioActual = this.eleccionSeleccionada.ambito;
-      this.cargarPartidosPorEleccion();
-      this.cargarTema();
-      this.cargarResultados();
-      this.cdr.detectChanges();
-    }
-  }
-
-  cargarPartidosPorEleccion(): void {
-    if (!this.eleccionSeleccionada) return;
-
-    this.cdr.detectChanges();
-    this.loading = true;
-    this.partidoService.getParticipacionesPorEleccion(this.eleccionSeleccionada.id).subscribe({
-      next: (participaciones) => {
-        this.partidosParticipacion = participaciones;
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Error cargando partidos:', error);
-        this.loading = false;
-      }
-    });
-  }
-
-  cargarTema(): void {
-    if (!this.eleccionSeleccionada) return;
-
-    const tipo = this.eleccionSeleccionada.tipo;
-    const ambito = this.eleccionSeleccionada.ambito;
-
-    this.cdr.detectChanges();
-
-    if (tipo === 'MUNICIPAL') {
-      // Buscar el municipio por nombre (simplificado, idealmente tener ID)
-      this.temaService.cargarTemaMunicipio(1).subscribe(); // Temporal
-    } else if (tipo === 'AUTONOMICA') {
-      this.temaService.cargarTemaComunidad(1).subscribe(); // Temporal
-    } else if (tipo === 'NACIONAL') {
-      this.temaService.cargarTemaNacional().subscribe();
-    }
-  }
-
-  cargarResultados(): void {
-    // Datos de ejemplo según el año
-    if (this.anioSeleccionado === 2023) {
-      this.resultadosActuales = [
-        { partido: 'PP', porcentaje: 38, votos: 42000 },
-        { partido: 'PSOE', porcentaje: 32, votos: 35000 },
-        { partido: 'VOX', porcentaje: 15, votos: 16000 },
-        { partido: 'SUMAR', porcentaje: 10, votos: 11000 },
-        { partido: 'OTROS', porcentaje: 5, votos: 5000 }
-      ];
-    } else if (this.anioSeleccionado === 2019) {
-      this.resultadosActuales = [
-        { partido: 'PP', porcentaje: 35, votos: 38000 },
-        { partido: 'PSOE', porcentaje: 30, votos: 32000 },
-        { partido: 'VOX', porcentaje: 18, votos: 19000 },
-        { partido: 'SUMAR', porcentaje: 12, votos: 13000 },
-        { partido: 'OTROS', porcentaje: 5, votos: 5000 }
-      ];
-    } else if (this.anioSeleccionado === 2015) {
-      this.resultadosActuales = [
-        { partido: 'PP', porcentaje: 40, votos: 43000 },
-        { partido: 'PSOE', porcentaje: 35, votos: 37000 },
-        { partido: 'VOX', porcentaje: 10, votos: 10000 },
-        { partido: 'SUMAR', porcentaje: 10, votos: 10000 },
-        { partido: 'OTROS', porcentaje: 5, votos: 5000 }
-      ];
+    const eleccion = this.elecciones.find(e => e.tipo === 'NACIONAL' && e.ambito === 'España');
+    if (eleccion) {
+      this.cargarPartidosPorEleccionId(eleccion.id);
+    } else {
+      console.error('No se encontró la elección nacional');
     }
     this.cdr.detectChanges();
   }
 
+  cargarPartidosPorComunidad(comunidadNombre: string): void {
+    const eleccion = this.elecciones.find(e => e.tipo === 'AUTONOMICA' && e.ambito === comunidadNombre);
+    if (eleccion) {
+      this.cargarPartidosPorEleccionId(eleccion.id);
+    } else {
+      console.error('No se encontró la elección autonómica para:', comunidadNombre);
+    }
+    this.cdr.detectChanges();
+  }
+
+  cargarPartidosPorMunicipio(municipioNombre: string): void {
+    const eleccion = this.elecciones.find(e => e.tipo === 'MUNICIPAL' && e.ambito === municipioNombre);
+    if (eleccion) {
+      this.cargarPartidosPorEleccionId(eleccion.id);
+    } else {
+      console.error('No se encontró la elección municipal para:', municipioNombre);
+    }
+    this.cdr.detectChanges();
+  }
+
+  // ========== EVENTOS DEL USUARIO ==========
   onAnioChange(event: Event): void {
     const select = event.target as HTMLSelectElement;
     this.anioSeleccionado = Number(select.value);
@@ -493,23 +319,12 @@ getPartidosEjemplo(): PartidoEleccionResumen[] {
     this.cdr.detectChanges();
   }
 
-  onFechaChange(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    this.fechaEventos = input.value;
-    this.cargarEventos();
-    this.cdr.detectChanges();
+  verPartido(partidoId: number): void {
+    this.router.navigate(['/partido', partidoId]);
   }
 
-  cargarEventos(): void {
-    if (this.fechaEventos) {
-      this.eventos = [
-        { id: 1, descripcion: 'Mitin del Partido Popular en la Plaza Mayor', fecha: this.fechaEventos },
-        { id: 2, descripcion: 'Rueda de prensa del PSOE en el Hotel de la Reconquista', fecha: this.fechaEventos },
-        { id: 3, descripcion: 'Debate electoral en el Teatro Campoamor', fecha: this.fechaEventos }
-      ];
-    } else {
-      this.eventos = [];
-    }
+  verEvento(eventoId: number): void {
+    console.log('Ver evento:', eventoId);
     this.cdr.detectChanges();
   }
 
@@ -521,8 +336,22 @@ getPartidosEjemplo(): PartidoEleccionResumen[] {
     alert('Funcionalidad de censo electoral - Próximamente');
   }
 
+  goToHome(): void {
+    window.location.reload();
+  }
+
+  // ========== UTILIDADES ==========
   handleImageError(event: Event): void {
-  const img = event.target as HTMLImageElement;
-  img.src = 'assets/partidos/placeholder.png'; // Imagen por defecto
-}
+    const img = event.target as HTMLImageElement;
+    img.src = 'assets/partidos/placeholder.png';
+  }
+
+  /* // Filtro para búsqueda de municipios
+  getMunicipiosFiltrados(): Municipio[] {
+    if (!this.searchText) return this.municipios;
+    return this.municipios.filter(m =>
+      m.nombre.toLowerCase().includes(this.searchText.toLowerCase())
+    );
+  } */
+
 }
