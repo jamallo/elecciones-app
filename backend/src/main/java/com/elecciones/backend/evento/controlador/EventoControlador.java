@@ -57,10 +57,10 @@ public class EventoControlador {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/participacion/{partidoEleccionId}")
+    /*@GetMapping("/participacion/{partidoEleccionId}")
     public ResponseEntity<List<EventoDetalleDTO>> listarPorParticipacion(@PathVariable Long partidoEleccionId) {
         return ResponseEntity.ok(eventoServicio.litarPorPartidoEleccion(partidoEleccionId));
-    }
+    }*/
 
     // ========== ENDPOINTS PÚBLICOS ==========
 
@@ -78,5 +78,11 @@ public class EventoControlador {
     @Operation(summary = "Obtener últimos 5 eventos")
     public ResponseEntity<List<EventoDetalleDTO>> getUltimosEventos() {
         return ResponseEntity.ok(eventoServicio.findTop5ByOrderByFechaDesc());
+    }
+
+    @GetMapping("/participacion/{partidoEleccionId}")
+    @Operation(summary = "Obtener eventos por ID de participación electoral")
+    public ResponseEntity<List<EventoDetalleDTO>> getEventosByParticipacion(@PathVariable Long partidoEleccionId) {
+        return ResponseEntity.ok(eventoServicio.listarPorPartidoEleccion(partidoEleccionId));
     }
 }

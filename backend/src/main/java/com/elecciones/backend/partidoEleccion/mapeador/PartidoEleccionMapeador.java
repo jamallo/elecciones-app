@@ -20,6 +20,7 @@ public interface PartidoEleccionMapeador {
     @Mapping(target = "eleccionTipo", source = "eleccion.tipo")
     @Mapping(target = "eleccionAmbito", source = "eleccion.ambito")
     @Mapping(target = "eleccionAnio", source = "eleccion.anio")
+    @Mapping(target = "informacion", source = "informacion")
     PartidoEleccionDTO toDTO(PartidoEleccion partidoEleccion);
 
     @Mapping(target = "id", source = "id")

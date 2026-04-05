@@ -72,4 +72,10 @@ public class SedeControlador {
         servicio.eliminarSede(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/participacion/{partidoEleccionId}")
+    @Operation(summary = "Obtener sedes por ID de participación electoral")
+    public ResponseEntity<List<SedeMapaDTO>> getSedesByParticipacion(@PathVariable Long partidoEleccionId) {
+        return ResponseEntity.ok(servicio.listarSedesPartido(partidoEleccionId));
+    }
 }

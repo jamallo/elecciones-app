@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +46,7 @@ public class SedeServicio {
         return sedeRepositorio.findByPartidoEleccionIdAndTipo(partidoEleccionId, "SEDE_PARTIDO")
                 .stream()
                 .map(sedeMapeador::toMapaDTO)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     //CRUD (BUSCAR LISTAR TODOS LOS COLEGIOS ELECTORALES - READ)

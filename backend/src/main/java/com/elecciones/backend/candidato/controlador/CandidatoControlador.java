@@ -65,10 +65,16 @@ public class CandidatoControlador {
 
     }
 
-    @GetMapping("/participacion/{partidoEleccionId}")
+    /*@GetMapping("/participacion/{partidoEleccionId}")
     @Operation(summary = "Listar candidatos por participación electoral")
     public ResponseEntity<List<CandidatoDetalleDTO>> listarPorParticipacion(@PathVariable Long partidoEleccionId) {
 
+        return ResponseEntity.ok(candidatoServicio.listarPorPartidoEleccion(partidoEleccionId));
+    }*/
+
+    @GetMapping("/participacion/{partidoEleccionId}")
+    @Operation(summary = "Obtener candidatos por ID de participación electoral")
+    public ResponseEntity<List<CandidatoDetalleDTO>> getCandidatosByParticipacion(@PathVariable Long partidoEleccionId) {
         return ResponseEntity.ok(candidatoServicio.listarPorPartidoEleccion(partidoEleccionId));
     }
 

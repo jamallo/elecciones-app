@@ -12,6 +12,8 @@ import org.mapstruct.MappingConstants;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface PartidoMapeador {
 
+
+
 /*    @Mapping(target = "candidatos", ignore = true)
     @Mapping(target = "eventos", ignore = true)
     @Mapping(target = "sedes", ignore = true)*/

@@ -10,6 +10,7 @@ import com.elecciones.backend.partido.modelo.dto.PartidoResumenDTO;
 import com.elecciones.backend.partido.repositorio.PartidoRepositorio;
 import com.elecciones.backend.partido.servicio.PartidoServicio;
 import com.elecciones.backend.partidoEleccion.modelo.dto.PartidoEleccionDTO;
+import com.elecciones.backend.partidoEleccion.modelo.dto.PartidoEleccionResumenDTO;
 import com.elecciones.backend.partidoEleccion.modelo.entidad.PartidoEleccion;
 import com.elecciones.backend.partidoEleccion.repositorio.PartidoEleccionRepositorio;
 import com.elecciones.backend.sede.modelo.entidad.Sede;
@@ -79,6 +80,12 @@ public class PartidoControlador {
     }
 
     //----------------------------------------------
+    //Para participación completa
+    @GetMapping("/participacion/{partidoEleccionId}")
+    @Operation(summary = "Obtener participación completa por ID (partido + elección + información)")
+    public ResponseEntity<PartidoEleccionDTO> obtenerParticipacionCompleta(@PathVariable Long partidoEleccionId) {
+        return ResponseEntity.ok(partidoServicio.obtenerParticipacionCompleta(partidoEleccionId));
+    }
 
     //Para participación (Partido-elección)
     @PostMapping("/participacion")
@@ -95,7 +102,7 @@ public class PartidoControlador {
 
     @GetMapping("/eleccion/{tipo}/{ambito}")
     @Operation(summary = "Listar partidos por tipo y ámbito de elección")
-    public ResponseEntity<List<PartidoResumenDTO>> listarPorEleccionTipoAmbito(
+    public ResponseEntity<List<PartidoEleccionResumenDTO>> listarPorEleccionTipoAmbito(
             @PathVariable String tipo,
             @PathVariable String ambito) {
         return ResponseEntity.ok(partidoServicio.buscarPorEleccionTipoAmbito(tipo, ambito));

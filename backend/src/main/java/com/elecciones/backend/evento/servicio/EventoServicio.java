@@ -121,4 +121,12 @@ public class EventoServicio {
                 .map(eventoMapeador::toDetalleDTO)
                 .collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public List<EventoDetalleDTO> listarPorPartidoEleccion(Long partidoEleccionId) {
+        return eventoRepositorio.findByPartidoEleccionIdOrderByFechaAsc(partidoEleccionId)
+                .stream()
+                .map(eventoMapeador::toDetalleDTO)
+                .collect(Collectors.toList());
+    }
 }

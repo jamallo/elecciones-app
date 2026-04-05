@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -103,6 +104,14 @@ public class PartidoServicio {
     }
 
     //------------------------------------------
+    //PARA PARTICIPACIÓN COMPLETA
+    @Transactional(readOnly = true)
+    public PartidoEleccionDTO obtenerParticipacionCompleta(Long partidoEleccionId) {
+        PartidoEleccion partidoEleccion = partidoEleccionRepositorio.findById(partidoEleccionId)
+                .orElseThrow(() -> new RecursoNoEncontradoExcepcion("Participación electoral no encontrada con id: " + partidoEleccionId));
+
+        return partidoEleccionMapeador.toDTO(partidoEleccion);
+    }
 
     //PARA PARTICIPACIÓN (PARTIDO-ELECCIÓN)
     @Transactional
@@ -191,11 +200,12 @@ public class PartidoServicio {
 
 
     @Transactional(readOnly = true)
-    public List<PartidoResumenDTO> buscarPorEleccionTipoAmbito(String tipo, String ambito) {
-        return partidoEleccionRepositorio.findByEleccionTipoAndAmbito(tipo, ambito)
-                .stream()
-                .map(pe -> partidoMapeador.toResumenDTO(pe.getPartido()))
-                .toList();
+    public List<PartidoEleccionResumenDTO> buscarPorEleccionTipoAmbito(String tipo, String ambito) {
+        List<PartidoEleccion> participaciones = partidoEleccionRepositorio.findByEleccionTipoAndAmbito(tipo, ambito);
+
+        return participaciones.stream()
+                .map(partidoEleccionMapeador::toResumenDTO)  // ← Usar PartidoEleccionMapeador
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

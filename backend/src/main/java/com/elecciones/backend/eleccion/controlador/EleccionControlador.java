@@ -8,6 +8,7 @@ import com.elecciones.backend.partido.modelo.dto.PartidoResumenDTO;
 import com.elecciones.backend.partido.modelo.entidad.Partido;
 import com.elecciones.backend.partido.repositorio.PartidoRepositorio;
 import com.elecciones.backend.partido.servicio.PartidoServicio;
+import com.elecciones.backend.partidoEleccion.modelo.dto.PartidoEleccionResumenDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +56,7 @@ public class EleccionControlador {
     //CRUD (BUSCAR POR TIPO Y ÁMBITO DE ELECCIÓN - READ)
     @GetMapping("/{tipo}/{ambito}/partidos")
     @Operation(summary = "Obtener partidos por tipo y ámbito de elección")
-    public ResponseEntity<List<PartidoResumenDTO>> getPartidosByEleccion(@PathVariable String tipo, @PathVariable String ambito) {
+    public ResponseEntity<List<PartidoEleccionResumenDTO>> getPartidosByEleccion(@PathVariable String tipo, @PathVariable String ambito) {
         return ResponseEntity.ok(partidoServicio.buscarPorEleccionTipoAmbito(tipo, ambito));
     }
 

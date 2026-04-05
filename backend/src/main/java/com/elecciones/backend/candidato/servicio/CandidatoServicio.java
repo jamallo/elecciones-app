@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -91,7 +93,7 @@ public class CandidatoServicio {
         return candidatoRepositorio.findByPartidoEleccionIdOrderByPosicionListaAsc(partidoEleccionId)
                 .stream()
                 .map(candidatoMapeador::toDetalleDTO)
-                .toList();
+                .collect(Collectors.toList());
     }
 
 
