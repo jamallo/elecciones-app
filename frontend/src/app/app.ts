@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from './services/auth.service';
+import { BuscadorComponent } from './buscador/buscador.component';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +11,8 @@ import { AuthService } from './services/auth.service';
 })
 export class App {
   menuOpen = false;
+
+  @ViewChild(BuscadorComponent) buscadorComponent!: BuscadorComponent;
 
   constructor(
     public authService: AuthService,
@@ -43,4 +46,12 @@ export class App {
       window.location.reload();
     });
   }
+
+  // Método para abrir el buscador
+  abrirBuscador(): void {
+    if (this.buscadorComponent) {
+      this.buscadorComponent.abrir();
+    }
+  }
+  
 }

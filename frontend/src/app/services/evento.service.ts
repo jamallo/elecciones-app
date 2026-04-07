@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Evento, EventoDetalle } from '../model/evento.model';
 import { Observable } from 'rxjs';
+import { CalendarioEventosComponent } from '../calendario-eventos/calendario-eventos.component';
 
 @Injectable({
   providedIn: 'root',
@@ -75,6 +76,14 @@ export class EventoService {
   //CRUD (ELIMINAR PARTIDO - DELETE)
   eleminarEvento(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/admin/${id}`);
+  }
+
+  getEventosEntreFechas(fechaInicio: string, fechaFin: string): Observable<EventoDetalle[]> {
+    return this.http.get<EventoDetalle[]>(`${this.apiUrl}/entre-fechas?inicio=${fechaInicio}&fin=${fechaFin}`);
+  }
+
+  getEventoPorMes(anio: number, mes: number): Observable<CalendarioEventosComponent[]> {
+    return this.http.get<CalendarioEventosComponent[]>(`${this.apiUrl}/por-mes?anio=${anio}&mes=${mes}`);
   }
 
 }

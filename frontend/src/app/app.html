@@ -12,6 +12,11 @@
     </div>
     <div class="spacer"></div>
 
+    <!-- Botón de búsqueda en la toolbar -->
+    <button mat-icon-button (click)="abrirBuscador()" class="search-button">
+      <lucide-angular name="Search" [size]="22" [strokeWidth]="1.5"></lucide-angular>
+    </button>
+
     @if ((authService.currentUser$ | async); as user) {
       <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-button">
         <lucide-angular name="User" [size]="22" [strokeWidth]="1.5"></lucide-angular>
@@ -23,7 +28,7 @@
         </button>
         <mat-divider></mat-divider>
         @if (user.rol !== 'USUARIO') {
-          <button mat-menu-item routerLink="/admin">
+          <button mat-menu-item routerLink="/admin" (click)="closeMenu()">
             <lucide-angular name="Shield" [size]="16"></lucide-angular>
             Administración
           </button>
@@ -104,3 +109,6 @@
     </button>
   </div>
 </div>
+
+<!-- Componente buscador (flotante) -->
+<app-buscador></app-buscador>

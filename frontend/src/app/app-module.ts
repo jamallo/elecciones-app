@@ -18,7 +18,7 @@ import { LoginComponent } from './login/login.component';
 import { MapaEspaniaComponent } from './mapa-espania/mapa-espania.component';
 
 //Anguar Material
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -87,8 +87,18 @@ import {
   BookOpen,
   FileCheck,
   CalendarClock,
-  ChevronLeft
+  ChevronLeft,
+  ChevronRight,
+  Flag,
+  MessageSquare,
+  Table,
+  TrendingUp
  } from 'lucide-angular';
+import { CalendarioCompletoComponent } from './calendario-completo/calendario-completo.component';
+import { ResultadosComponent } from './resultados/resultados.component';
+import { BuscadorComponent } from './buscador/buscador.component';
+import { BusquedaService } from './services/busqueda.service';
+import { ResultadoService } from './services/resultado.service';
 
 
 @NgModule({
@@ -102,7 +112,10 @@ import {
     ResultadosGraficoComponent,
     CalendarioEventosComponent,
     LoginComponent,
-    MapaEspaniaComponent
+    MapaEspaniaComponent,
+    CalendarioCompletoComponent,
+    ResultadosComponent,
+    BuscadorComponent
   ],
   imports: [
     BrowserModule,
@@ -127,6 +140,7 @@ import {
     MatMenuModule,
     MatAutocompleteModule,
     MatInputModule,
+    ReactiveFormsModule,
     LucideAngularModule.pick({
       Home,
       Map,
@@ -164,7 +178,12 @@ import {
       BookOpen,
       FileCheck,
       CalendarClock,
-      ChevronLeft
+      ChevronLeft,
+      ChevronRight,
+      Flag,
+      MessageSquare,
+      Table,
+      TrendingUp
     })
   ],
   providers: [
@@ -179,6 +198,8 @@ import {
     CandidatoService,
     EventoService,
     SedeService,
+    BusquedaService,
+    ResultadoService
 
   ],
   bootstrap: [App]

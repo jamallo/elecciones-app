@@ -1,0 +1,145 @@
+<!-- Botón de búsqueda flotante -->
+<button class="btn-buscar" (click)="abrir()" appTema>
+  <lucide-angular name="Search" [size]="22" [strokeWidth]="1.5"></lucide-angular>
+</button>
+
+<!-- Modal de búsqueda -->
+@if (mostrando) {
+  <div class="buscador-overlay" (click)="cerrar()">
+    <div class="buscador-modal" (click)="$event.stopPropagation()">
+      <div class="buscador-header" [style.background]="'var(--header-gradient)'">
+        <div class="search-input-container">
+          <lucide-angular name="Search" [size]="20" [strokeWidth]="1.5"></lucide-angular>
+          <input
+            type="text"
+            [formControl]="searchControl"
+            placeholder="Buscar partidos, candidatos, eventos..."
+            autofocus
+          >
+          @if (searchControl.value) {
+            <button class="clear-btn" (click)="limpiarBusqueda()">
+              <lucide-angular name="X" [size]="16" [strokeWidth]="1.5"></lucide-angular>
+            </button>
+          }
+        </div>
+        <button class="close-btn" (click)="cerrar()">
+          <lucide-angular name="X" [size]="20" [strokeWidth]="1.5"></lucide-angular>
+        </button>
+      </div>
+
+      <div class="buscador-body">
+        @if (loading) {
+          <div class="loading-spinner">
+            <mat-spinner diameter="30"></mat-spinner>
+            <p>Buscando...</p>
+          </div>
+        } @else if (terminoActual.length >= 2 && getTotalResultados() === 0) {
+          <div class="sin-resultados">
+            <lucide-angular name="SearchX" [size]="48" [strokeWidth]="1.5"></lucide-angular>
+            <p>No se encontraron resultados para "{{ terminoActual }}"</p>
+          </div>
+        } @else if (terminoActual.length >= 2) {
+          <div class="resultados-container">
+            <!-- Partidos -->
+            @if (resultados.partidos.length > 0) {
+              <div class="categoria">
+                <h3>
+                  <lucide-angular name="Users" [size]="18"></lucide-angular>
+                  Partidos ({{ resultados.partidos.length }})
+                </h3>
+                @for (item of resultados.partidos; track item.id) {
+                  <div class="resultado-item" (click)="seleccionarResultado(item)">
+                    <div class="imagen" [style.backgroundColor]="item.color">
+                      <img [src]="item.imagenUrl" [alt]="item.nombre">
+                    </div>
+                    <div class="info">
+                      <h4>{{ item.nombre }}</h4>
+                      <p>{{ item.descripcion }}</p>
+                      <span class="subtitulo">{{ item.subtitulo }}</span>
+                    </div>
+                    <lucide-angular name="ChevronRight" [size]="16"></lucide-angular>
+                  </div>
+                }
+              </div>
+            }
+
+            <!-- Candidatos -->
+            @if (resultados.candidatos.length > 0) {
+              <div class="categoria">
+                <h3>
+                  <lucide-angular name="User" [size]="18"></lucide-angular>
+                  Candidatos ({{ resultados.candidatos.length }})
+                </h3>
+                @for (item of resultados.candidatos; track item.id) {
+                  <div class="resultado-item" (click)="seleccionarResultado(item)">
+                    <div class="imagen candidato">
+                      <img [src]="item.imagenUrl" [alt]="item.nombre">
+                    </div>
+                    <div class="info">
+                      <h4>{{ item.nombre }}</h4>
+                      <p>{{ item.descripcion }}</p>
+                      <span class="subtitulo">{{ item.subtitulo }}</span>
+                    </div>
+                    <lucide-angular name="ChevronRight" [size]="16"></lucide-angular>
+                  </div>
+                }
+              </div>
+            }
+
+            <!-- Eventos -->
+            @if (resultados.eventos.length > 0) {
+              <div class="categoria">
+                <h3>
+                  <lucide-angular name="Calendar" [size]="18"></lucide-angular>
+                  Eventos ({{ resultados.eventos.length }})
+                </h3>
+                @for (item of resultados.eventos; track item.id) {
+                  <div class="resultado-item" (click)="seleccionarResultado(item)">
+                    <div class="imagen evento">
+                      <lucide-angular name="Calendar" [size]="24"></lucide-angular>
+                    </div>
+                    <div class="info">
+                      <h4>{{ item.nombre }}</h4>
+                      <p>{{ item.descripcion }}</p>
+                      <span class="subtitulo">{{ item.subtitulo }}</span>
+                    </div>
+                    <lucide-angular name="ChevronRight" [size]="16"></lucide-angular>
+                  </div>
+                }
+              </div>
+            }
+
+            <!-- Municipios -->
+            @if (resultados.municipios.length > 0) {
+              <div class="categoria">
+                <h3>
+                  <lucide-angular name="Building" [size]="18"></lucide-angular>
+                  Municipios ({{ resultados.municipios.length }})
+                </h3>
+                @for (item of resultados.municipios; track item.id) {
+                  <div class="resultado-item" (click)="seleccionarResultado(item)">
+                    <div class="imagen municipio">
+                      <lucide-angular name="Building2" [size]="24"></lucide-angular>
+                    </div>
+                    <div class="info">
+                      <h4>{{ item.nombre }}</h4>
+                      <p>{{ item.descripcion }}</p>
+                      <span class="subtitulo">{{ item.subtitulo }}</span>
+                    </div>
+                    <lucide-angular name="ChevronRight" [size]="16"></lucide-angular>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="inicio-busqueda">
+            <lucide-angular name="Search" [size]="48" [strokeWidth]="1.5"></lucide-angular>
+            <p>Escribe al menos 2 caracteres para buscar</p>
+            <span class="ejemplos">Ej: PP, PSOE, Oviedo, mitin...</span>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,125 @@
+<div class="calendario-container" appTema>
+  <!-- Cabecera -->
+  <div class="calendario-header" [style.background]="'var(--header-gradient)'">
+    <button class="back-button" (click)="volverAlInicio()">
+      <lucide-angular name="ArrowLeft" [size]="20" [strokeWidth]="1.5"></lucide-angular>
+    </button>
+    <h1>Calendario Electoral</h1>
+    <div class="nav-controls">
+      <button (click)="mesAnterior()">
+        <lucide-angular name="ChevronLeft" [size]="20"></lucide-angular>
+      </button>
+      <span class="fecha-actual">{{ meses[mesActual] }} {{ anioActual }}</span>
+      <button (click)="mesSiguiente()">
+        <lucide-angular name="ChevronRight" [size]="20"></lucide-angular>
+      </button>
+    </div>
+    <div class="vista-toggle">
+      <button [class.active]="vistaActual === 'month'" (click)="cambiarVista('month')">Mes</button>
+      <button [class.active]="vistaActual === 'week'" (click)="cambiarVista('week')">Semana</button>
+    </div>
+  </div>
+
+  <!-- VISTA MENSUAL -->
+  @if (vistaActual === 'month') {
+    <div class="vista-mensual">
+      <div class="calendario-grid">
+        <div class="dias-semana">
+          @for (dia of diasSemana; track dia) {
+            <div class="dia-semana">{{ dia }}</div>
+          }
+        </div>
+        <div class="dias-grid">
+          @for (dia of diasDelMes; track dia.fecha) {
+            <div class="dia-cell" [class.otro-mes]="!dia.esMesActual" [class.hoy]="dia.esHoy" (click)="seleccionarDia(dia)">
+              <div class="dia-numero">{{ dia.fecha.getDate() }}</div>
+              @if (dia.eventos.length > 0) {
+                <div class="eventos-preview">
+                  @for (evento of dia.eventos.slice(0, 2); track evento.id) {
+                    <div class="evento-preview" [style.backgroundColor]="getColorPartido(evento.partidoSiglas)"></div>
+                  }
+                  @if (dia.eventos.length > 2) {
+                    <div class="evento-mas">+{{ dia.eventos.length - 2 }}</div>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- VISTA SEMANAL -->
+  @if (vistaActual === 'week') {
+    <div class="vista-semanal">
+      @if (loading) {
+        <div class="loading-spinner">
+          <mat-spinner diameter="30"></mat-spinner>
+        </div>
+      }
+      <div class="eventos-semana">
+        @for (evento of eventosSemana; track evento.id) {
+          <div class="evento-card" [style.borderLeftColor]="getColorPartido(evento.partidoSiglas)">
+            <div class="evento-fecha">
+              <span class="dia">{{ evento.fecha | date:'dd' }}</span>
+              <span class="mes">{{ evento.fecha | date:'MMM' }}</span>
+            </div>
+            <div class="evento-contenido">
+              <h4>{{ evento.titulo }}</h4>
+              <p>{{ evento.descripcion | slice:0:100 }}...</p>
+              <div class="evento-metadata">
+                <span class="lugar">
+                  <lucide-angular name="MapPin" [size]="12"></lucide-angular>
+                  {{ evento.lugar }}
+                </span>
+                @if (evento.partidoSiglas) {
+                  <span class="partido" [style.backgroundColor]="getColorPartido(evento.partidoSiglas)">
+                    {{ evento.partidoSiglas }}
+                  </span>
+                }
+              </div>
+            </div>
+          </div>
+        }
+        @if (!loading && eventosSemana.length === 0) {
+          <div class="no-eventos">
+            <lucide-angular name="CalendarX" [size]="48"></lucide-angular>
+            <p>No hay eventos programados esta semana</p>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- MODAL DE EVENTOS -->
+  @if (mostrarModalEventos) {
+    <div class="modal-overlay" (click)="cerrarModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Eventos del {{ diaSeleccionado | date:'dd/MM/yyyy' }}</h2>
+          <button class="close-modal" (click)="cerrarModal()">
+            <lucide-angular name="X" [size]="20"></lucide-angular>
+          </button>
+        </div>
+        <div class="modal-body">
+          @for (evento of eventosSeleccionados; track evento.id) {
+            <div class="evento-modal-item" (click)="verEvento(evento.id)">
+              <div class="evento-hora" [style.backgroundColor]="getColorPartido(evento.partidoSiglas)">
+                {{ evento.fecha | date:'HH:mm' }}
+              </div>
+              <div class="evento-info">
+                <h4>{{ evento.titulo }}</h4>
+                <p>{{ evento.lugar }}</p>
+                <span class="partido">{{ evento.partidoSiglas }}</span>
+              </div>
+            </div>
+          }
+          @if (eventosSeleccionados.length === 0) {
+            <p class="no-eventos-modal">No hay eventos programados para este día</p>
+          }
+        </div>
+      </div>
+    </div>
+  }
+</div>

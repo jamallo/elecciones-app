@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { EventoDetalle } from '../model/evento.model';
 import { EventoService } from '../services/evento.service';
 
@@ -15,19 +15,24 @@ export class CalendarioEventosComponent implements OnInit, OnChanges{
   eventos: EventoDetalle[] = [];
   loading: boolean = false;
 
-  constructor(private eventoService: EventoService) {
+  constructor(
+    private eventoService: EventoService,
+    private cdr: ChangeDetectorRef
+  ) {
 
   }
 
   ngOnInit(): void {
     if (this.fecha) {
       this.eventoService.getEventosPorParticipacion;
+      this.cdr.detectChanges;
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['fecha'] && !changes['fecha'].firstChange) {
       this.eventoService.getEventosPorParticipacion;
+      this.cdr.detectChanges;
     }
   }
 

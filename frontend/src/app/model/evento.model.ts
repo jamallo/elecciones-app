@@ -3,6 +3,7 @@ export interface Evento {
   titulo: string;
   descripcion: string;
   fecha: string;
+  hora?: string;
   lugar: string;
   tipo: string; //NACIONAL, AUTONÓMICA, MUNICIPAL
   partidoNombre?: string;
@@ -19,3 +20,5 @@ export interface EventoDetalle extends Evento {
   eleccionTipo: string; //NACIONAL, AUTONÓMICA, MUNICIPAL
   eleccionAmbito: string; //España, Asturias, Oviedo
 }
+
+export type EventoCalendario = EventoDetalle;
