@@ -1,7 +1,7 @@
 spring:
   datasource:
     url: jdbc:postgresql://ep-calm-bird-agbc1qka-pooler.c-2.eu-central-1.aws.neon.tech:5432/elecciones_db?sslmode=require
-    *****************************
+    ************************
 
   jpa:
     hibernate:

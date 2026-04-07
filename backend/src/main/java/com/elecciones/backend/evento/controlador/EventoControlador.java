@@ -85,4 +85,12 @@ public class EventoControlador {
     public ResponseEntity<List<EventoDetalleDTO>> getEventosByParticipacion(@PathVariable Long partidoEleccionId) {
         return ResponseEntity.ok(eventoServicio.listarPorPartidoEleccion(partidoEleccionId));
     }
+
+    @GetMapping("/entre-fechas")
+    @Operation(summary = "Obtener eventos entre dos fechas")
+    public ResponseEntity<List<EventoDetalleDTO>> getEventosEntreFechas(
+            @RequestParam String inicio,
+            @RequestParam String fin) {
+        return ResponseEntity.ok(eventoServicio.findByFechaBetween(inicio, fin));
+    }
 }

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.plaf.PanelUI;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -125,6 +126,17 @@ public class EventoServicio {
     @Transactional(readOnly = true)
     public List<EventoDetalleDTO> listarPorPartidoEleccion(Long partidoEleccionId) {
         return eventoRepositorio.findByPartidoEleccionIdOrderByFechaAsc(partidoEleccionId)
+                .stream()
+                .map(eventoMapeador::toDetalleDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<EventoDetalleDTO> findByFechaBetween(String inicio, String fin) {
+        LocalDateTime fechaInicio = LocalDateTime.parse(inicio + "T00:00:00");
+        LocalDateTime fechaFin = LocalDateTime.parse(fin + "T23:59:59");
+
+        return eventoRepositorio.findByFechaBetween(fechaInicio, fechaFin)
                 .stream()
                 .map(eventoMapeador::toDetalleDTO)
                 .collect(Collectors.toList());

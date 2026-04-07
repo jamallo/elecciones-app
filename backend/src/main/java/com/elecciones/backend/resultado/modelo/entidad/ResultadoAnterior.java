@@ -14,8 +14,9 @@ public class ResultadoAnterior {
     private Long id;
     private Integer anio;
 
-    @JoinColumn(name = "partido_nombre")
-    private String partidoNombre;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "partido_id")
+    private Partido partido;
     private Integer votos;
     private double porcentaje;
     private Integer concejales;
@@ -23,4 +24,5 @@ public class ResultadoAnterior {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "eleccion_id")
     private Eleccion eleccion;
+
 }
