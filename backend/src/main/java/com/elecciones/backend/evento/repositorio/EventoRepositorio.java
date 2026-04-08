@@ -12,4 +12,5 @@ public interface EventoRepositorio extends JpaRepository<Evento, Long> {
     List<Evento> findByFechaBetween(LocalDateTime inicio, LocalDateTime fin);
     // Últimos 5 eventos por fecha
     List<Evento> findTop5ByOrderByFechaDesc();
+    List<Evento> findByTituloContainingIgnoreCase(String titulo);
 }

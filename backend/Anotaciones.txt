@@ -326,3 +326,57 @@ CandidatosAdmin	(Pendiente) Gestión de candidatos
 EventosAdmin	(Pendiente) Gestión de eventos
 EleccionesAdmin	(Pendiente) Gestión de elecciones
 SedesAdmin	(Pendiente) Gestión de sedes
+
+------------------------------
+
+DÍA 08/04/2026
+
+BACKEND (SPRING BOOT + POSTGREESQL NEON)  -> Funcionando
+AUTENTICACIÓN JWT -> Funcionando
+PÁGINA DE INICIO CON SELECTOR JERÁRQUICO -> Funcionando
+TEMAS DINÁMICOS POR NIVEL -> Funcionando
+GRID DE PARTIDOS -> Funcionando
+EVENTOS FILTRADOS -> Funcionando
+MAPA INTERACTIVO -> Funcionando
+DETALLE DE PARTIDO -> Funcionando
+DETALLE DE CANDIDATO -> Funcionando
+CALENDARIO COMPLETO (VISTA MES/SEMANA) -> Funcionando
+RESULTADOS ELECTORALES CON GRÁFICOS -> Funcionando
+BUSCADOR GLOBAL -> Funcionando
+MODO OSCURO/CLARO -> Funcionando
+ANIMACIONALES SUAVES -> Funcionando
+
+------------------------------------------
+TO DO:
+
+· PANEL DE ADMINISTRACIÓN COMPLETO
+-> CRUD completo de partidos(editar, eliminar)
+-> CRUD de candidatos
+-> CRUD de eventos
+-> CRUD de resultados electorales
+-> Subida de imágenes (logos, fotos)
+-> Dashboard con estadísticas
+
+· COMPARADOR DE PARTIDOS
+-> Seleccionar múltiples partidos
+-> Comparar programas electorales lado a lado
+-> Comparar resultados históricos
+
+· EXPORTACIÓN DE DATOS
+-> Exportar resultados a PDF
+-> Exportar calendario a Excel/CSV
+-> Generar informes personalizados
+
+· COMPARTIR EN REDES SOCIALES
+-> Botones para compartir
+-> Open Graph para vista previa
+-> Generar imágenes de resumen
+
+· NOTIFICACIONES PUSH
+-> Alertas de eventos próximos
+-> Recordatorios de elecciones
+-> Novedades de partidos seguidos
+
+· INTERNACIONALIZACIÓN
+-> Soporte para múltiples idiomas
+-> Traducciones dinámicas

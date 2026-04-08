@@ -10,4 +10,5 @@ public interface MunicipioRepositorio extends JpaRepository<Municipio, Long> {
     Optional<Municipio> findByNombre(String nombre);
     boolean existsByNombre(String nombre);
     List<Municipio> findByComunidadAutonomaIgnoreCase(String comunidad);
+    List<Municipio> findByNombreContainingIgnoreCase(String nombre);
 }

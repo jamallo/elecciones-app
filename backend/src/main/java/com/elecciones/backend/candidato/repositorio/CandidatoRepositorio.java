@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface CandidatoRepositorio extends JpaRepository<Candidato, Long> {
     List<Candidato> findByPartidoEleccionIdOrderByPosicionListaAsc(Long partidoEleccionId);
+    List<Candidato> findByNombreContainingIgnoreCase(String nombre);
 }

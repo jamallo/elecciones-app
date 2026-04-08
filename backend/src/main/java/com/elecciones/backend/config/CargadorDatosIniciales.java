@@ -160,9 +160,7 @@ public class CargadorDatosIniciales implements CommandLineRunner {
         System.out.println("✅ " + sedes.size() + " sedes creadas");
 
         // ========== 9. RESULTADOS ANTERIORES ==========
-        List<ResultadoAnterior> resultados = crearResultadosAnteriores(oviedoEleccion);
-        resultadoRepositorio.saveAll(resultados);
-        System.out.println("✅ Resultados anteriores creados");
+
 
         // ========== 10. USUARIO ADMIN ==========
         Usuario admin = new Usuario();
@@ -365,22 +363,12 @@ public class CargadorDatosIniciales implements CommandLineRunner {
         return sedes;
     }
 
-    private List<ResultadoAnterior> crearResultadosAnteriores(Eleccion eleccion) {
-        List<ResultadoAnterior> resultados = new ArrayList<>();
 
-        resultados.add(crearResultado(2019, "PP", 35000, 32.5, 12, eleccion));
-        resultados.add(crearResultado(2019, "PSOE", 28000, 26.0, 9, eleccion));
-        resultados.add(crearResultado(2019, "FORO", 15000, 14.0, 5, eleccion));
-        resultados.add(crearResultado(2019, "PODEMOS", 12000, 11.0, 4, eleccion));
-        resultados.add(crearResultado(2019, "VOX", 5000, 4.5, 0, eleccion));
 
-        return resultados;
-    }
-
-    private ResultadoAnterior crearResultado(int anio, String partido, int votos, double porcentaje, int concejales, Eleccion eleccion) {
+    private ResultadoAnterior crearResultado(int anio, Partido partido, int votos, double porcentaje, int concejales, Eleccion eleccion) {
         ResultadoAnterior r = new ResultadoAnterior();
         r.setAnio(anio);
-        r.setPartidoNombre(partido);
+        r.setPartido(partido);
         r.setVotos(votos);
         r.setPorcentaje(porcentaje);
         r.setConcejales(concejales);
