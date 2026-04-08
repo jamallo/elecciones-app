@@ -17,6 +17,15 @@
       <lucide-angular name="Search" [size]="22" [strokeWidth]="1.5"></lucide-angular>
     </button>
 
+    <!-- Botón de modo oscuro -->
+    <button mat-icon-button (click)="toggleTheme()" class="theme-button">
+      @if ((themeService.currentTheme$ | async) === 'dark') {
+        <lucide-angular name="Sun" [size]="20" [strokeWidth]="1.5"></lucide-angular>
+      } @else {
+        <lucide-angular name="Moon" [size]="20" [strokeWidth]="1.5"></lucide-angular>
+      }
+    </button>
+
     @if ((authService.currentUser$ | async); as user) {
       <button mat-icon-button [matMenuTriggerFor]="userMenu" class="user-button">
         <lucide-angular name="User" [size]="22" [strokeWidth]="1.5"></lucide-angular>

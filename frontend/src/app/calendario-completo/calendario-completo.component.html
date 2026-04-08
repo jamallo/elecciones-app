@@ -1,4 +1,4 @@
-<div class="calendario-container" appTema>
+<div class="calendario-container fade-in-up" appTema>
   <!-- Cabecera -->
   <div class="calendario-header" [style.background]="'var(--header-gradient)'">
     <button class="back-button" (click)="volverAlInicio()">
@@ -6,11 +6,19 @@
     </button>
     <h1>Calendario Electoral</h1>
     <div class="nav-controls">
-      <button (click)="mesAnterior()">
+      <button (click)="vistaActual === 'month' ? mesAnterior() : semanaAnterior()">
         <lucide-angular name="ChevronLeft" [size]="20"></lucide-angular>
       </button>
-      <span class="fecha-actual">{{ meses[mesActual] }} {{ anioActual }}</span>
-      <button (click)="mesSiguiente()">
+
+      <span class="fecha-actual">
+        @if (vistaActual === 'month') {
+          {{ meses[mesActual] }} {{ anioActual }}
+        } @else {
+          {{ getRangoSemana() }}
+        }
+      </span>
+
+      <button (click)="vistaActual === 'month' ? mesSiguiente() : semanaSiguiente()">
         <lucide-angular name="ChevronRight" [size]="20"></lucide-angular>
       </button>
     </div>

@@ -16,7 +16,9 @@ const routes: Routes = [
   {path: 'candidato/:id', component: CandidatoDetalle},
   { path: 'calendario', component: CalendarioCompletoComponent },
   { path: 'resultados', component: ResultadosComponent },
-  //{path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule), canActivate: [adminGuard]},
+  /* { path: 'evento/:id', component: EventoDetalleComponent },
+  { path: 'municipio/:id', component: MunicipioDetalleComponent }, */
+  {path: 'admin', loadChildren: () => import('./admin/admin-module').then(m => m.AdminModule), canActivate: [adminGuard]},
   {path: '**', redirectTo: ''}
 ];
 

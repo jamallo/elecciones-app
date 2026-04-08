@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { ResultadosAgrupados } from '../model/busqueda.model';
+import { ResultadoBusqueda, ResultadosAgrupados } from '../model/busqueda.model';
 
 @Injectable({
   providedIn: 'root',
@@ -20,8 +20,43 @@ export class BusquedaService {
       });
     }
 
-    return this.http.get<any>(`${this.apiUrl}/busqueda?q=${encodeURIComponent(termino)}`).pipe(
-      map(response => this.organizarResultados(response))
+    return this.http.get<any[]>(`${this.apiUrl}/busqueda?q=${encodeURIComponent(termino)}`).pipe(
+      map(resultados => {
+        const agrupados: ResultadosAgrupados = {
+          partidos: [],
+          candidatos: [],
+          eventos: [],
+          municipios: []
+        };
+        resultados.forEach(item => {
+          const resultado: ResultadoBusqueda = {
+            tipo: item.tipo,
+            id: item.id,
+            nombre: item.nombre,
+            descripcion: item.descripcion,
+            imagenUrl: item.imagenUrl,
+            color: item.color,
+            link: item.link,
+            subtitulo: item.subtitulo
+          };
+
+          switch (item.tipo) {
+            case 'PARTIDO':
+              agrupados.partidos.push(resultado);
+              break;
+            case 'CANDIDATO':
+              agrupados.candidatos.push(resultado);
+              break;
+            case 'EVENTO':
+              agrupados.eventos.push(resultado);
+              break;
+            case 'MUNICIPIO':
+              agrupados.municipios.push(resultado);
+              break;
+          }
+        });
+      return agrupados;
+      })
     );
   }
 

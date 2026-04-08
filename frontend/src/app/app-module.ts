@@ -92,7 +92,10 @@ import {
   Flag,
   MessageSquare,
   Table,
-  TrendingUp
+  TrendingUp,
+  Sun,
+  Moon,
+  SearchX
  } from 'lucide-angular';
 import { CalendarioCompletoComponent } from './calendario-completo/calendario-completo.component';
 import { ResultadosComponent } from './resultados/resultados.component';
@@ -183,7 +186,10 @@ import { ResultadoService } from './services/resultado.service';
       Flag,
       MessageSquare,
       Table,
-      TrendingUp
+      TrendingUp,
+      Sun,
+      Moon,
+      SearchX
     })
   ],
   providers: [

@@ -33,36 +33,32 @@ export class BuscadorComponent implements OnInit, OnDestroy {
     this.searchControl.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged(),
-      switchMap(termino => {
-        this.terminoActual = termino || '';
-        if (!termino || termino.length < 2) {
-          this.resultados = { partidos: [], candidatos: [], eventos: [], municipios: [] };
-          this.mostrando = false;
-          this.loading = false;
-
-          return new Observable<ResultadosAgrupados>(subscriber => {
-            subscriber.next({ partidos: [], candidatos: [], eventos: [], municipios: [] });
-            subscriber.complete();
-          });
-        }
-        this.loading = true;
-        this.mostrando =true;
-        this.cdr.detectChanges();
-        return this.busquedaServicio.buscarGlobal(termino);
-      }),
       takeUntil(this.destroy$)
-    ).subscribe ({
-      next: (resultados) => {
-        this.resultados = resultados;
+    ).subscribe(termino => {
+      this.terminoActual = termino || '';
+      if (!termino || termino.length < 2) {
+        this.resultados = { partidos: [], candidatos: [], eventos: [], municipios: [] };
         this.loading = false;
         this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.error('Error en búsqueda: ', error);
-        this.loading = false;
-        this.cdr.detectChanges();
+        return;
       }
-    })
+
+      this.loading = true;
+      this.cdr.detectChanges();
+
+      this.busquedaServicio.buscarGlobal(termino).subscribe({
+        next: (resultados) => {
+          this.resultados = resultados;
+          this.loading = false;
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          console.error('Error en búsqueda:', error);
+          this.loading = false;
+          this.cdr.detectChanges();
+        }
+      });
+    });
   }
 
   ngOnDestroy(): void {
@@ -73,6 +69,13 @@ export class BuscadorComponent implements OnInit, OnDestroy {
   public abrir(): void {
     this.mostrando = true;
     this.cdr.detectChanges();
+    // Enfocar el input después de abrir
+    setTimeout(() => {
+      const input = document.querySelector('.buscador-modal input') as HTMLInputElement;
+      if (input) {
+        input.focus();
+      }
+    }, 100);
   }
 
   cerrar(): void {
@@ -83,7 +86,24 @@ export class BuscadorComponent implements OnInit, OnDestroy {
 
   seleccionarResultado(resultado: ResultadoBusqueda): void {
     this.cerrar();
-    this.router.navigate([resultado.link]);
+    let ruta = '';
+    switch (resultado.tipo) {
+      case 'PARTIDO':
+        ruta = `/partido/${resultado.id}`;
+        break;
+      case 'CANDIDATO':
+        ruta = `/candidato/${resultado.id}`;
+        break;
+      case 'EVENTO':
+        ruta = `/evento/${resultado.id}`;
+        break;
+      case 'MUNICIPIO':
+        ruta = `/municipio/${resultado.id}`;
+        break;
+      default:
+        ruta = '/';
+    }
+    this.router.navigate([ruta]);
   }
 
   getTotalResultados(): number {
@@ -103,5 +123,11 @@ export class BuscadorComponent implements OnInit, OnDestroy {
     this.router.navigate(['/']);
     this.temaService.resetToNeutral();
   }
+
+  onOverlayClick(event: MouseEvent): void {
+  if ((event.target as HTMLElement).classList.contains('buscador-overlay')) {
+    this.cerrar();
+  }
+}
 
 }

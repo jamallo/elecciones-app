@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from './services/auth.service';
 import { BuscadorComponent } from './buscador/buscador.component';
+import { ThemeService, ThemeMode } from './services/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,7 @@ export class App {
 
   constructor(
     public authService: AuthService,
+    public themeService: ThemeService,
     private router: Router
   ) {}
 
@@ -53,5 +55,9 @@ export class App {
       this.buscadorComponent.abrir();
     }
   }
-  
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
+  }
+
 }

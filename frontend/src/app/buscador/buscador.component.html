@@ -5,7 +5,7 @@
 
 <!-- Modal de búsqueda -->
 @if (mostrando) {
-  <div class="buscador-overlay" (click)="cerrar()">
+  <div class="buscador-overlay" (click)="onOverlayClick($event)">
     <div class="buscador-modal" (click)="$event.stopPropagation()">
       <div class="buscador-header" [style.background]="'var(--header-gradient)'">
         <div class="search-input-container">

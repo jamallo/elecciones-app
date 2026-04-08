@@ -49,3 +49,164 @@
   background-size: 200% auto;
   animation: metallicShine 3s linear infinite;
 }
+
+// ========== MODO OSCURO ==========
+body.dark-mode {
+  --bg-color: #1a1a2e;
+  --text-color: #eeeeee;
+  --card-bg: #16213e;
+  --border-color: #0f3460;
+  --header-gradient: linear-gradient(135deg, #0f3460, #1a1a2e);
+
+  background-color: var(--bg-color);
+  color: var(--text-color);
+
+  // Tarjetas
+  .mat-mdc-card, .partido-card, .evento-card, .candidato-card, .resultado-card {
+    background-color: var(--card-bg) !important;
+    color: var(--text-color) !important;
+  }
+
+  // Formularios
+  .mat-mdc-form-field {
+    background-color: var(--card-bg);
+  }
+
+  .mat-mdc-select-value-text {
+    color: var(--text-color) !important;
+  }
+
+  // Tablas
+  table {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+
+    th, td {
+      border-color: var(--border-color);
+    }
+
+    th {
+      background-color: #0f3460;
+    }
+  }
+
+  // Botones secundarios
+  .back-button, .nav-controls button {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+  }
+
+  // Inputs
+  input, select, textarea {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+  }
+
+  // Selectores de Angular Material
+  .mat-mdc-select-panel {
+    background-color: var(--card-bg) !important;
+  }
+
+  .mat-mdc-option {
+    color: var(--text-color) !important;
+
+    &:hover {
+      background-color: #0f3460 !important;
+    }
+  }
+
+  // Calendario
+  .calendario-grid, .dia-cell {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+  }
+
+  .dias-semana {
+    background-color: #0f3460;
+  }
+
+  // Modales
+  .modal-content {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+  }
+}
+
+// ========== ANIMACIONES ==========
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+// Clases de animación
+.fade-in-up {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.slide-in-right {
+  animation: slideInRight 0.3s ease-out;
+}
+
+.pulse {
+  animation: pulse 0.3s ease-in-out;
+}
+
+// Transiciones suaves
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+// Loading spinner animado
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+
+  mat-spinner {
+    animation: pulse 1s infinite;
+  }
+}

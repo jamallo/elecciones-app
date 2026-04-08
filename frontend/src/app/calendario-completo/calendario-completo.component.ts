@@ -45,7 +45,7 @@ export class CalendarioCompletoComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.temaService.resetToNeutral();
     this.irAHoy();
-    this.cdr.detectChanges;
+    this.cdr.detectChanges();
   }
 
   ngAfterViewInit(): void {
@@ -59,21 +59,21 @@ export class CalendarioCompletoComponent implements OnInit, AfterViewInit {
     this.fechaActual = new Date();
     this.actualizarFecha();
     this.cargarEventos();
-    this.cdr.detectChanges;
+    this.cdr.detectChanges();
   }
 
   mesAnterior(): void {
     this.fechaActual.setMonth(this.fechaActual.getMonth() - 1);
     this.actualizarFecha();
     this.cargarEventos();
-    this.cdr.detectChanges;
+    this.cdr.detectChanges();
   }
 
   mesSiguiente(): void {
     this.fechaActual.setMonth(this.fechaActual.getMonth() + 1);
     this.actualizarFecha();
     this.cargarEventos();
-    this.cdr.detectChanges;
+    this.cdr.detectChanges();
   }
 
   cambiarVista(vista: 'month' | 'week'): void {
@@ -89,7 +89,7 @@ export class CalendarioCompletoComponent implements OnInit, AfterViewInit {
   private actualizarFecha(): void {
     this.anioActual = this.fechaActual.getFullYear();
     this.mesActual = this.fechaActual.getMonth();
-    this.cdr.detectChanges;
+    this.cdr.detectChanges();
   }
 
   cargarEventos(): void {
@@ -115,7 +115,7 @@ export class CalendarioCompletoComponent implements OnInit, AfterViewInit {
         this.loading = false;
       }
     });
-    this.cdr.detectChanges;
+    this.cdr.detectChanges();
   }
 
   cargarEventosSemana(): void {
@@ -141,7 +141,7 @@ export class CalendarioCompletoComponent implements OnInit, AfterViewInit {
           this.loading = false;
         }
     });
-    this.cdr.detectChanges;
+    this.cdr.detectChanges();
   }
 
   private organizarEventosPorDia(eventos: EventoDetalle[]): void {
@@ -154,7 +154,7 @@ export class CalendarioCompletoComponent implements OnInit, AfterViewInit {
       }
       this.eventosPorDia.get(fecha)!.push(evento);
     });
-    this.cdr.detectChanges;
+    this.cdr.detectChanges();
   }
 
   private generarCalendario(): void {
@@ -175,7 +175,7 @@ export class CalendarioCompletoComponent implements OnInit, AfterViewInit {
         esMesActual: false,
         eventos: this.eventosPorDia.get(this.formatearFecha(fecha)) || []
       });
-      this.cdr.detectChanges;
+      this.cdr.detectChanges();
     }
 
     // Días del mes actual
@@ -187,7 +187,7 @@ export class CalendarioCompletoComponent implements OnInit, AfterViewInit {
         esHoy: this.esHoy(fecha),
         eventos: this.eventosPorDia.get(this.formatearFecha(fecha)) || []
       });
-      this.cdr.detectChanges;
+      this.cdr.detectChanges();
     }
 
     // Completar la cuadrícula
@@ -200,7 +200,7 @@ export class CalendarioCompletoComponent implements OnInit, AfterViewInit {
         esMesActual: false,
         eventos: this.eventosPorDia.get(this.formatearFecha(fecha)) || []
       });
-      this.cdr.detectChanges;
+      this.cdr.detectChanges();
     }
   }
 
@@ -208,13 +208,13 @@ export class CalendarioCompletoComponent implements OnInit, AfterViewInit {
     const anio = fecha.getFullYear();
     const mes = String(fecha.getMonth() + 1).padStart(2, '0');
     const dia = String(fecha.getDate()).padStart(2, '0');
-    this.cdr.detectChanges;
+    this.cdr.detectChanges();
     return `${anio}-${mes}-${dia}`;
   }
 
   private esHoy(fecha: Date): boolean {
     const hoy = new Date();
-    this.cdr.detectChanges;
+    this.cdr.detectChanges();
     return fecha.getDate() === hoy.getDate() &&
            fecha.getMonth() === hoy.getMonth() &&
            fecha.getFullYear() === hoy.getFullYear();
@@ -236,7 +236,7 @@ export class CalendarioCompletoComponent implements OnInit, AfterViewInit {
 
   verEvento(eventoId: number): void {
     this.router.navigate(['/evento', eventoId]);
-    this.cdr.detectChanges;
+    this.cdr.detectChanges();
   }
 
   getColorPartido(siglas: string): string {
@@ -263,7 +263,30 @@ export class CalendarioCompletoComponent implements OnInit, AfterViewInit {
   volverAlInicio(): void {
     this.router.navigate(['/']);
     this.temaService.resetToNeutral();
-    this.cdr.detectChanges;
+    this.cdr.detectChanges();
+  }
+
+  semanaAnterior(): void {
+    this.fechaActual.setDate(this.fechaActual.getDate() - 7);
+    this.actualizarFecha();
+    this.cargarEventosSemana();
+  }
+
+  semanaSiguiente(): void {
+    this.fechaActual.setDate(this.fechaActual.getDate() + 7);
+    this.actualizarFecha();
+    this.cargarEventosSemana();
+  }
+
+  getRangoSemana(): string {
+    const diasSemana = this.fechaActual.getDay();
+    const inicio = new Date(this.fechaActual);
+    inicio.setDate(this.fechaActual.getDate() - (diasSemana === 0 ? 6 : diasSemana - 1));
+
+    const fin = new Date(inicio);
+    fin.setDate(inicio.getDate() + 6);
+
+    return `${inicio.getDate()} ${this.meses[inicio.getMonth()]} - ${fin.getDate()} ${this.meses[fin.getMonth()]}`;
   }
 
 }
