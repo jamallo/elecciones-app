@@ -1,0 +1,21 @@
+<div class="evento-container" appTema>
+  <div class="evento-header" [style.background]="'var(--header-gradient)'">
+    <button class="back-button" (click)="volverAlInicio()">
+      <lucide-angular name="ArrowLeft" [size]="20" [strokeWidth]="1.5"></lucide-angular>
+    </button>
+    <h1>Evento Electoral</h1>
+  </div>
+
+  @if (loading) {
+    <div class="loading-spinner">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  } @else if (evento) {
+    <div class="evento-content">
+      <h2>{{ evento.titulo }}</h2>
+      <p>{{ evento.descripcion }}</p>
+      <p><strong>Lugar:</strong> {{ evento.lugar }}</p>
+      <p><strong>Fecha:</strong> {{ evento.fecha | date:'dd/MM/yyyy HH:mm' }}</p>
+    </div>
+  }
+</div>

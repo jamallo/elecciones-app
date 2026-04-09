@@ -7,6 +7,8 @@ import { LoginComponent } from './login/login.component';
 import { adminGuard } from './core/guards/auth-guard';
 import { CalendarioCompletoComponent } from './calendario-completo/calendario-completo.component';
 import { ResultadosComponent } from './resultados/resultados.component';
+import { EventoDetalleComponent } from './evento-detalle/evento-detalle.component';
+import { MunicipioDetalleComponent } from './municipio-detalle/municipio-detalle.component';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -16,8 +18,8 @@ const routes: Routes = [
   {path: 'candidato/:id', component: CandidatoDetalle},
   { path: 'calendario', component: CalendarioCompletoComponent },
   { path: 'resultados', component: ResultadosComponent },
-  /* { path: 'evento/:id', component: EventoDetalleComponent },
-  { path: 'municipio/:id', component: MunicipioDetalleComponent }, */
+  { path: 'evento/:id', component: EventoDetalleComponent },
+  { path: 'municipio/:id', component: MunicipioDetalleComponent },
   {path: 'admin', loadChildren: () => import('./admin/admin-module').then(m => m.AdminModule), canActivate: [adminGuard]},
   {path: '**', redirectTo: ''}
 ];

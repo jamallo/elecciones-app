@@ -37,6 +37,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 //Servicios
 import { EleccionService } from './services/eleccion.service';
@@ -95,13 +96,18 @@ import {
   TrendingUp,
   Sun,
   Moon,
-  SearchX
+  SearchX,
+  Edit,
+  Trash,
  } from 'lucide-angular';
 import { CalendarioCompletoComponent } from './calendario-completo/calendario-completo.component';
 import { ResultadosComponent } from './resultados/resultados.component';
 import { BuscadorComponent } from './buscador/buscador.component';
 import { BusquedaService } from './services/busqueda.service';
 import { ResultadoService } from './services/resultado.service';
+import { EventoDetalleComponent } from './evento-detalle/evento-detalle.component';
+import { MunicipioDetalleComponent } from './municipio-detalle/municipio-detalle.component';
+import { AdminModule } from './admin/admin-module';
 
 
 @NgModule({
@@ -118,7 +124,9 @@ import { ResultadoService } from './services/resultado.service';
     MapaEspaniaComponent,
     CalendarioCompletoComponent,
     ResultadosComponent,
-    BuscadorComponent
+    BuscadorComponent,
+    EventoDetalleComponent,
+    MunicipioDetalleComponent,
   ],
   imports: [
     BrowserModule,
@@ -144,6 +152,8 @@ import { ResultadoService } from './services/resultado.service';
     MatAutocompleteModule,
     MatInputModule,
     ReactiveFormsModule,
+    AdminModule,
+    MatSnackBarModule,
     LucideAngularModule.pick({
       Home,
       Map,
@@ -189,7 +199,9 @@ import { ResultadoService } from './services/resultado.service';
       TrendingUp,
       Sun,
       Moon,
-      SearchX
+      SearchX,
+      Edit,
+      Trash
     })
   ],
   providers: [

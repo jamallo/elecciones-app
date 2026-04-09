@@ -1,1 +1,88 @@
-<p>partido-dialog works!</p>
+<h2 mat-dialog-title>
+  @if (data?.id) {
+    Editar Partido
+  } @else {
+    Nuevo Partido
+  }
+</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nombre del partido</mat-label>
+      <input matInput formControlName="nombre" placeholder="Ej: Partido Popular">
+      <mat-error *ngIf="form.get('nombre')?.hasError('required')">
+        El nombre es requerido
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Siglas</mat-label>
+      <input matInput formControlName="siglas" placeholder="Ej: PP">
+      <mat-error *ngIf="form.get('siglas')?.hasError('required')">
+        Las siglas son requeridas
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>URL del logo</mat-label>
+      <input matInput formControlName="logoUrl" placeholder="/assets/partidos/pp.png">
+      <mat-hint>Ruta relativa o URL completa</mat-hint>
+    </mat-form-field>
+
+    <h3>Colores del partido</h3>
+
+    <div class="color-selector">
+      <label>Color principal:</label>
+      <div class="color-options">
+        @for (color of coloresPredefinidos; track color.valor) {
+          <div class="color-option"
+               [style.backgroundColor]="color.valor"
+               [class.selected]="form.get('colorPrimario')?.value === color.valor"
+               (click)="seleccionarColor(color.valor, 'colorPrimario')"
+               [title]="color.nombre">
+          </div>
+        }
+      </div>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="colorPrimario" placeholder="#RRGGBB">
+      </mat-form-field>
+    </div>
+
+    <div class="color-selector">
+      <label>Color secundario:</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="colorSecundario" placeholder="#RRGGBB">
+      </mat-form-field>
+    </div>
+
+    <div class="color-selector">
+      <label>Color de acento:</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="colorAcento" placeholder="#RRGGBB">
+      </mat-form-field>
+    </div>
+
+    <div class="color-selector">
+      <label>Color de fondo:</label>
+      <mat-form-field appearance="outline" class="full-width">
+        <input matInput formControlName="colorFondo" placeholder="#RRGGBB">
+      </mat-form-field>
+    </div>
+
+    <div class="color-preview" [style.backgroundColor]="form.get('colorPrimario')?.value">
+      Vista previa del color principal
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || loading">
+      @if (loading) {
+        <mat-spinner diameter="20"></mat-spinner>
+      } @else {
+        {{ data?.id ? 'Actualizar' : 'Crear' }}
+      }
+    </button>
+  </mat-dialog-actions>
+</form>

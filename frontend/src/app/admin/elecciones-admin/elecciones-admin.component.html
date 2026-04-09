@@ -1,1 +1,75 @@
-<p>elecciones-admin works!</p>
+<div class="elecciones-admin">
+  <div class="admin-header">
+    <h1>Gestión de Elecciones</h1>
+    <button mat-raised-button color="primary" (click)="abrirDialogo()">
+      <lucide-angular name="Plus" [size]="16"></lucide-angular>
+      Nueva elección
+    </button>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <div class="filter-container">
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Buscar elección</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Ej: Nacional">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="table-container" *ngIf="!loading; else loadingSpinner">
+        <table mat-table [dataSource]="dataSource" matSort>
+          <ng-container matColumnDef="tipo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</th>
+            <td mat-cell *matCellDef="let eleccion">
+              <mat-chip [color]="eleccion.tipo === 'NACIONAL' ? 'primary' : (eleccion.tipo === 'AUTONOMICA' ? 'accent' : 'warn')" highlighted>
+                {{ eleccion.tipo === 'NACIONAL' ? 'Nacionales' : (eleccion.tipo === 'AUTONOMICA' ? 'Autonómicas' : 'Municipales') }}
+              </mat-chip>
+            <td>
+          </ng-container>
+
+          <ng-container matColumnDef="ambito">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Ámbito</th>
+            <td mat-cell *matCellDef="let eleccion">{{ eleccion.ambito }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="anio">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Año</th>
+            <td mat-cell *matCellDef="let eleccion">{{ eleccion.anio }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="partidos">
+            <th mat-header-cell *matHeaderCellDef>Partidos</th>
+            <td mat-cell *matCellDef="let eleccion">
+              <span class="badge">{{ eleccion.partidosCount || 0 }}</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let eleccion">
+              <button mat-icon-button color="primary" (click)="abrirDialogo(eleccion)">
+                <lucide-angular name="Edit" [size]="18"></lucide-angular>
+              </button>
+              <button mat-icon-button color="warn" (click)="eliminarEleccion(eleccion.id, eleccion.tipo + ' - ' + eleccion.ambito)">
+                <lucide-angular name="Trash" [size]="18"></lucide-angular>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
+      </div>
+
+      <ng-template #loadingSpinner>
+        <div class="loading-spinner">
+          <mat-spinner diameter="40"></mat-spinner>
+          <p>Cargando elecciones...</p>
+        </div>
+      </ng-template>
+    </mat-card-content>
+  </mat-card>
+</div>

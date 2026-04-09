@@ -68,6 +68,10 @@ export class EventoService {
     return this.http.get<Evento>(`${this.apiUrl}/${id}`)
   }
 
+  getEventoById(id: number): Observable<EventoDetalle> {
+  return this.http.get<EventoDetalle>(`${this.apiUrl}/${id}`);
+}
+
   //CRUD (ACTUALIZAR EVENTO - UPDATE(PUT)) - SOLO PARA ADMINISTRADORES
   actualizarEvento(id: number, evento: any): Observable<Evento> {
     return this.http.put<Evento>(`${this.apiUrl}/admin/${id}`, evento);

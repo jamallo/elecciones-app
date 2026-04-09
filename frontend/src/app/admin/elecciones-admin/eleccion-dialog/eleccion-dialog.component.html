@@ -1,1 +1,68 @@
-<p>eleccion-dialog works!</p>
+<h2 mat-dialog-title>
+  @if (data?.id) {
+    Editar Elección
+  } @else {
+    Nueva Elección
+  }
+</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Tipo de elección</mat-label>
+      <mat-select formControlName="tipo">
+        @for (tipo of tipos; track tipo) {
+          <mat-option [value]="tipo">
+            {{ tipo === 'NACIONAL' ? 'Nacionales' : (tipo === 'AUTONOMICA' ? 'Autonómicas' : 'Municipales') }}
+          </mat-option>
+        }
+      </mat-select>
+      @if (form.get('tipo')?.hasError('required')) {
+      <mat-error>
+        El tipo es requerido
+      </mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Ámbito</mat-label>
+      <input matInput formControlName="ambito" placeholder="Ej: España, Asturias, Oviedo">
+      @if (form.get('ambito')?.hasError('required')) {
+      <mat-error>
+        El ámbito es requerido
+      </mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Año</mat-label>
+      <input matInput type="number" formControlName="anio" placeholder="2027">
+      @if (form.get('anio')?.hasError('required')) {
+      <mat-error>
+        El año es requerido
+      </mat-error>
+      }
+      @if (form.get('anio')?.hasError('min')) {
+      <mat-error>
+        El año debe ser mayor o igual a 2000
+      </mat-error>
+      }
+      @if (form.get('anio')?.hasError('max')) {
+      <mat-error>
+        El año debe ser menor o igual a 2030
+      </mat-error>
+      }
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || loading">
+      @if (loading) {
+        <mat-spinner diameter="20"></mat-spinner>
+      } @else {
+        {{ data?.id ? 'Actualizar' : 'Crear' }}
+      }
+    </button>
+  </mat-dialog-actions>
+</form>

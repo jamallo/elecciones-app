@@ -1,0 +1,121 @@
+@import '../../styles.scss';
+
+.evento-container {
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  padding-bottom: 80px;
+}
+
+.evento-header {
+  padding: 40px 20px 30px;
+  text-align: center;
+  position: relative;
+  border-radius: 0 0 40px 40px;
+
+  .back-button {
+    position: absolute;
+    top: 20px;
+    left: 16px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 30px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .evento-icon {
+    margin-bottom: 16px;
+
+    lucide-angular {
+      color: white;
+      filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
+    }
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--primary-color);
+  }
+}
+
+.evento-content {
+  padding: 20px;
+
+  .info-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: white;
+    border-radius: 20px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+    lucide-angular {
+      color: var(--primary-color);
+    }
+
+    h4 {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #888;
+      margin-bottom: 4px;
+    }
+
+    p {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #333;
+      margin: 0;
+    }
+
+    &.full-width {
+      flex-direction: column;
+      align-items: flex-start;
+
+      p {
+        margin-top: 8px;
+      }
+    }
+
+    .partido-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+
+      .partido-logo-mini {
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+      }
+    }
+  }
+
+  .action-buttons {
+    margin-top: 20px;
+
+    .btn-volver {
+      width: 100%;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  }
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Partido } from '../../model/partido.model';
 import { MatPaginator } from '@angular/material/paginator';
@@ -26,16 +26,19 @@ export class PartidosAdminComponent implements OnInit{
   constructor(
     private partidoServicio: PartidoService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.cargarPartidos();
+    this.cdr.detectChanges();
   }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.cdr.detectChanges();
   }
 
   cargarPartidos(): void {
@@ -44,17 +47,21 @@ export class PartidosAdminComponent implements OnInit{
       next: (partidos) => {
         this.dataSource.data = partidos;
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error cargando partidos: ', error);
+        this.snackBar.open('Error al cargar partidos', 'Cerrar', {duration: 3000});
         this.loading = false;
       }
     });
+    this.cdr.detectChanges();
   }
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.cdr.detectChanges();
   }
 
   abrirDialogo(partido?: Partido): void {
@@ -72,13 +79,24 @@ export class PartidosAdminComponent implements OnInit{
         );
       }
     });
+    this.cdr.detectChanges();
   }
 
   eliminarPartido(id: number, nombre: string): void {
     if (confirm(`¿Estás seguro de eliminar el partido "${nombre}"?`)) {
-      //TODO: Implementar eliminación en backend
-      this.snackBar.open('Funcionalidad en desarrollo', 'Cerrar', {duration: 2000});
+      this.partidoServicio.eliminarPartido(id).subscribe({
+        next: () => {
+          this.cargarPartidos();
+          this.snackBar.open('Partido eliminado correctamente', 'Cerrar', {duration: 3000});
+          this.cdr.detectChanges();
+        },
+        error: (error) => {
+          console.error('Error eliminando partido: ', error);
+          this.snackBar.open(error.error?.mensaje || 'Error al eliminar partido', 'Cerrar', {duration: 3000 });
+        }
+      });
     }
+    this.cdr.detectChanges();
   }
 
 }

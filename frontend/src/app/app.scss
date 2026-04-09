@@ -197,4 +197,33 @@
   lucide-angular {
     color: white;
   }
+
+  ::ng-deep .mat-mdc-menu-panel {
+  background-color: white !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
+
+  .mat-mdc-menu-item {
+    color: #333 !important;
+
+    &:hover {
+      background-color: #f5f5f5 !important;
+    }
+  }
+}
+
+// Modo oscuro
+body.dark-mode {
+  ::ng-deep .mat-mdc-menu-panel {
+    background-color: var(--card-bg) !important;
+
+    .mat-mdc-menu-item {
+      color: var(--text-color) !important;
+
+      &:hover {
+        background-color: #0f3460 !important;
+      }
+    }
+  }
+}
 }

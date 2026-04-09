@@ -1,0 +1,89 @@
+<div class="municipio-container" appTema>
+  @if (loading) {
+    <div class="loading-spinner">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  }
+
+  @if (!loading && municipio) {
+    <!-- Cabecera -->
+    <div class="municipio-header" [style.background]="'var(--header-gradient)'">
+      <button class="back-button" (click)="volverAlInicio()">
+        <lucide-angular name="ArrowLeft" [size]="20" [strokeWidth]="1.5"></lucide-angular>
+      </button>
+      <div class="municipio-icon">
+        <lucide-angular name="Building2" [size]="48" [strokeWidth]="1.5"></lucide-angular>
+      </div>
+      <h1>{{ municipio.nombre }}</h1>
+      <p class="provincia">{{ municipio.provincia }} · {{ municipio.comunidadAutonoma }}</p>
+      <div class="poblacion">
+        <lucide-angular name="Users" [size]="16"></lucide-angular>
+        <span>{{ municipio.poblacion | number }} habitantes</span>
+      </div>
+    </div>
+
+    <!-- Partidos -->
+    <div class="partidos-section">
+      <h2>
+        <lucide-angular name="Users" [size]="20"></lucide-angular>
+        Partidos que se presentan en {{ municipio.nombre }}
+      </h2>
+      <div class="partidos-grid">
+        @for (partido of partidos; track partido.id) {
+          <div class="partido-card" (click)="verPartido(partido.id)">
+            <div class="logo-container">
+              <img [src]="partido.partidoLogoUrl" [alt]="partido.partidoNombre">
+            </div>
+            <div class="partido-info">
+              <h3>{{ partido.partidoNombre }}</h3>
+              <span class="siglas">{{ partido.partidoSiglas }}</span>
+            </div>
+          </div>
+        }
+        @if (partidos.length === 0) {
+          <div class="no-data">
+            <p>No hay partidos registrados para este municipio</p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Eventos -->
+    <div class="eventos-section">
+      <h2>
+        <lucide-angular name="Calendar" [size]="20"></lucide-angular>
+        Próximos eventos en {{ municipio.nombre }}
+      </h2>
+      <div class="eventos-list">
+        @for (evento of eventos; track evento.id) {
+          <div class="evento-card" (click)="verEvento(evento.id)">
+            <div class="evento-fecha">
+              <span class="dia">{{ evento.fecha | date:'dd' }}</span>
+              <span class="mes">{{ evento.fecha | date:'MMM' }}</span>
+            </div>
+            <div class="evento-info">
+              <h4>{{ evento.titulo }}</h4>
+              <p>{{ evento.descripcion | slice:0:100 }}...</p>
+              <div class="evento-metadata">
+                <span class="lugar">
+                  <lucide-angular name="MapPin" [size]="12"></lucide-angular>
+                  {{ evento.lugar }}
+                </span>
+                @if (evento.partidoSiglas) {
+                  <span class="partido" [style.backgroundColor]="getColorPartido(evento.partidoSiglas)">
+                    {{ evento.partidoSiglas }}
+                  </span>
+                }
+              </div>
+            </div>
+          </div>
+        }
+        @if (eventos.length === 0) {
+          <div class="no-data">
+            <p>No hay eventos programados para este municipio</p>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

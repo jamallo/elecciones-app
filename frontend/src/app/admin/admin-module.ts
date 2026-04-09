@@ -33,6 +33,7 @@ import { CandidatoDialogComponent } from './candidatos-admin/candidato-dialog/ca
 import { EventoDialogComponent } from './eventos-admin/evento-dialog/evento-dialog.component';
 import { EleccionDialogComponent } from './elecciones-admin/eleccion-dialog/eleccion-dialog.component';
 import { SedeDialogComponent } from './sedes-admin/sede-dialog/sede-dialog.component';
+import { Calendar, CalendarPlus, Edit, LucideAngularModule, MapPin, Plus, Trash, User, UserPlus, Users, Vote } from 'lucide-angular';
 
 
 
@@ -73,7 +74,18 @@ import { SedeDialogComponent } from './sedes-admin/sede-dialog/sede-dialog.compo
     MatCardModule,
     MatChipsModule,
     MatProgressSpinnerModule,
-    AdminRoutingModule
+    LucideAngularModule.pick({
+      Trash,
+      Plus,
+      Edit,
+      Users,
+      Vote,
+      User,
+      Calendar,
+      MapPin,
+      UserPlus,
+      CalendarPlus,
+    })
   ]
 })
 export class AdminModule { }

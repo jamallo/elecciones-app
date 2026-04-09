@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Eleccion } from '../../model/eleccion.model';
 import { MatPaginator } from '@angular/material/paginator';
@@ -25,16 +25,19 @@ export class EleccionesAdminComponent implements OnInit {
   constructor(
     private eleccionService: EleccionService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.cargarElecciones();
+    this.cdr.detectChanges();
   }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.cdr.detectChanges();
   }
 
   cargarElecciones(): void {
@@ -43,6 +46,7 @@ export class EleccionesAdminComponent implements OnInit {
       next: (elecciones) => {
         this.dataSource.data = elecciones;
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error cargando elecciones: ', error);
@@ -54,6 +58,7 @@ export class EleccionesAdminComponent implements OnInit {
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.cdr.detectChanges();
   }
 
   abrirDialogo(eleccion?: Eleccion): void {
@@ -68,6 +73,7 @@ export class EleccionesAdminComponent implements OnInit {
         this.snackBar.open(
           eleccion ? 'Elección actualizada correctamente' : 'Elección creada correctamente', 'Cerrar', {duration: 3000}
         );
+        this.cdr.detectChanges();
       }
     });
   }
@@ -78,6 +84,7 @@ export class EleccionesAdminComponent implements OnInit {
         next: () => {
           this.cargarElecciones();
           this.snackBar.open('Elección eliminada correctamente', 'Cerrar', {duration: 3000});
+          this.cdr.detectChanges();
         },
         error: (error) => {
           console.error('Error eliminando elección: ', error);
