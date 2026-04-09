@@ -28,18 +28,24 @@ public class AuthServicio {
     private final PasswordEncoder passwordEncoder;
 
     public LoginResponseDTO login(LoginRequestDTO request) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String token = jwtUtilidad.generateToken(userDetails);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            String token = jwtUtilidad.generateToken(userDetails);
 
-        Usuario usuario = usuarioRepositorio.findByEmail(request.getEmail())
-                .orElseThrow(() -> new ErrorValidacionExcepcion("Usuario no encontrado"));
+            Usuario usuario = usuarioRepositorio.findByEmail(request.getEmail())
+                    .orElseThrow(() -> new ErrorValidacionExcepcion("Usuario no encontrado"));
 
-        return new LoginResponseDTO(token, usuario.getEmail(), usuario.getNombre(), usuario.getRol().name());
+            return new LoginResponseDTO(token, usuario.getEmail(), usuario.getNombre(), usuario.getRol().name());
+
+        } catch (Exception e) {
+            e.printStackTrace(); // 🔥 MUY IMPORTANTE
+            throw new ErrorValidacionExcepcion("Credenciales incorrectas");
+        }
     }
 
     @Transactional
