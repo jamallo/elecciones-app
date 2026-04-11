@@ -1,0 +1,36 @@
+@if (type === 'card') {
+  <div class="skeleton-grid">
+    @for (item of getArray(); track $index) {
+      <div class="skeleton-card">
+        <div class="skeleton-image"></div>
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line short"></div>
+      </div>
+    }
+  </div>
+}
+
+@if (type === 'list') {
+  <div class="skeleton-list">
+    @for (item of getArray(); track $index) {
+      <div class="skeleton-list-item">
+        <div class="skeleton-avatar"></div>
+        <div class="skeleton-list-content">
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+      </div>
+    }
+  </div>
+}
+
+@if (type === 'grid') {
+  <div class="skeleton-grid">
+    @for (item of getArray(); track $index) {
+      <div class="skeleton-grid-item">
+        <div class="skeleton-image"></div>
+        <div class="skeleton-line"></div>
+      </div>
+    }
+  </div>
+}

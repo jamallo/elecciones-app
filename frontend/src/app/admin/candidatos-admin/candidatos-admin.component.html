@@ -1,1 +1,87 @@
-<p>candidatos-admin works!</p>
+<div class="candidatos-admin">
+  <div class="admin-header">
+    <h1>Gestión de Candidatos</h1>
+    <button mat-raised-button color="primary" (click)="abrirDialogo()">
+      <lucide-angular name="Plus" [size]="16"></lucide-angular>
+      Nuevo candidato
+    </button>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <div class="filter-container">
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Buscar candidato</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="Ej: Alberto">
+          <lucide-angular name="Search" [size]="16" class="search-icon"></lucide-angular>
+        </mat-form-field>
+      </div>
+
+      <div class="table-container" *ngIf="!loading; else loadingSpinner">
+        <table mat-table [dataSource]="dataSource" matSort>
+          <ng-container matColumnDef="foto">
+            <th mat-header-cell *matHeaderCellDef>Foto</th>
+            <td mat-cell *matCellDef="let candidato">
+              <img [src]="candidato.fotoUrl" [alt]="candidato.nombre" class="foto-mini">
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="nombre">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+            <td mat-cell *matCellDef="let candidato">{{ candidato.nombre }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="cargo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Cargo</th>
+            <td mat-cell *matCellDef="let candidato">{{ candidato.cargo }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="partido">
+            <th mat-header-cell *matHeaderCellDef>Partido</th>
+            <td mat-cell *matCellDef="let candidato">
+              <mat-chip [style.backgroundColor]="candidato.partidoColorPrimario" style="color: white;">
+                {{ candidato.partidoSiglas }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="eleccion">
+            <th mat-header-cell *matHeaderCellDef>Elección</th>
+            <td mat-cell *matCellDef="let candidato">
+              {{ candidato.eleccionTipo }} - {{ candidato.eleccionAmbito }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="posicion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Posición</th>
+            <td mat-cell *matCellDef="let candidato">{{ candidato.posicionLista }}º</td>
+          </ng-container>
+
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let candidato">
+              <button mat-icon-button color="primary" (click)="abrirDialogo(candidato)">
+                <lucide-angular name="Edit" [size]="18"></lucide-angular>
+              </button>
+              <button mat-icon-button color="warn" (click)="eliminarCandidato(candidato.id, candidato.nombre)">
+                <lucide-angular name="Trash" [size]="18"></lucide-angular>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
+      </div>
+
+      <ng-template #loadingSpinner>
+        <div class="loading-spinner">
+          <mat-spinner diameter="40"></mat-spinner>
+          <p>Cargando candidatos...</p>
+        </div>
+      </ng-template>
+    </mat-card-content>
+  </mat-card>
+</div>

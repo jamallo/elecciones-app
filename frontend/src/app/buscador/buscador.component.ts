@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ResultadoBusqueda, ResultadosAgrupados } from '../model/busqueda.model';
+import { ResultadoBusqueda, ResultadosAgrupados, Sugerencia } from '../model/busqueda.model';
 import { debounceTime, distinctUntilChanged, Observable, Subject, Subscriber, switchMap, takeUntil } from 'rxjs';
 import { BusquedaService } from '../services/busqueda.service';
 import { Router } from '@angular/router';
@@ -16,9 +16,11 @@ export class BuscadorComponent implements OnInit, OnDestroy {
 
   searchControl = new FormControl('');
   resultados: ResultadosAgrupados = { partidos: [], candidatos: [], eventos: [], municipios: [] };
+  sugerencias: Sugerencia[] = [];
   mostrando = false;
   loading = false;
   terminoActual = '';
+  categoriaActiva: 'todos' | 'partidos' | 'candidatos' | 'eventos' | 'municipios' = 'todos';
 
   private destroy$ = new Subject<void>();
 
@@ -38,6 +40,7 @@ export class BuscadorComponent implements OnInit, OnDestroy {
       this.terminoActual = termino || '';
       if (!termino || termino.length < 2) {
         this.resultados = { partidos: [], candidatos: [], eventos: [], municipios: [] };
+        this.sugerencias = [];
         this.loading = false;
         this.cdr.detectChanges();
         return;
@@ -49,6 +52,7 @@ export class BuscadorComponent implements OnInit, OnDestroy {
       this.busquedaServicio.buscarGlobal(termino).subscribe({
         next: (resultados) => {
           this.resultados = resultados;
+          this.generarSugerencias(termino);
           this.loading = false;
           this.cdr.detectChanges();
         },
@@ -78,9 +82,40 @@ export class BuscadorComponent implements OnInit, OnDestroy {
     }, 100);
   }
 
+  private generarSugerencias(termino: string): void {
+    const sugerenciasMap = new Map<string, Sugerencia>();
+
+    this.resultados.partidos.forEach(p => {
+      if (!sugerenciasMap.has(p.nombre)) {
+        sugerenciasMap.set(p.nombre, { texto: p.nombre, tipo: 'partido', id: p.id });
+      }
+    });
+
+    this.resultados.candidatos.forEach(c => {
+      if (!sugerenciasMap.has(c.nombre)) {
+        sugerenciasMap.set(c.nombre, { texto: c.nombre, tipo: 'candidato', id: c.id });
+      }
+    });
+
+    this.resultados.eventos.forEach(e => {
+      if (!sugerenciasMap.has(e.nombre)) {
+        sugerenciasMap.set(e.nombre, { texto: e.nombre, tipo: 'evento', id: e.id });
+      }
+    });
+
+    this.resultados.municipios.forEach(m => {
+      if (!sugerenciasMap.has(m.nombre)) {
+        sugerenciasMap.set(m.nombre, { texto: m.nombre, tipo: 'municipio', id: m.id });
+      }
+    });
+
+    this.sugerencias = Array.from(sugerenciasMap.values()).slice(0, 5);
+  }
+
   cerrar(): void {
     this.mostrando = false;
     this.searchControl.setValue('');
+    this.categoriaActiva = 'todos';
     this.cdr.detectChanges();
   }
 
@@ -106,6 +141,11 @@ export class BuscadorComponent implements OnInit, OnDestroy {
     this.router.navigate([ruta]);
   }
 
+  seleccionarSugerencia(sugerencia: Sugerencia): void {
+    this.searchControl.setValue(sugerencia.texto);
+    this.cdr.detectChanges();
+  }
+
   getTotalResultados(): number {
     return this.resultados.partidos.length +
            this.resultados.candidatos.length +
@@ -116,6 +156,7 @@ export class BuscadorComponent implements OnInit, OnDestroy {
   limpiarBusqueda(): void {
     this.searchControl.setValue('');
     this.resultados = { partidos: [], candidatos: [], eventos: [], municipios: [] };
+    this.sugerencias = [];
     this.cdr.detectChanges();
   }
 
@@ -125,9 +166,49 @@ export class BuscadorComponent implements OnInit, OnDestroy {
   }
 
   onOverlayClick(event: MouseEvent): void {
-  if ((event.target as HTMLElement).classList.contains('buscador-overlay')) {
-    this.cerrar();
+    if ((event.target as HTMLElement).classList.contains('buscador-overlay')) {
+      this.cerrar();
+    }
   }
-}
+
+  cambiarCategoria(categoria: 'todos' | 'partidos' | 'candidatos' | 'eventos' | 'municipios'): void {
+    this.categoriaActiva = categoria;
+    this.cdr.detectChanges();
+  }
+
+  getResultadosFiltrados(): ResultadosAgrupados {
+    switch (this.categoriaActiva) {
+      case 'partidos':
+        return { ...this.resultados, candidatos: [], eventos: [], municipios: [] };
+      case 'candidatos':
+        return { partidos: [], candidatos: this.resultados.candidatos, eventos: [], municipios: [] };
+      case 'eventos':
+        return { partidos: [], candidatos: [], eventos: this.resultados.eventos, municipios: [] };
+      case 'municipios':
+        return { partidos: [], candidatos: [], eventos: [], municipios: this.resultados.municipios };
+      default:
+        return this.resultados;
+    }
+  }
+
+  getColorPorTipo(tipo: string): string {
+    switch (tipo) {
+      case 'partido': return '#1E88E5';
+      case 'candidato': return '#E63946';
+      case 'evento': return '#2E7D32';
+      case 'municipio': return '#FF9800';
+      default: return '#666';
+    }
+  }
+
+  getIconoPorTipo(tipo: string): string {
+    switch (tipo) {
+      case 'partido': return 'Users';
+      case 'candidato': return 'User';
+      case 'evento': return 'Calendar';
+      case 'municipio': return 'Building2';
+      default: return 'Search';
+    }
+  }
 
 }

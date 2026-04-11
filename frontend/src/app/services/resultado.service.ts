@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ResultadosEleccion, ResultadosHistorico } from '../model/resultados.model';
+import { ComparativaResultados, ResultadosEleccion, ResultadosHistorico } from '../model/resultados.model';
 
 @Injectable({
   providedIn: 'root',
@@ -23,8 +23,18 @@ export class ResultadoService {
   }
 
   //Obtener comparativa entre elecciones
-  getComparativaResultados(tipo: string, ambito: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/comparativa/${tipo}/${ambito}`);
+  getComparativaResultados(tipo: string, ambito: string): Observable<ComparativaResultados> {
+    return this.http.get<ComparativaResultados>(`${this.apiUrl}/comparativa/${tipo}/${ambito}`);
+  }
+
+  // Obtener resultados por municipio
+  getResultadosByMunicipio(municipioId: number): Observable<ResultadosEleccion[]> {
+    return this.http.get<ResultadosEleccion[]>(`${this.apiUrl}/municipio/${municipioId}`);
+  }
+
+  // Obtener resultados por comunidad
+  getResultadosByComunidad(comunidadId: number): Observable<ResultadosEleccion[]> {
+    return this.http.get<ResultadosEleccion[]>(`${this.apiUrl}/comunidad/${comunidadId}`);
   }
 
 }

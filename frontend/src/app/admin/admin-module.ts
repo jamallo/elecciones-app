@@ -33,7 +33,7 @@ import { CandidatoDialogComponent } from './candidatos-admin/candidato-dialog/ca
 import { EventoDialogComponent } from './eventos-admin/evento-dialog/evento-dialog.component';
 import { EleccionDialogComponent } from './elecciones-admin/eleccion-dialog/eleccion-dialog.component';
 import { SedeDialogComponent } from './sedes-admin/sede-dialog/sede-dialog.component';
-import { Calendar, CalendarPlus, Edit, LucideAngularModule, MapPin, Plus, Trash, User, UserPlus, Users, Vote } from 'lucide-angular';
+import { Calendar, CalendarPlus, Edit, Edit2, LucideAngularModule, MapPin, Plus, PlusCircle, Search, Trash, Trash2, User, UserPlus, Users, Vote } from 'lucide-angular';
 
 
 
@@ -85,6 +85,10 @@ import { Calendar, CalendarPlus, Edit, LucideAngularModule, MapPin, Plus, Trash,
       MapPin,
       UserPlus,
       CalendarPlus,
+      Search,
+      PlusCircle,
+      Edit2,
+      Trash2
     })
   ]
 })

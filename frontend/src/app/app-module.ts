@@ -99,6 +99,9 @@ import {
   SearchX,
   Edit,
   Trash,
+  FileSpreadsheet,
+  GitCompare,
+
  } from 'lucide-angular';
 import { CalendarioCompletoComponent } from './calendario-completo/calendario-completo.component';
 import { ResultadosComponent } from './resultados/resultados.component';
@@ -108,6 +111,12 @@ import { ResultadoService } from './services/resultado.service';
 import { EventoDetalleComponent } from './evento-detalle/evento-detalle.component';
 import { MunicipioDetalleComponent } from './municipio-detalle/municipio-detalle.component';
 import { AdminModule } from './admin/admin-module';
+
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment.prod';
+import { MatTableModule } from '@angular/material/table';
+import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
+import { SkeletonLoaderComponent } from './shared/skeleton-loader/skeleton-loader.component';
 
 
 @NgModule({
@@ -127,6 +136,8 @@ import { AdminModule } from './admin/admin-module';
     BuscadorComponent,
     EventoDetalleComponent,
     MunicipioDetalleComponent,
+    LoadingSpinnerComponent,
+    SkeletonLoaderComponent,
   ],
   imports: [
     BrowserModule,
@@ -153,7 +164,12 @@ import { AdminModule } from './admin/admin-module';
     MatInputModule,
     ReactiveFormsModule,
     AdminModule,
+    MatTableModule,
     MatSnackBarModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: false//environment.production,
+      //registrationStrategy: 'registerWhenStable: 30000'
+    }),
     LucideAngularModule.pick({
       Home,
       Map,
@@ -201,7 +217,9 @@ import { AdminModule } from './admin/admin-module';
       Moon,
       SearchX,
       Edit,
-      Trash
+      Trash,
+      FileSpreadsheet,
+      GitCompare
     })
   ],
   providers: [

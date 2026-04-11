@@ -210,3 +210,178 @@ body.dark-mode {
     animation: pulse 1s infinite;
   }
 }
+
+
+// ========== VARIABLES RESPONSIVE ==========
+:root {
+  // Por defecto móvil
+  --container-padding: 16px;
+  --header-height: 56px;
+  --tab-bar-height: 70px;
+  --font-size-base: 14px;
+  --border-radius: 12px;
+}
+
+// Tablet (768px - 1024px)
+@media (min-width: 768px) {
+  :root {
+    --container-padding: 24px;
+    --header-height: 64px;
+    --tab-bar-height: 80px;
+    --font-size-base: 15px;
+    --border-radius: 16px;
+  }
+
+  .app-container {
+    max-width: 768px;
+    margin: 0 auto;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+  }
+}
+
+// Desktop (1024px - 1200px)
+@media (min-width: 1024px) {
+  :root {
+    --container-padding: 32px;
+    --font-size-base: 16px;
+    --border-radius: 20px;
+  }
+
+  .app-container {
+    max-width: 1024px;
+  }
+}
+
+// Desktop grande (>1200px)
+@media (min-width: 1200px) {
+  .app-container {
+    max-width: 1200px;
+  }
+}
+
+// ========== ANIMACIONES AVANZADAS ==========
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes rotateIn {
+  from {
+    opacity: 0;
+    transform: rotate(-180deg) scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Clases de animación
+.animate-fadeInUp {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.animate-fadeInLeft {
+  animation: fadeInLeft 0.5s ease-out;
+}
+
+.animate-fadeInRight {
+  animation: fadeInRight 0.5s ease-out;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.3s ease-out;
+}
+
+.animate-rotateIn {
+  animation: rotateIn 0.4s ease-out;
+}
+
+.animate-slideInDown {
+  animation: slideInDown 0.4s ease-out;
+}
+
+// Stagger children animations
+.stagger-children > * {
+  opacity: 0;
+  animation: fadeInUp 0.4s ease-out forwards;
+
+  @for $i from 1 through 20 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.05}s;
+    }
+  }
+}
+
+// Hover animations
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.hover-scale {
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.02);
+  }
+}
+
+// Page transitions
+.page-transition {
+  animation: fadeInUp 0.4s ease-out;
+}

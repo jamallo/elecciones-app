@@ -34,8 +34,63 @@
   padding: 20px;
 }
 
-.selector-eleccion {
+.filtros-ambito {
   margin-bottom: 20px;
+
+  .tipo-filtro {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+
+    button {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &.active {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+
+        lucide-angular {
+          color: white;
+        }
+      }
+    }
+  }
+
+  .filter-field {
+    width: 100%;
+    margin-top: 8px;
+  }
+}
+
+.selector-eleccion, .selector-eleccion-comparativa {
+  margin-bottom: 20px;
+}
+
+.export-buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+
+  button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 30px;
+  }
 }
 
 .vista-tabs {
@@ -85,16 +140,27 @@
 
   .resumen {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     margin-top: 20px;
     padding-top: 16px;
     border-top: 1px solid #eee;
+    flex-wrap: wrap;
+    gap: 16px;
 
-    p {
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: #666;
-      margin: 0;
+    .resumen-item {
+      text-align: center;
+
+      .label {
+        font-size: 0.7rem;
+        color: #666;
+        display: block;
+      }
+
+      .value {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--primary-color);
+      }
     }
   }
 }
@@ -102,14 +168,10 @@
 .vista-tabla {
   background: white;
   border-radius: 20px;
-  overflow: hidden;
+  overflow-x: auto;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
 
-  .tabla-container {
-    overflow-x: auto;
-  }
-
-  table {
+  .resultados-table {
     width: 100%;
     border-collapse: collapse;
 
@@ -129,6 +191,10 @@
       font-size: 0.85rem;
     }
 
+    .text-right {
+      text-align: right;
+    }
+
     .partido-cell {
       display: flex;
       align-items: center;
@@ -139,6 +205,11 @@
         height: 12px;
         border-radius: 50%;
       }
+    }
+
+    .total-row {
+      background: #f5f5f5;
+      font-weight: 600;
     }
   }
 }
@@ -168,26 +239,61 @@
     }
 
     .barra-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-
       .barra {
         height: 8px;
         border-radius: 4px;
         transition: width 0.3s ease;
       }
 
-      .partido-nombre {
-        min-width: 50px;
-        font-size: 0.8rem;
-        font-weight: 500;
-      }
+      .barra-info {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 4px;
+        font-size: 0.7rem;
 
-      .porcentaje {
-        min-width: 40px;
-        font-size: 0.75rem;
-        color: #666;
+        .partido-nombre {
+          font-weight: 500;
+        }
+
+        .porcentaje {
+          color: #666;
+        }
+
+        .escanos {
+          color: #999;
+        }
+      }
+    }
+  }
+}
+
+.vista-comparativa {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+
+  canvas {
+    max-height: 300px;
+    width: 100%;
+  }
+
+  .comparativa-leyenda {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 16px;
+
+    .leyenda-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.75rem;
+
+      .color-box {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
       }
     }
   }
@@ -201,4 +307,34 @@
 
 .full-width {
   width: 100%;
+}
+
+// Modo oscuro
+body.dark-mode {
+  .vista-grafico, .vista-tabla, .historico-card, .vista-comparativa {
+    background-color: var(--card-bg);
+
+    .resumen, th, td {
+      border-color: var(--border-color);
+    }
+
+    th {
+      background-color: #0f3460;
+      color: white;
+    }
+
+    .total-row {
+      background-color: #0f3460;
+    }
+  }
+
+  .vista-tabs {
+    background-color: var(--card-bg);
+  }
+
+  .tipo-filtro button {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+  }
 }

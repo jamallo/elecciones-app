@@ -227,3 +227,106 @@ body.dark-mode {
   }
 }
 }
+
+
+
+// ========== TOOLBAR RESPONSIVE ==========
+.toolbar-mobile {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  padding: 0 12px;
+  height: var(--header-height);
+
+  .logo-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .toolbar-title {
+      font-size: 1rem;
+      font-weight: 500;
+
+      @media (min-width: 768px) {
+        font-size: 1.2rem;
+      }
+    }
+  }
+}
+
+// ========== MENÚ LATERAL ==========
+.side-menu {
+  .side-menu-content {
+    width: 280px;
+
+    @media (min-width: 768px) {
+      width: 320px;
+    }
+  }
+}
+
+// ========== TAB BAR RESPONSIVE ==========
+.bottom-tab-bar {
+  max-width: 100%;
+  padding: 8px 16px;
+
+  button {
+    padding: 4px 8px;
+
+    span {
+      font-size: 10px;
+
+      @media (min-width: 768px) {
+        font-size: 12px;
+      }
+    }
+
+    lucide-angular {
+      @media (min-width: 768px) {
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+
+  @media (min-width: 768px) {
+    max-width: 768px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 20px 20px 0 0;
+  }
+
+  @media (min-width: 1024px) {
+    max-width: 1024px;
+  }
+
+  @media (min-width: 1200px) {
+    max-width: 1200px;
+  }
+}
+
+// ========== BOTÓN DE INSTALACIÓN ==========
+.install-button {
+  bottom: 90px;
+  left: 20px;
+
+  @media (min-width: 768px) {
+    bottom: 100px;
+    left: 30px;
+    padding: 12px 20px;
+  }
+}
+
+// ========== BOTÓN DE BÚSQUEDA ==========
+.btn-buscar {
+  bottom: 90px;
+  right: 20px;
+
+  @media (min-width: 768px) {
+    bottom: 100px;
+    right: 30px;
+    width: 64px;
+    height: 64px;
+  }
+}

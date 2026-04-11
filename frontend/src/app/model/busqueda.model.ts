@@ -7,6 +7,7 @@ export interface ResultadoBusqueda {
   color?: string;
   link: string;
   subtitulo?: string;
+  destacado?: boolean;
 }
 
 export interface ResultadosAgrupados {
@@ -15,3 +16,11 @@ export interface ResultadosAgrupados {
   eventos: ResultadoBusqueda[];
   municipios: ResultadoBusqueda[];
 }
+
+export interface Sugerencia {
+  texto: string;
+  tipo: string;
+  id?: number;
+}
+
+

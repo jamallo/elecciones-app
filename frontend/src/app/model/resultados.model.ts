@@ -22,6 +22,8 @@ export interface ResultadosHistorico {
 }
 
 export interface ComparativaResultados {
-  eleccion: string;
-  resultados: ResultadosHistorico[];
+  eleccion1: string;
+  eleccion2: string;
+  resultados1: ResultadosHistorico[];
+  resultados2: ResultadosHistorico[];
 }

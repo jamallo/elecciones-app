@@ -8,7 +8,7 @@
     <mat-card class="stat-card">
       <mat-card-content>
         <div class="stat-icon partidos-icon">
-          <mat-icon>groups</mat-icon>
+          <lucide-angular name="Users" [size]="32" [strokeWidth]="1.5"></lucide-angular>
         </div>
         <div class="stat-info">
           <h3>{{ stats.partidos }}</h3>
@@ -23,7 +23,7 @@
     <mat-card class="stat-card">
       <mat-card-content>
         <div class="stat-icon elecciones-icon">
-          <mat-icon>how_to_vote</mat-icon>
+          <lucide-angular name="Vote" [size]="32" [strokeWidth]="1.5"></lucide-angular>
         </div>
         <div class="stat-info">
           <h3>{{ stats.elecciones }}</h3>
@@ -38,7 +38,7 @@
     <mat-card class="stat-card">
       <mat-card-content>
         <div class="stat-icon candidatos-icon">
-          <mat-icon>person</mat-icon>
+          <lucide-angular name="User" [size]="32" [strokeWidth]="1.5"></lucide-angular>
         </div>
         <div class="stat-info">
           <h3>{{ stats.candidatos || 0 }}</h3>
@@ -53,7 +53,7 @@
     <mat-card class="stat-card">
       <mat-card-content>
         <div class="stat-icon eventos-icon">
-          <mat-icon>event</mat-icon>
+          <lucide-angular name="Calendar" [size]="32" [strokeWidth]="1.5"></lucide-angular>
         </div>
         <div class="stat-info">
           <h3>{{ stats.eventos || 0 }}</h3>
@@ -68,7 +68,7 @@
     <mat-card class="stat-card">
       <mat-card-content>
         <div class="stat-icon sedes-icon">
-          <mat-icon>place</mat-icon>
+          <lucide-angular name="MapPin" [size]="32" [strokeWidth]="1.5"></lucide-angular>
         </div>
         <div class="stat-info">
           <h3>{{ stats.sedes || 0 }}</h3>
@@ -88,15 +88,15 @@
     <mat-card-content>
       <div class="actions-grid">
         <button mat-raised-button color="primary" routerLink="/admin/partidos">
-          <mat-icon>add</mat-icon>
+          <lucide-angular name="Plus" [size]="16" [strokeWidth]="1.5"></lucide-angular>
           Nuevo partido
         </button>
         <button mat-raised-button color="accent" routerLink="/admin/candidatos">
-          <mat-icon>person_add</mat-icon>
+          <lucide-angular name="UserPlus" [size]="16" [strokeWidth]="1.5"></lucide-angular>
           Nuevo candidato
         </button>
         <button mat-raised-button color="warn" routerLink="/admin/eventos">
-          <mat-icon>event_add</mat-icon>
+          <lucide-angular name="CalendarPlus" [size]="16" [strokeWidth]="1.5"></lucide-angular>
           Nuevo evento
         </button>
       </div>

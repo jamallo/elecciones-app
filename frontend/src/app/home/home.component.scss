@@ -35,12 +35,20 @@
     margin-bottom: 12px;
     letter-spacing: -0.5px;
     z-index: 10;
+
+    @media (min-width: 768px) {
+      font-size: 2.2rem;
+    }
   }
 
   p {
     font-size: 0.9rem;
     opacity: 0.9;
     line-height: 1.4;
+
+    @media (min-width: 768px) {
+      font-size: 1rem;
+    }
   }
 
   @keyframes shine {
@@ -152,6 +160,38 @@
         font-size: 11px;
         color: #999;
         font-weight: 500;
+      }
+    }
+  }
+}
+
+.partidos-grid-section {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 20px;
+
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 24px;
+    }
+
+    .partido-item {
+      .logo-wrapper {
+        width: 70px;
+        height: 70px;
+
+        @media (min-width: 768px) {
+          width: 90px;
+          height: 90px;
+        }
+      }
+
+      .partido-nombre {
+        font-size: 11px;
+
+        @media (min-width: 768px) {
+          font-size: 12px;
+        }
       }
     }
   }
@@ -276,6 +316,10 @@
     cursor: pointer;
     transition: all 0.2s;
 
+    @media (min-width: 768px) {
+      padding: 20px;
+    }
+
     &:active {
       transform: scale(0.99);
     }
@@ -287,6 +331,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
+
+      @media (min-width: 768px) {
+        width: 64px;
+        height: 64px;
+      }
 
       lucide-angular {
         color: white;
@@ -313,6 +362,10 @@
         font-weight: 600;
         margin-bottom: 4px;
         color: #333;
+
+        @media (min-width: 768px) {
+          font-size: 16px;
+        }
       }
 
       p {
@@ -358,6 +411,14 @@
       display: block;
       width: 100%;
       height: 400px;
+
+      @media (min-width: 768px) {
+        height: 500px;
+      }
+
+      @media (min-width: 1024px) {
+        height: 600px;
+      }
     }
 
     .zoom-controls {
@@ -454,10 +515,18 @@
 .selector-jerarquico {
   margin: 20px;
 
+  @media (min-width: 768px) {
+    margin: 24px;
+  }
+
   .niveles {
     display: flex;
     gap: 12px;
     margin-bottom: 20px;
+
+    @media (min-width: 768px) {
+      gap: 16px;
+    }
 
     .nivel-btn {
       flex: 1;
@@ -475,6 +544,11 @@
       lucide-angular {
         color: #999;
         transition: all 0.3s ease;
+
+        @media (min-width: 768px) {
+          width: 28px;
+          height: 28px;
+        }
       }
 
       span {
@@ -482,6 +556,10 @@
         font-weight: 600;
         color: #666;
         transition: all 0.3s ease;
+
+        @media (min-width: 768px) {
+          font-size: 14px;
+        }
       }
 
       &.active {

@@ -1,4 +1,4 @@
-<div class="resultados-container fade-in-up" appTema>
+<div class="resultados-container" appTema>
   <!-- Cabecera -->
   <div class="resultados-header" [style.background]="'var(--header-gradient)'">
     <button class="back-button" (click)="volverAlInicio()">
@@ -8,6 +8,52 @@
   </div>
 
   <div class="resultados-content">
+    <!-- Filtros por ámbito -->
+    <div class="filtros-ambito">
+      <div class="tipo-filtro">
+        <button [class.active]="tipoFiltro === 'nacional'" (click)="tipoFiltro = 'nacional'; onTipoFiltroChange()">
+          <lucide-angular name="Globe" [size]="16"></lucide-angular>
+          Nacional
+        </button>
+        <button [class.active]="tipoFiltro === 'comunidad'" (click)="tipoFiltro = 'comunidad'; onTipoFiltroChange()">
+          <lucide-angular name="Building2" [size]="16"></lucide-angular>
+          Comunidad
+        </button>
+        <button [class.active]="tipoFiltro === 'municipio'" (click)="tipoFiltro = 'municipio'; onTipoFiltroChange()">
+          <lucide-angular name="Building" [size]="16"></lucide-angular>
+          Municipio
+        </button>
+      </div>
+
+      <!-- Selector de Comunidad -->
+      @if (tipoFiltro === 'comunidad') {
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Selecciona una comunidad</mat-label>
+          <mat-select (selectionChange)="onComunidadChange()" [(ngModel)]="comunidadSeleccionada">
+            @for (comunidad of comunidades; track comunidad.id) {
+              <mat-option [value]="comunidad.id">
+                {{ comunidad.nombre }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      }
+
+      <!-- Selector de Municipio -->
+      @if (tipoFiltro === 'municipio') {
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Selecciona un municipio</mat-label>
+          <mat-select (selectionChange)="onMunicipioChange()" [(ngModel)]="municipioSeleccionado">
+            @for (municipio of municipios; track municipio.id) {
+              <mat-option [value]="municipio.id">
+                {{ municipio.nombre }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      }
+    </div>
+
     <!-- Selector de elección -->
     <div class="selector-eleccion">
       <mat-form-field appearance="outline" class="full-width">
@@ -24,6 +70,38 @@
       </mat-form-field>
     </div>
 
+    <!-- Selector de elección comparativa -->
+    @if (vistaActual === 'comparativa') {
+      <div class="selector-eleccion-comparativa">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Comparar con...</mat-label>
+          <mat-select (selectionChange)="onEleccionComparativaChange($event.value)" [value]="eleccionComparativa?.id">
+            @for (eleccion of elecciones; track eleccion.id) {
+              @if (eleccion.id !== eleccionSeleccionada?.id) {
+                <mat-option [value]="eleccion.id">
+                  {{ eleccion.tipo === 'NACIONAL' ? 'Nacionales' :
+                     eleccion.tipo === 'AUTONOMICA' ? 'Autonómicas' : 'Municipales' }}
+                  - {{ eleccion.ambito }} ({{ eleccion.anio }})
+                </mat-option>
+              }
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    }
+
+    <!-- Botones de exportación -->
+    <div class="export-buttons">
+      <button mat-raised-button (click)="exportarPDF()">
+        <lucide-angular name="FileText" [size]="16"></lucide-angular>
+        Exportar PDF
+      </button>
+      <button mat-raised-button (click)="exportarExcel()">
+        <lucide-angular name="FileSpreadsheet" [size]="16"></lucide-angular>
+        Exportar Excel
+      </button>
+    </div>
+
     <!-- Tabs de vista -->
     <div class="vista-tabs">
       <button [class.active]="vistaActual === 'grafico'" (click)="cambiarVista('grafico')">
@@ -38,6 +116,10 @@
         <lucide-angular name="TrendingUp" [size]="16"></lucide-angular>
         Histórico
       </button>
+      <button [class.active]="vistaActual === 'comparativa'" (click)="cambiarVista('comparativa')">
+        <lucide-angular name="GitCompare" [size]="16"></lucide-angular>
+        Comparativa
+      </button>
     </div>
 
     <!-- Contenido según vista -->
@@ -51,8 +133,18 @@
         <div class="vista-grafico">
           <canvas #resultadosCanvas></canvas>
           <div class="resumen">
-            <p>Total de votos: {{ getTotalVotos() | number }}</p>
-            <p>Participación: {{ (getTotalVotos() / 1000000 * 100) | number:'1.0-0' }}%</p>
+            <div class="resumen-item">
+              <span class="label">Total de votos:</span>
+              <span class="value">{{ getTotalVotos() | number }}</span>
+            </div>
+            <div class="resumen-item">
+              <span class="label">Participación:</span>
+              <span class="value">{{ (getTotalVotos() / 1000000 * 100) | number:'1.0-0' }}%</span>
+            </div>
+            <div class="resumen-item">
+              <span class="label">Total escaños:</span>
+              <span class="value">{{ getTotalEscanios() | number }}</span>
+            </div>
           </div>
         </div>
       }
@@ -61,13 +153,13 @@
       @if (vistaActual === 'tabla' && resultados.length > 0) {
         <div class="vista-tabla">
           <div class="tabla-container">
-            <table>
+            <table mat-table [dataSource]="resultados" class="resultados-table">
               <thead>
                 <tr>
                   <th>Partido</th>
-                  <th>Votos</th>
-                  <th>%</th>
-                  <th>Escaños</th>
+                  <th class="text-right">Votos</th>
+                  <th class="text-right">%</th>
+                  <th class="text-right">Escaños</th>
                 </tr>
               </thead>
               <tbody>
@@ -79,12 +171,20 @@
                         {{ r.partidoNombre }}
                       </div>
                     </td>
-                    <td>{{ r.votos | number }}</td>
-                    <td>{{ r.porcentaje }}%</td>
-                    <td>{{ r.escanios || r.concejales || '-' }}</td>
+                    <td class="text-right">{{ r.votos | number }}</td>
+                    <td class="text-right">{{ r.porcentaje }}%</td>
+                    <td class="text-right">{{ r.escanios || r.concejales || '-' }}</td>
                   </tr>
                 }
               </tbody>
+              <tfoot>
+                <tr class="total-row">
+                  <td><strong>Total</strong></td>
+                  <td class="text-right"><strong>{{ getTotalVotos() | number }}</strong></td>
+                  <td class="text-right"><strong>100%</strong></td>
+                  <td class="text-right"><strong>{{ getTotalEscanios() }}</strong></td>
+                </tr>
+              </tfoot>
             </table>
           </div>
         </div>
@@ -100,13 +200,33 @@
                 @for (partido of item.partidos; track partido.nombre) {
                   <div class="barra-item">
                     <div class="barra" [style.width.%]="partido.porcentaje" [style.backgroundColor]="partido.color"></div>
-                    <span class="partido-nombre">{{ partido.nombre }}</span>
-                    <span class="porcentaje">{{ partido.porcentaje }}%</span>
+                    <div class="barra-info">
+                      <span class="partido-nombre">{{ partido.nombre }}</span>
+                      <span class="porcentaje">{{ partido.porcentaje }}%</span>
+                      <span class="escanos">{{ partido.escanos }} escaños</span>
+                    </div>
                   </div>
                 }
               </div>
             </div>
           }
+        </div>
+      }
+
+      <!-- Vista Comparativa -->
+      @if (vistaActual === 'comparativa' && resultados.length > 0 && resultadosComparativa.length > 0) {
+        <div class="vista-comparativa">
+          <canvas #comparativaCanvas></canvas>
+          <div class="comparativa-leyenda">
+            <div class="leyenda-item">
+              <div class="color-box" style="background-color: #1E88E5"></div>
+              <span>{{ eleccionSeleccionada?.anio }} - {{ eleccionSeleccionada?.ambito }}</span>
+            </div>
+            <div class="leyenda-item">
+              <div class="color-box" style="background-color: #E63946"></div>
+              <span>{{ eleccionComparativa?.anio }} - {{ eleccionComparativa?.ambito }}</span>
+            </div>
+          </div>
         </div>
       }
     }

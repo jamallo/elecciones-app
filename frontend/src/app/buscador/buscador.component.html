@@ -5,16 +5,17 @@
 
 <!-- Modal de búsqueda -->
 @if (mostrando) {
-  <div class="buscador-overlay" (click)="onOverlayClick($event)">
+  <div class="buscador-overlay" (click)="cerrar()">
     <div class="buscador-modal" (click)="$event.stopPropagation()">
       <div class="buscador-header" [style.background]="'var(--header-gradient)'">
         <div class="search-input-container">
           <lucide-angular name="Search" [size]="20" [strokeWidth]="1.5"></lucide-angular>
           <input
+            #searchInput
             type="text"
             [formControl]="searchControl"
-            placeholder="Buscar partidos, candidatos, eventos..."
-            autofocus
+            placeholder="Buscar partidos, candidatos, eventos, municipios..."
+            autocomplete="off"
           >
           @if (searchControl.value) {
             <button class="clear-btn" (click)="limpiarBusqueda()">
@@ -27,6 +28,52 @@
         </button>
       </div>
 
+      <!-- Sugerencias -->
+      @if (sugerencias.length > 0 && terminoActual.length >= 2 && !loading) {
+        <div class="sugerencias">
+          @for (sug of sugerencias; track sug.texto) {
+            <div class="sugerencia-item" (click)="seleccionarSugerencia(sug)">
+              <lucide-angular [name]="getIconoPorTipo(sug.tipo)" [size]="14"></lucide-angular>
+              <span>{{ sug.texto }}</span>
+              <span class="sugerencia-tipo">{{ sug.tipo }}</span>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Categorías -->
+      @if (terminoActual.length >= 2 && getTotalResultados() > 0 && !loading) {
+        <div class="categorias">
+          <button [class.active]="categoriaActiva === 'todos'" (click)="cambiarCategoria('todos')">
+            Todos ({{ getTotalResultados() }})
+          </button>
+          @if (resultados.partidos.length > 0) {
+            <button [class.active]="categoriaActiva === 'partidos'" (click)="cambiarCategoria('partidos')">
+              <lucide-angular name="Users" [size]="12"></lucide-angular>
+              Partidos ({{ resultados.partidos.length }})
+            </button>
+          }
+          @if (resultados.candidatos.length > 0) {
+            <button [class.active]="categoriaActiva === 'candidatos'" (click)="cambiarCategoria('candidatos')">
+              <lucide-angular name="User" [size]="12"></lucide-angular>
+              Candidatos ({{ resultados.candidatos.length }})
+            </button>
+          }
+          @if (resultados.eventos.length > 0) {
+            <button [class.active]="categoriaActiva === 'eventos'" (click)="cambiarCategoria('eventos')">
+              <lucide-angular name="Calendar" [size]="12"></lucide-angular>
+              Eventos ({{ resultados.eventos.length }})
+            </button>
+          }
+          @if (resultados.municipios.length > 0) {
+            <button [class.active]="categoriaActiva === 'municipios'" (click)="cambiarCategoria('municipios')">
+              <lucide-angular name="Building2" [size]="12"></lucide-angular>
+              Municipios ({{ resultados.municipios.length }})
+            </button>
+          }
+        </div>
+      }
+
       <div class="buscador-body">
         @if (loading) {
           <div class="loading-spinner">
@@ -37,17 +84,20 @@
           <div class="sin-resultados">
             <lucide-angular name="SearchX" [size]="48" [strokeWidth]="1.5"></lucide-angular>
             <p>No se encontraron resultados para "{{ terminoActual }}"</p>
+            <p class="sugerencia">Prueba con otro término o revisa la ortografía</p>
           </div>
-        } @else if (terminoActual.length >= 2) {
+        } @else if (terminoActual.length >= 2 && getTotalResultados() > 0) {
           <div class="resultados-container">
+            @let resultadosFiltrados = getResultadosFiltrados();
+
             <!-- Partidos -->
-            @if (resultados.partidos.length > 0) {
+            @if (resultadosFiltrados.partidos.length > 0) {
               <div class="categoria">
                 <h3>
-                  <lucide-angular name="Users" [size]="18"></lucide-angular>
-                  Partidos ({{ resultados.partidos.length }})
+                  <lucide-angular name="Users" [size]="16"></lucide-angular>
+                  Partidos ({{ resultadosFiltrados.partidos.length }})
                 </h3>
-                @for (item of resultados.partidos; track item.id) {
+                @for (item of resultadosFiltrados.partidos; track item.id) {
                   <div class="resultado-item" (click)="seleccionarResultado(item)">
                     <div class="imagen" [style.backgroundColor]="item.color">
                       <img [src]="item.imagenUrl" [alt]="item.nombre">
@@ -64,15 +114,15 @@
             }
 
             <!-- Candidatos -->
-            @if (resultados.candidatos.length > 0) {
+            @if (resultadosFiltrados.candidatos.length > 0) {
               <div class="categoria">
                 <h3>
-                  <lucide-angular name="User" [size]="18"></lucide-angular>
-                  Candidatos ({{ resultados.candidatos.length }})
+                  <lucide-angular name="User" [size]="16"></lucide-angular>
+                  Candidatos ({{ resultadosFiltrados.candidatos.length }})
                 </h3>
-                @for (item of resultados.candidatos; track item.id) {
+                @for (item of resultadosFiltrados.candidatos; track item.id) {
                   <div class="resultado-item" (click)="seleccionarResultado(item)">
-                    <div class="imagen candidato">
+                    <div class="imagen candidato" [style.backgroundColor]="item.color">
                       <img [src]="item.imagenUrl" [alt]="item.nombre">
                     </div>
                     <div class="info">
@@ -87,13 +137,13 @@
             }
 
             <!-- Eventos -->
-            @if (resultados.eventos.length > 0) {
+            @if (resultadosFiltrados.eventos.length > 0) {
               <div class="categoria">
                 <h3>
-                  <lucide-angular name="Calendar" [size]="18"></lucide-angular>
-                  Eventos ({{ resultados.eventos.length }})
+                  <lucide-angular name="Calendar" [size]="16"></lucide-angular>
+                  Eventos ({{ resultadosFiltrados.eventos.length }})
                 </h3>
-                @for (item of resultados.eventos; track item.id) {
+                @for (item of resultadosFiltrados.eventos; track item.id) {
                   <div class="resultado-item" (click)="seleccionarResultado(item)">
                     <div class="imagen evento">
                       <lucide-angular name="Calendar" [size]="24"></lucide-angular>
@@ -110,13 +160,13 @@
             }
 
             <!-- Municipios -->
-            @if (resultados.municipios.length > 0) {
+            @if (resultadosFiltrados.municipios.length > 0) {
               <div class="categoria">
                 <h3>
-                  <lucide-angular name="Building" [size]="18"></lucide-angular>
-                  Municipios ({{ resultados.municipios.length }})
+                  <lucide-angular name="Building2" [size]="16"></lucide-angular>
+                  Municipios ({{ resultadosFiltrados.municipios.length }})
                 </h3>
-                @for (item of resultados.municipios; track item.id) {
+                @for (item of resultadosFiltrados.municipios; track item.id) {
                   <div class="resultado-item" (click)="seleccionarResultado(item)">
                     <div class="imagen municipio">
                       <lucide-angular name="Building2" [size]="24"></lucide-angular>
@@ -136,7 +186,13 @@
           <div class="inicio-busqueda">
             <lucide-angular name="Search" [size]="48" [strokeWidth]="1.5"></lucide-angular>
             <p>Escribe al menos 2 caracteres para buscar</p>
-            <span class="ejemplos">Ej: PP, PSOE, Oviedo, mitin...</span>
+            <div class="ejemplos">
+              <span class="ejemplo">PP</span>
+              <span class="ejemplo">PSOE</span>
+              <span class="ejemplo">Oviedo</span>
+              <span class="ejemplo">mitin</span>
+              <span class="ejemplo">Feijóo</span>
+            </div>
           </div>
         }
       </div>
