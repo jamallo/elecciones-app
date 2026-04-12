@@ -1,0 +1,33 @@
+<div class="share-buttons">
+  <button class="share-btn twitter" (click)="shareOnTwitter()" title="Compartir en X">
+    <lucide-angular name="Twitter" [size]="18"></lucide-angular>
+  </button>
+
+  <button class="share-btn facebook" (click)="shareOnFacebook()" title="Compartir en Facebook">
+    <lucide-angular name="Facebook" [size]="18"></lucide-angular>
+  </button>
+
+  <button class="share-btn whatsapp" (click)="shareOnWhatsApp()" title="Compartir en WhatsApp">
+    <lucide-angular name="MessageCircle" [size]="18"></lucide-angular>
+  </button>
+
+  <button class="share-btn telegram" (click)="shareOnTelegram()" title="Compartir en Telegram">
+    <lucide-angular name="Send" [size]="18"></lucide-angular>
+  </button>
+
+  <button class="share-btn linkedin" (click)="shareOnLinkedIn()" title="Compartir en LinkedIn">
+    <lucide-angular name="Linkedin" [size]="18"></lucide-angular>
+  </button>
+
+  @if (showCopy) {
+    <button class="share-btn copy" (click)="copyLink()" title="Copiar enlace">
+      <lucide-angular name="Link" [size]="18"></lucide-angular>
+    </button>
+  }
+
+  @if (showImage) {
+    <button class="share-btn image" (click)="shareImage()" title="Descargar imagen">
+      <lucide-angular name="Image" [size]="18"></lucide-angular>
+    </button>
+  }
+</div>

@@ -511,3 +511,68 @@
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   }
 }
+
+.share-section {
+  padding: 0 20px;
+  margin: 16px 0;
+}
+
+.share-image-container {
+  .share-card {
+    width: 500px;
+    padding: 40px;
+    text-align: center;
+    border-radius: 20px;
+    color: white;
+
+    .share-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 30px;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .share-partido-logo {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 20px;
+      background: white;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+
+      img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+
+    .share-siglas {
+      font-size: 1rem;
+      opacity: 0.9;
+      margin-bottom: 16px;
+    }
+
+    .share-eleccion {
+      font-size: 0.8rem;
+      opacity: 0.8;
+      margin-bottom: 20px;
+    }
+
+    .share-url {
+      font-size: 0.7rem;
+      opacity: 0.7;
+    }
+  }
+}

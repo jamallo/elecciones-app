@@ -25,6 +25,39 @@
       </div>
     </div>
 
+    <!-- Botones de compartir -->
+  <div class="share-section">
+    <app-share-buttons
+      [title]="'🗳️ ' + participacion.partidoNombre + ' - Elecciones ' + participacion.eleccionAnio"
+      [description]="'Consulta el programa electoral, candidatos y eventos de ' + participacion.partidoNombre + ' para las ' + (participacion.eleccionTipo === 'MUNICIPAL' ? 'Elecciones Municipales' : participacion.eleccionTipo === 'AUTONOMICA' ? 'Elecciones Autonómicas' : 'Elecciones Nacionales')"
+      [url]="'https://elecciones2027.es/partido/' + participacion.id"
+      [hashtags]="['Elecciones2027', participacion.partidoSiglas]"
+      [showImage]="true"
+      [imageElementId]="'partido-share-image'"
+      (onShare)="onShare($event)">
+    </app-share-buttons>
+  </div>
+  <!-- Contenedor para imagen de resumen -->
+  <div id="partido-share-image" class="share-image-container" style="position: absolute; left: -9999px; top: 0;">
+    <div class="share-card" [style.background]="'var(--header-gradient)'">
+      <div class="share-logo">
+        <lucide-angular name="Vote" [size]="48"></lucide-angular>
+        <span>Elecciones 2027</span>
+      </div>
+      <div class="share-partido-logo">
+        <img [src]="participacion.partidoLogoUrl" [alt]="participacion.partidoNombre">
+      </div>
+      <h2>{{ participacion.partidoNombre }}</h2>
+      <p class="share-siglas">{{ participacion.partidoSiglas }}</p>
+      <div class="share-eleccion">
+        {{ participacion.eleccionTipo === 'MUNICIPAL' ? 'Elecciones Municipales' :
+          participacion.eleccionTipo === 'AUTONOMICA' ? 'Elecciones Autonómicas' : 'Elecciones Nacionales' }}
+        - {{ participacion.eleccionAmbito }} {{ participacion.eleccionAnio }}
+      </div>
+      <div class="share-url">elecciones2027.es</div>
+    </div>
+  </div>
+
     <!-- Enlaces rápidos -->
     <div class="quick-links">
       <a (click)="mostrarHistoriaCompleta = true">
@@ -159,5 +192,9 @@
         </div>
       </div>
     </div>
+
+
   }
 </div>
+
+

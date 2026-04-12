@@ -89,4 +89,8 @@ export class CandidatoDetalle implements OnInit {
     img.src = 'assets/candidatos/placeholder.png'
   }
 
+  onShare(platform: string): void {
+    console.log(`Compartido en ${platform}: ${this.candidato?.nombre}`);
+  }
+
 }

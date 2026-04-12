@@ -33,7 +33,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressSpinnerModule, MatSpinner } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
@@ -101,6 +101,14 @@ import {
   Trash,
   FileSpreadsheet,
   GitCompare,
+  Twitter,
+  Facebook,
+  MessageCircle,
+  Send,
+  Linkedin,
+  Link,
+  Image,
+  Lock,
 
  } from 'lucide-angular';
 import { CalendarioCompletoComponent } from './calendario-completo/calendario-completo.component';
@@ -117,6 +125,7 @@ import { environment } from '../environments/environment.prod';
 import { MatTableModule } from '@angular/material/table';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import { SkeletonLoaderComponent } from './shared/skeleton-loader/skeleton-loader.component';
+import { ShareButtonsComponent } from './shared/share-buttons/share-buttons.component';
 
 
 @NgModule({
@@ -138,6 +147,7 @@ import { SkeletonLoaderComponent } from './shared/skeleton-loader/skeleton-loade
     MunicipioDetalleComponent,
     LoadingSpinnerComponent,
     SkeletonLoaderComponent,
+    ShareButtonsComponent,
   ],
   imports: [
     BrowserModule,
@@ -166,6 +176,7 @@ import { SkeletonLoaderComponent } from './shared/skeleton-loader/skeleton-loade
     AdminModule,
     MatTableModule,
     MatSnackBarModule,
+    MatSpinner,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: false//environment.production,
       //registrationStrategy: 'registerWhenStable: 30000'
@@ -219,7 +230,15 @@ import { SkeletonLoaderComponent } from './shared/skeleton-loader/skeleton-loade
       Edit,
       Trash,
       FileSpreadsheet,
-      GitCompare
+      GitCompare,
+      Twitter,
+      Facebook,
+      MessageCircle,
+      Send,
+      Linkedin,
+      Link,
+      Image,
+      Lock
     })
   ],
   providers: [

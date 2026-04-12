@@ -10,6 +10,7 @@ import { CandidatoDetalles } from '../model/candidato.model';
 import { EventoDetalle } from '../model/evento.model';
 import { SedeMapa } from '../model/sede.model';
 import { Router } from '@angular/router';
+import { ShareButtonsComponent } from '../shared/share-buttons/share-buttons.component';
 
 @Component({
   selector: 'app-partido-detalle',
@@ -145,7 +146,11 @@ export class PartidoDetalleComponent implements OnInit {
   }
 
   handleImageError(event: Event): void {
-  const img = event.target as HTMLImageElement;
-  img.src = 'assets/partidos/placeholder.png';
-}
+    const img = event.target as HTMLImageElement;
+    img.src = 'assets/partidos/placeholder.png';
+  }
+
+  onShare(platform: string): void {
+    console.log(`Compartido en ${platform}: ${this.participacion?.partidoNombre}`);
+  }
 }

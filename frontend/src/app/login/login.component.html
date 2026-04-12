@@ -2,7 +2,7 @@
   <mat-card class="login-card">
     <mat-card-header>
       <mat-card-title>
-        <mat-icon>how_to_vote</mat-icon>
+        <lucide-angular name="Vote" [size]="24" class="login-icon"></lucide-angular>
         Iniciar sesión
       </mat-card-title>
     </mat-card-header>
@@ -12,23 +12,26 @@
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Email</mat-label>
           <input matInput type="email" [(ngModel)]="credentials.email" name="email" required>
-          <mat-icon matSuffix>email</mat-icon>
+          <lucide-angular name="Mail" [size]="16" class="input-icon" matSuffix></lucide-angular>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Contraseña</mat-label>
           <input matInput type="password" [(ngModel)]="credentials.password" name="password" required>
-          <mat-icon matSuffix>lock</mat-icon>
+          <lucide-angular name="Lock" [size]="16" class="input-icon" matSuffix></lucide-angular>
         </mat-form-field>
 
         <div *ngIf="error" class="error-message">
-          <mat-icon>error</mat-icon>
+          <lucide-angular name="AlertCircle" [size]="16"></lucide-angular>
           {{ error }}
         </div>
 
         <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid || loading" class="full-width">
-          <mat-icon *ngIf="!loading">login</mat-icon>
-          <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+          @if (!loading) {
+            <lucide-angular name="LogIn" [size]="16"></lucide-angular>
+          } @else {
+            <mat-spinner diameter="20"></mat-spinner>
+          }
           {{ loading ? 'Iniciando...' : 'Iniciar sesión' }}
         </button>
       </form>

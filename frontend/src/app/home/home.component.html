@@ -163,7 +163,7 @@
         <div class="eventos-list">
           @for (evento of eventos; track evento.id) {
             <div class="evento-card" (click)="verEvento(evento.id)">
-              <div class="evento-icon" [class]="evento.eleccionTipo.toLowerCase()">
+              <div class="evento-icon" [class]="(evento.eleccionTipo || '').toLowerCase()">
                 <lucide-angular [name]="evento.tipo === 'DEBATE' ? 'Mic2' : (evento.tipo === 'MITIN' ? 'Users' : 'Calendar')"
                                 [size]="24" [strokeWidth]="1.5"></lucide-angular>
               </div>

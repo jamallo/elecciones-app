@@ -33,6 +33,35 @@
       </div>
     </div>
 
+    <!-- Botones de compartir -->
+    <div class="share-section">
+      <app-share-buttons
+        [title]="'👤 ' + candidato.nombre + ' - Candidato a ' + candidato.cargo"
+        [description]="candidato.biografia"
+        [url]="'https://elecciones2027.es/candidato/' + candidato.id"
+        [hashtags]="['Elecciones2027', candidato.partidoSiglas]"
+        [showImage]="true"
+        [imageElementId]="'candidato-share-image'">
+      </app-share-buttons>
+    </div>
+
+    <!-- Contenedor para imagen de resumen -->
+    <div id="candidato-share-image" class="share-image-container" style="position: absolute; left: -9999px; top: 0;">
+      <div class="share-card" [style.background]="'var(--header-gradient)'">
+        <div class="share-logo">
+          <lucide-angular name="Vote" [size]="48"></lucide-angular>
+          <span>Elecciones 2027</span>
+        </div>
+        <div class="share-candidato-foto">
+          <img [src]="candidato.fotoUrl" [alt]="candidato.nombre">
+        </div>
+        <h2>{{ candidato.nombre }}</h2>
+        <p class="share-cargo">{{ candidato.cargo }}</p>
+        <p class="share-partido">{{ candidato.partidoNombre }} ({{ candidato.partidoSiglas }})</p>
+        <div class="share-url">elecciones2027.es</div>
+      </div>
+    </div>
+
     <!-- Biografía -->
     <div class="biografia-section">
       <h2>
@@ -110,5 +139,6 @@
         </div>
       </div>
     </div>
+
   }
 </div>
