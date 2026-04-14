@@ -8,9 +8,33 @@
     <!-- Logo y título - CLICABLE para volver al inicio -->
     <div class="logo-container" (click)="goToHome()" style="cursor: pointer;">
       <lucide-angular name="Vote" class="logo-icon" [size]="24" [strokeWidth]="1.5"></lucide-angular>
-      <span class="toolbar-title">Elecciones 2027</span>
+      <span class="toolbar-title">InfoPartidos</span>
     </div>
     <div class="spacer"></div>
+
+    <!-- Menú de navegación desktop (visible solo en pantallas grandes) -->
+    <div class="desktop-menu">
+      <button (click)="navigateTo('/')" [class.active]="isActive('/')">
+        <lucide-angular name="Home" [size]="18"></lucide-angular>
+        <span>Inicio</span>
+      </button>
+      <button (click)="navigateTo('/resultados')" [class.active]="isActive('/resultados')">
+        <lucide-angular name="BarChart3" [size]="18"></lucide-angular>
+        <span>Resultados</span>
+      </button>
+      <button (click)="navigateTo('/calendario')" [class.active]="isActive('/calendario')">
+        <lucide-angular name="Calendar" [size]="18"></lucide-angular>
+        <span>Calendario</span>
+      </button>
+      <button (click)="navigateTo('/mapa')" [class.active]="isActive('/mapa')">
+        <lucide-angular name="Map" [size]="18"></lucide-angular>
+        <span>Mapa</span>
+      </button>
+      <button (click)="navigateTo('/partidos')" [class.active]="isActive('/partidos')">
+        <lucide-angular name="Users" [size]="18"></lucide-angular>
+        <span>Partidos</span>
+      </button>
+    </div>
 
     <!-- Botón de búsqueda en la toolbar -->
     <button mat-icon-button (click)="abrirBuscador()" class="search-button">
@@ -59,7 +83,7 @@
     <div class="side-menu-content" (click)="$event.stopPropagation()">
       <div class="menu-header">
         <lucide-angular name="Vote" [size]="28"></lucide-angular>
-        <span>Elecciones 2027</span>
+        <span>InfoPartidos</span>
         <button mat-icon-button (click)="closeMenu()">
           <lucide-angular name="X" [size]="20"></lucide-angular>
         </button>

@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://elecciones.es/sitemap.xml

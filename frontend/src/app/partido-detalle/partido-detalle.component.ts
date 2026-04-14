@@ -11,6 +11,9 @@ import { EventoDetalle } from '../model/evento.model';
 import { SedeMapa } from '../model/sede.model';
 import { Router } from '@angular/router';
 import { ShareButtonsComponent } from '../shared/share-buttons/share-buttons.component';
+import { SeoService } from '../services/seo.service';
+import { AnalyticsService } from '../services/analytics.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-partido-detalle',
@@ -24,6 +27,7 @@ export class PartidoDetalleComponent implements OnInit {
   candidatos: CandidatoDetalles[] = [];
   eventos: EventoDetalle[] = [];
   sedes: SedeMapa[] = [];
+  programaCompletoHtml: SafeHtml = '';
 
   loading: boolean = true;
   mostrarHistoriaCompleta: boolean = false;
@@ -37,7 +41,10 @@ export class PartidoDetalleComponent implements OnInit {
     private eventoService: EventoService,
     private sedeService: SedeService,
     private temaService: TemaService,
-    private cdr: ChangeDetectorRef,
+    private seoService: SeoService,
+    private analytics: AnalyticsService,
+    private sanitizer: DomSanitizer,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -59,6 +66,13 @@ export class PartidoDetalleComponent implements OnInit {
         console.log('Ámbito:', participacion.eleccionAmbito);
         this.participacion = participacion;
 
+        //Aplicar SEO
+        this.seoService.setPartidoSeo(
+          participacion.partidoNombre,
+          participacion.partidoSiglas,
+          `${participacion.eleccionTipo} - ${participacion.eleccionAmbito}`
+        );
+
         // Cambiar tema según el partido
         this.temaService.setTema({
           colorPrincipal: participacion.partidoColorPrimario,
@@ -74,6 +88,12 @@ export class PartidoDetalleComponent implements OnInit {
         this.cargarEventos();
         this.cargarSedes();
         this.cdr.detectChanges();
+
+        this.analytics.trackPartidoClick(
+          participacion.id,
+          participacion.partidoNombre
+        );
+
       },
       error: (error) => {
         console.error('Error cargando participación:', error);

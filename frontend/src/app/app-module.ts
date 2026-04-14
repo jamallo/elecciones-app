@@ -109,6 +109,7 @@ import {
   Link,
   Image,
   Lock,
+  Eye,
 
  } from 'lucide-angular';
 import { CalendarioCompletoComponent } from './calendario-completo/calendario-completo.component';
@@ -238,7 +239,8 @@ import { ShareButtonsComponent } from './shared/share-buttons/share-buttons.comp
       Linkedin,
       Link,
       Image,
-      Lock
+      Lock,
+      Eye
     })
   ],
   providers: [

@@ -575,4 +575,48 @@
       opacity: 0.7;
     }
   }
+
+  .historia-completa, .programa-completo {
+    h2 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin: 24px 0 12px;
+      color: var(--primary-color);
+      border-left: 4px solid var(--primary-color);
+      padding-left: 12px;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 20px 0 10px;
+      color: var(--secondary-color);
+    }
+
+    p {
+      line-height: 1.6;
+      margin-bottom: 12px;
+      color: var(--text-color);
+    }
+
+    ul, ol {
+      margin: 12px 0;
+      padding-left: 24px;
+
+      li {
+        margin: 8px 0;
+        line-height: 1.5;
+      }
+    }
+
+    strong {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+
+    em {
+      font-style: italic;
+      color: #666;
+    }
+  }
 }

@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CandidatoService } from '../services/candidato.service';
 import { TemaService } from '../services/tema.service';
 import { CandidatoDetalles } from '../model/candidato.model';
+import { SeoService } from '../services/seo.service';
 
 @Component({
   selector: 'app-candidato-detalle',
@@ -21,6 +22,7 @@ export class CandidatoDetalle implements OnInit {
     private router: Router,
     private candidatoService: CandidatoService,
     private temaService: TemaService,
+    private seoService: SeoService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -37,6 +39,11 @@ export class CandidatoDetalle implements OnInit {
     this.candidatoService.getCandidato(this.candidatoId).subscribe({
       next: (candidato) => {
         this.candidato = candidato;
+        this.seoService.setCandidatoSeo(
+          candidato.nombre,
+          candidato.partidoNombre,
+          candidato.cargo
+        );
         this.loading = false;
         this.cdr.detectChanges();
 

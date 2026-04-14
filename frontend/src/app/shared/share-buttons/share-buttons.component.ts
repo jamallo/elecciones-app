@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ShareService } from '../../services/share.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AnalyticsService } from '../../services/analytics.service';
 
 @Component({
   selector: 'app-share-buttons',
@@ -21,11 +22,13 @@ export class ShareButtonsComponent {
 
   constructor(
     private shareService: ShareService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private analytics: AnalyticsService
   ) {}
 
   shareOnTwitter(): void {
     this.shareService.shareOnTwitter(this.title, this.url, this.hashtags);
+    this.analytics.trackShare('twitter', this.title);
     this.onShare.emit('twitter');
   }
 

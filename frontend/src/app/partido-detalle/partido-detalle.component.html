@@ -163,7 +163,8 @@
           </button>
         </div>
         <div class="modal-body">
-          <p>{{ participacion.informacion?.historiaCompleta }}</p>
+          <div class="historia-completa" [innerHTML]="participacion.informacion?.historiaCompleta"></div>
+          <!-- <p>{{ participacion.informacion?.historiaCompleta }}</p> -->
         </div>
         <div class="modal-footer">
           <button (click)="cerrarModal()">Cerrar</button>
@@ -185,7 +186,8 @@
           </button>
         </div>
         <div class="modal-body">
-          <p>{{ participacion.informacion?.programaCompleto }}</p>
+          <div class="programa-completo" [innerHTML]="participacion.informacion?.programaCompleto"></div>
+          <!-- <p>{{ participacion.informacion?.programaCompleto }}</p> -->
         </div>
         <div class="modal-footer">
           <button (click)="cerrarModal()">Cerrar</button>

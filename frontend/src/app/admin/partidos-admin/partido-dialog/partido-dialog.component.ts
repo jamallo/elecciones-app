@@ -53,7 +53,8 @@ export class PartidoDialogComponent {
     }
 
     this.loading = true;
-    const partido = this.form.value;
+    const partido = { ...this.form.value };
+    delete partido.id;
 
     if (this.data?.id) {
       //Actualizar

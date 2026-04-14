@@ -3,7 +3,7 @@
   <div class="hero-section metallic-bg animate-fadeInUp" (click)="goToHome()">
     <div class="hero-content">
       <lucide-angular name="Vote" class="hero-icon" [size]="48" [strokeWidth]="1.5"></lucide-angular>
-      <h1>Elecciones 2027</h1>
+      <h1>InfoPartidos</h1>
       <p>Información electoral transparente y accesible para todos los ciudadanos</p>
     </div>
   </div>
@@ -105,16 +105,16 @@
           @for (partido of partidos; track partido.id) {
             <div class="partido-card" (click)="verPartido(partido.id)">
               <!-- ********Mostrar debug********** -->
-              <div class="debug" style="font-size: 10px; color: red;">
+              <!-- <div class="debug" style="font-size: 10px; color: red;">
                 ID partido: {{ partido.id }} | Tipo: {{ partido.eleccionTipo }}
-              </div>
+              </div> -->
               <div class="logo-container">
                 <img [src]="partido.partidoLogoUrl" [alt]="partido.partidoNombre">
               </div>
               <div class="partido-info">
-                <h3>{{ partido.partidoNombre }}</h3>
                 <span class="siglas">{{ partido.partidoSiglas }}</span>
-                <span class="eleccion-tipo">{{ partido.eleccionTipo }} - {{ partido.eleccionAmbito }}</span>
+                <h3>{{ partido.partidoNombre }}</h3>
+                <!-- <span class="eleccion-tipo">{{ partido.eleccionTipo }} - {{ partido.eleccionAmbito }}</span> -->
               </div>
             </div>
           }

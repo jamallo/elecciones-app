@@ -5,6 +5,7 @@ import { debounceTime, distinctUntilChanged, Observable, Subject, Subscriber, sw
 import { BusquedaService } from '../services/busqueda.service';
 import { Router } from '@angular/router';
 import { TemaService } from '../services/tema.service';
+import { AnalyticsService } from '../services/analytics.service';
 
 @Component({
   selector: 'app-buscador',
@@ -28,6 +29,7 @@ export class BuscadorComponent implements OnInit, OnDestroy {
     private busquedaServicio: BusquedaService,
     private router: Router,
     private temaService: TemaService,
+    private analytics: AnalyticsService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -120,6 +122,7 @@ export class BuscadorComponent implements OnInit, OnDestroy {
   }
 
   seleccionarResultado(resultado: ResultadoBusqueda): void {
+    this.analytics.trackSearch(this.terminoActual, this.getTotalResultados());
     this.cerrar();
     let ruta = '';
     switch (resultado.tipo) {

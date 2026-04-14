@@ -9,6 +9,7 @@ import { PartidoEleccionResumen } from '../model/partido-eleccion.model';
 import { Comunidad } from '../model/comunidad.model';
 import { Municipio } from '../model/municipio.model';
 import { EventoDetalle } from '../model/evento.model';
+import { SeoService } from '../services/seo.service';
 
 interface NivelEleccion {
   tipo: string;
@@ -65,11 +66,13 @@ export class HomeComponent implements OnInit {
     private temaService: TemaService,
     private eventoService: EventoService,
     private router: Router,
+    private seoService: SeoService,
     private cdr: ChangeDetectorRef
   ) {}
 
   // ========== INICIALIZACIÓN ==========
   ngOnInit(): void {
+    this.seoService.setHomeSeo();
     this.temaService.resetToNeutral();
     this.cargarElecciones();
     this.cargarComunidades();
@@ -148,6 +151,7 @@ export class HomeComponent implements OnInit {
     this.loading = true;
     this.partidoService.getParticipacionesPorEleccion(eleccionId).subscribe({
       next: (partidos) => {
+
         console.log('Partidos recibidos del API:', partidos);
         // Verificar la estructura de cada partido
         partidos.forEach(p => {
@@ -287,13 +291,23 @@ export class HomeComponent implements OnInit {
 
   // ========== CARGA DE PARTIDOS POR NIVEL ==========
   cargarPartidosNacionales(): void {
-    const eleccion = this.elecciones.find(e => e.tipo === 'NACIONAL' && e.ambito === 'España');
-    if (eleccion) {
-      this.cargarPartidosPorEleccionId(eleccion.id);
-    } else {
-      console.error('No se encontró la elección nacional');
-    }
-    this.cdr.detectChanges();
+    this.loading = true;
+
+  this.partidoService
+    .getParticipacionesPorTipoAmbito('NACIONAL', 'España')
+    .subscribe({
+      next: (partidos) => {
+        console.log('Partidos NACIONALES:', partidos);
+        this.partidos = partidos;
+        this.loading = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Error cargando partidos nacionales:', error);
+        this.partidos = [];
+        this.loading = false;
+      }
+    });
   }
 
   cargarPartidosPorComunidad(comunidadNombre: string): void {
@@ -348,9 +362,10 @@ export class HomeComponent implements OnInit {
   verPartido(partidoId: number): void {
     console.log('verPartido llamado con ID:', partidoId);
     // Buscar el partido en la lista actual
-    const partido = this.partidos.find(p => p.id === partidoId);
+    const partido = this.partidos.find(p => p.partidoId === partidoId);
     console.log('Partido encontrado:', partido);
     this.router.navigate(['/partido', partidoId]);
+    this.cdr.detectChanges();
   }
 
   verEvento(eventoId: number): void {

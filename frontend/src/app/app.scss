@@ -4,6 +4,11 @@
   top: 0;
   z-index: 100;
   background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  padding: 0 12px;
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
   .menu-button {
     margin-right: 8px;
@@ -14,6 +19,7 @@
     align-items: center;
     gap: 8px;
     flex: 1;
+    cursor: pointer;
 
     .logo-icon {
       font-size: 24px;
@@ -24,6 +30,10 @@
     .toolbar-title {
       font-size: 1rem;
       font-weight: 500;
+
+      @media (min-width: 768px) {
+        font-size: 1.2rem;
+      }
     }
   }
 
@@ -31,10 +41,37 @@
     flex: 1;
   }
 
-  .user-button, .login-button {
-    color: white;
+  // Botones comunes
+  .menu-button, .search-button, .theme-button, .user-button, .login-button {
+
+
+    @media (min-width: 768px) {
+      width: 40px;
+      height: 40px;
+
+      lucide-angular {
+        width: 20px;
+        height: 20px;
+      }
+    }
   }
 }
+
+// ========== CLASES DE UTILIDAD RESPONSIVE ==========
+.mobile-only {
+  @media (min-width: 1024px) {
+    display: none !important;
+  }
+}
+
+.desktop-only {
+  display: none;
+
+  @media (min-width: 1024px) {
+    display: flex;
+  }
+}
+
 
 // ========== MENÚ LATERAL ==========
 .side-menu {
@@ -64,6 +101,10 @@
     box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
     transform: translateX(-100%);
     transition: transform 0.3s ease;
+
+    @media (min-width: 768px) {
+      width: 320px;
+    }
 
     .menu-header {
       padding: 20px 16px;
@@ -186,17 +227,11 @@
 .search-button {
   margin-right: 4px;
 
-  lucide-angular {
-    color: white;
-  }
 }
 
 .theme-button {
   margin-right: 4px;
 
-  lucide-angular {
-    color: white;
-  }
 
   ::ng-deep .mat-mdc-menu-panel {
   background-color: white !important;
@@ -328,5 +363,67 @@ body.dark-mode {
     right: 30px;
     width: 64px;
     height: 64px;
+  }
+}
+
+// Toolbar responsive
+.toolbar-mobile {
+  .toolbar-title {
+    @media (min-width: 768px) {
+      font-size: 1.2rem;
+    }
+  }
+
+  .menu-button, .search-button, .user-button, .login-button {
+    @media (min-width: 768px) {
+      width: 48px;
+      height: 48px;
+
+      lucide-angular {
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+}
+
+.desktop-menu {
+  display: none;
+}
+
+// Tab bar - en desktop se transforma en menú superior
+@media (min-width: 1024px) {
+  .bottom-tab-bar {
+    display: none;  // Ocultar tab bar en desktop
+  }
+
+  // Mostrar menú horizontal en desktop
+  .desktop-menu {
+    display: flex;
+    gap: 16px;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      border-radius: 30px;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+    }
+  }
+}
+
+// Menú lateral - más ancho en tablet
+.side-menu .side-menu-content {
+  width: 280px;
+
+  @media (min-width: 768px) {
+    width: 320px;
   }
 }

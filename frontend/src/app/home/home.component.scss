@@ -1033,3 +1033,105 @@
     font-size: 14px;
   }
 }
+
+// ========== MOBILE FIRST (por defecto) ==========
+.home-container {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.container {
+  padding: 0 var(--container-padding);
+}
+
+// ========== TABLET (768px - 1024px) ==========
+@media (min-width: 768px) {
+  .hero-section {
+    padding: 60px 40px;
+
+    h1 {
+      font-size: 2.5rem;
+    }
+
+    p {
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  }
+
+  .selector-jerarquico {
+    max-width: 800px;
+    margin: 30px auto;
+  }
+
+  .niveles {
+    .nivel-btn {
+      padding: 16px;
+
+      lucide-angular {
+        width: 32px;
+        height: 32px;
+      }
+
+      span {
+        font-size: 14px;
+      }
+    }
+  }
+
+  .partidos-section {
+    h2 {
+      font-size: 1.3rem;
+    }
+  }
+
+  .eventos-section, .mapa-section {
+    max-width: 900px;
+    margin: 40px auto;
+  }
+}
+
+// ========== DESKTOP (1024px - 1440px) ==========
+@media (min-width: 1024px) {
+  .hero-section {
+    padding: 80px 40px;
+
+    h1 {
+      font-size: 3rem;
+    }
+  }
+
+  .selector-jerarquico {
+    max-width: 1000px;
+  }
+
+  .partidos-section .partidos-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+
+  .evento-card {
+    padding: 20px;
+
+    .evento-icon {
+      width: 64px;
+      height: 64px;
+    }
+
+    .evento-info h4 {
+      font-size: 1rem;
+    }
+  }
+}
+
+// ========== WIDESCREEN (>1440px) ==========
+@media (min-width: 1440px) {
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .partidos-section .partidos-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+}

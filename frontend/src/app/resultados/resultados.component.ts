@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { SeoService } from '../services/seo.service';
 
 @Component({
   selector: 'app-resultados',
@@ -55,6 +56,7 @@ export class ResultadosComponent implements OnInit, AfterViewInit {
     private resultadoService: ResultadoService,
     private temaService: TemaService,
     private router: Router,
+    private seoService: SeoService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -119,6 +121,13 @@ export class ResultadosComponent implements OnInit, AfterViewInit {
   cargarResultados(): void {
 
     if (!this.eleccionSeleccionada) return;
+
+    //Aplicar SEO
+    this.seoService.setResultadosSeo(
+      this.eleccionSeleccionada.tipo,
+      this.eleccionSeleccionada.ambito,
+      this.eleccionSeleccionada.anio
+    );
 
     this.loading = true;
 

@@ -21,7 +21,19 @@ export class PartidosGrid implements OnInit, OnDestroy {
   gridCols: number = 4;
   private resizeObserver: ResizeObserver | null = null;
 
+  ngOnChanges() {
+    console.log('Partidos recibidos en PartidosGrid:', this.partidos);
+    // Itera sobre cada partido para ver su logoUrl
+    this.partidos.forEach(p => {
+      console.log(`Logo de ${p.nombre}: ${p.logoUrl}`);
+    });
+  }
+
   ngOnInit() {
+    console.log('Partidos en grid: ', this.partidos);
+    this.partidos.forEach(p => {
+      console.log(`Partido: ${p.nombre}, logo URL: "${p.logoUrl}"`);
+    });
     this.updateGridCols();
     // Usar ResizeObserver en lugar de HostListener
     this.resizeObserver = new ResizeObserver(() => {
@@ -38,12 +50,16 @@ export class PartidosGrid implements OnInit, OnDestroy {
 
   updateGridCols() {
     const width = window.innerWidth;
-    if (width < 768) {
-      this.gridCols = 2;
+    if (width < 600) {
+      this.gridCols = 2;  // Móvil pequeño
+    } else if (width < 768) {
+      this.gridCols = 3;  // Móvil grande
     } else if (width < 1024) {
-      this.gridCols = 3;
+      this.gridCols = 4;  // Tablet
+    } else if (width < 1440) {
+      this.gridCols = 5;  // Desktop
     } else {
-      this.gridCols = 4;
+      this.gridCols = 6;  // Pantallas grandes
     }
   }
 
@@ -59,6 +75,7 @@ export class PartidosGrid implements OnInit, OnDestroy {
 
   onImageError(event: Event) {
     const img = event.target as HTMLImageElement;
+    console.log('Error cargando imagen: ', img.src);
     img.src = 'assets/placeholder-party.png';
   }
 }

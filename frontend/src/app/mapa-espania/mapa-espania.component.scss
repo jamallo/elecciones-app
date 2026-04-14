@@ -5,6 +5,18 @@
   overflow: hidden;
   background: #f5f5f5;
   z-index: 1;
+
+  @media (min-width: 768px) {
+    height: 500px;
+  }
+
+  @media (min-width: 1024px) {
+    height: 600px;
+  }
+
+  @media (min-width: 1440px) {
+    height: 700px;
+  }
 }
 
 ::ng-deep {

@@ -29,7 +29,7 @@ export class TemaService {
       colorAcento: '#E5B83C',
       colorFondo: '#FFFDF7',
       tipo: 'NEUTRAL',
-      nombre: 'Elecciones 2027'
+      nombre: 'InfoPartidos'
     };
   }
 
